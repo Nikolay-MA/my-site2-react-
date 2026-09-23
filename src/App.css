@@ -363,3 +363,54 @@ a.btn-social:hover {
     .lightbox-content { max-width: 95%; max-height: 65%; }
     .lightbox-close { top: 15px; right: 20px; font-size: 35px; }
 }
+/* --- ТОНКАЯ ОБВОДКА ДЛЯ КНОПОК-ССЫЛОК НА СТРАНИЦЫ --- */
+.top-navigation button.nav-btn {
+    border: 1px solid rgba(0, 86, 179, 0.15) !important; /* Тонкая серо-синяя обводка по умолчанию */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+.top-navigation button.nav-btn:hover {
+    border-color: var(--primary-color) !important; /* Обводка становится ярче при наведении куросра */
+    transform: translateY(-2px);
+}
+
+.active-page-btn {
+    border-color: rgba(0, 0, 0, 0.1) !important; /* Обводка для активной кнопки */
+}
+
+/* Стили для визуализации баллов экзаменов */
+.score-card h3 {
+    border-bottom: 2px solid #f0f3f5;
+    padding-bottom: 8px;
+}
+.scores-list {
+    list-style: none;
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.scores-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1rem;
+}
+.scores-list .subject {
+    font-weight: 600;
+    color: var(--text-dark);
+}
+.scores-list .score {
+    padding: 4px 12px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+.badge-high {
+    background-color: rgba(46, 204, 113, 0.15);
+    color: #27ae60;
+}
+.badge-medium {
+    background-color: rgba(241, 196, 15, 0.15);
+    color: #d35400;
+}
