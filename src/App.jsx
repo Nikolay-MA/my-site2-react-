@@ -110,9 +110,10 @@ function AppContent() {
   );
 }
 
+// Корневой экспорт приложения с фиксированным базовым путем для вашего репозитория GitHub Pages
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/my-site2-react-/">
       <AppContent />
     </BrowserRouter>
   );
