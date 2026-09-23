@@ -12,7 +12,7 @@ export default function SchoolStudyPage({ schoolData }) {
             <h3>{schoolData.title}</h3>
             <p><strong>Дата рождения:</strong> 2 сентября 2008 года</p>
             <p><strong>Период обучения:</strong> В школу пошел в 2015 году</p>
-            <p><strong>Директор школы:</strong> {schoolData.director}</p>
+            <p><strong>Последний директор школы:</strong> {schoolData.director}</p>
             <p><strong>Направление:</strong> {schoolData.classType}</p>
           </div>
 
