@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://sitemaps.org">
   <url>
-    <loc>https://github.io</loc>
+    <loc>https://nikolay-ma.github.io/my-site2-react-/</loc>
     <lastmod>2026-09-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
-  <url><loc>https://github.ioschool-study</loc><lastmod>2026-09-25</lastmod><priority>0.8</priority></url>
-  <url><loc>https://github.ioname-change</loc><lastmod>2026-09-25</lastmod><priority>0.5</priority></url>
-  <url><loc>https://github.iomirea-study</loc><lastmod>2026-09-25</lastmod><priority>0.9</priority></url>
-  <url><loc>https://github.ioprojects</loc><lastmod>2026-09-25</lastmod><priority>0.9</priority></url>
-  <url><loc>https://github.ioevents</loc><lastmod>2026-09-25</lastmod><priority>0.7</priority></url>
+  <url><loc>https://nikolay-ma.github.io/my-site2-react-/school-study</loc><lastmod>2026-09-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://nikolay-ma.github.io/my-site2-react-/name-change</loc><lastmod>2026-09-25</lastmod><priority>0.5</priority></url>
+  <url><loc>https://nikolay-ma.github.io/my-site2-react-/mirea-study</loc><lastmod>2026-09-25</lastmod><priority>0.9</priority></url>
+  <url><loc>https://nikolay-ma.github.io/my-site2-react-/projects</loc><lastmod>2026-09-25</lastmod><priority>0.9</priority></url>
+  <url><loc>https://nikolay-ma.github.io/my-site2-react-/events</loc><lastmod>2026-09-25</lastmod><priority>0.7</priority></url>
 </urlset>
