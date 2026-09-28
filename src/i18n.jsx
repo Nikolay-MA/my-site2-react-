@@ -1,19 +1,16 @@
-import i18n from "i18next";
+import i18next from "i18next";
 import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 
-// Было: import enTranslation from '../public/locales/en/translation.json';
-// Стало (путь изменен на папку src):
 import enTranslation from './locales/en/translation.json';
 import ruTranslation from './locales/ru/translation.json';
-
 
 const resources = {
   en: { translation: enTranslation },
   ru: { translation: ruTranslation }
 };
 
-i18n
+i18next
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
@@ -21,12 +18,12 @@ i18n
     supportedLngs: ["ru", "en"],
     fallbackLng: "ru",
     detection: {
-      order: ["localStorage", "cookie", "navigator", "htmlTag"],
+      // 'path' на первом месте, чтобы URL определял язык сайта
+      order: ["path", "localStorage", "cookie", "navigator", "htmlTag"],
       caches: ["localStorage", "cookie"]
     },
     interpolation: {
       escapeValue: false,
-      // Кастомный форматер для слов "год/года/лет" и "year/years"
       format: (value, format, lng) => {
         if (format === "w_year") {
           if (lng === "ru") {
@@ -45,4 +42,4 @@ i18n
     }
   });
 
-export default i18n;
+export default i18next;
