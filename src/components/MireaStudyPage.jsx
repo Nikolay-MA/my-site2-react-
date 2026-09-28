@@ -1,46 +1,40 @@
 import React, { useState } from "react";
-// Импортируем компоненты галереи, как в MainPage
+import { useTranslation } from "react-i18next";
 import GalleryItem from "./GalleryItem";
 import Lightbox from "./Lightbox";
 
-// Импортируем необходимые изображения с правильными относительными путями и расширениями
 import flagImg from "./Фото/image_c58R0X.png";
 import mireaImg from "./Фото/image_qplLkv.png";
-import currentPhotoImg from "./Фото/image_kt9XQv.jpg"; // ИСПРАВЛЕНО: расширение .jpg вместо .png
-
-
-
-const techStack = [
-  { name: "Python", desc: "Основы ИИ и анализа данных", color: "linear-gradient(135deg, #306998, #FFD43B)", textLight: true },
-  { name: "C++", desc: "Алгоритмы и основы ООП", color: "linear-gradient(135deg, #00599C, #5E97D0)", textLight: true },
-  { name: "C#", desc: "Компилируемые приложения", color: "linear-gradient(135deg, #178600, #283593)", textLight: true },
-  { name: "Java", desc: "Промышленная разработка (2 курс)", color: "linear-gradient(135deg, #E76F51, #F4A261)", textLight: true },
-  { name: "SQL", desc: "Управление базами данных (2 курс)", color: "linear-gradient(135deg, #00758F, #F29111)", textLight: true },
-  { name: "Prompting", desc: "Управление нейросетями и ИИ", color: "linear-gradient(135deg, #9b59b6, #8e44ad)", textLight: true }
-];
-
-// Массив с фотографиями для МИРЭА
-const mireaPhotos = [
-  { caption: "Кампус Института кибербезопасности (ИКБ) РТУ МИРЭА на Стромынке, 20", src: mireaImg },
-  { caption: "Кампус Института кибербезопасности (ИКБ) РТУ МИРЭА на Стромынке, 20 правая часть", src: currentPhotoImg },
-  { caption: "Флаг Института кибербезопасности и цифровых технологий", src: flagImg }
-  
-];
+import currentPhotoImg from "./Фото/image_kt9XQv.jpg";
 
 export default function MireaStudyPage() {
-  // Состояние для управления лайтбоксом (увеличением картинок)
+  const { t } = useTranslation();
   const [lightbox, setLightbox] = useState({ isOpen: false, src: "", caption: "" });
+
+  const techStack = [
+    { name: "Python", desc: t("mirea.tech.py"), color: "linear-gradient(135deg, #306998, #FFD43B)", textLight: true },
+    { name: "C++", desc: t("mirea.tech.cpp"), color: "linear-gradient(135deg, #00599C, #5E97D0)", textLight: true },
+    { name: "C#", desc: t("mirea.tech.cs"), color: "linear-gradient(135deg, #178600, #283593)", textLight: true },
+    { name: "Java", desc: t("mirea.tech.java"), color: "linear-gradient(135deg, #E76F51, #F4A261)", textLight: true },
+    { name: "SQL", desc: t("mirea.tech.sql"), color: "linear-gradient(135deg, #00758F, #F29111)", textLight: true },
+    { name: "Prompting", desc: t("mirea.tech.prompt"), color: "linear-gradient(135deg, #9b59b6, #8e44ad)", textLight: true }
+  ];
+
+  const mireaPhotos = [
+    { caption: t("mirea.captions.campus1"), src: mireaImg },
+    { caption: t("mirea.captions.campus2"), src: currentPhotoImg },
+    { caption: t("mirea.captions.flag"), src: flagImg }
+  ];
 
   return (
     <section className="info-section-block page-fade-animation">
-      <h2>Учеба в МИРЭА</h2>
+      <h2>{t("mirea.title")}</h2>
       <div className="legal-info-card">
-        <h3>МИРЭА — Российский технологический университет</h3>
-        <p style={{ marginBottom: "12px" }}><strong>Институт:</strong> Кибербезопасности и цифровых технологий</p>
-        <p style={{ marginBottom: "25px" }}><strong>Направление:</strong> Искусственный Интеллект & Анализ Данных</p>
+        <h3>{t("mirea.sub")}</h3>
+        <p style={{ marginBottom: "12px" }}><strong>{t("mirea.institute")}</strong> {t("mirea.instVal")}</p>
+        <p style={{ marginBottom: "25px" }}><strong>{t("mirea.direction")}</strong> {t("mirea.dirVal")}</p>
         
-        {/* Секция галереи фотографий МИРЭА */}
-        <h3 style={{ marginTop: "30px", marginBottom: "15px" }}>Галерея института</h3>
+        <h3 style={{ marginTop: "30px", marginBottom: "15px" }}>{t("mirea.gallery")}</h3>
         <div className="gallery-grid" style={{ marginBottom: "30px" }}>
           {mireaPhotos.map((item, idx) => (
             <GalleryItem 
@@ -52,16 +46,9 @@ export default function MireaStudyPage() {
           ))}
         </div>
 
-        <h3 style={{ marginTop: "30px", marginBottom: "15px" }}>Изучаемый стек технологий</h3>
-        <p style={{ marginBottom: "25px" }}>
-          Сейчас я параллельно осваиваю фундаментальную базу: разработку на <strong>C++</strong>, 
-          <strong>C#</strong> и скриптовый язык <strong>Python</strong>. На втором курсе начнется 
-          углубление в веб-инженерию через <strong>Java</strong> и базы данных <strong>SQL</strong>. 
-          Кроме того, как специалист по ИИ, я активно учусь профессионально взаимодействовать с模делями и 
-          проектировать эффективные <strong>промты для нейросетей</strong>.
-        </p>
+        <h3 style={{ marginTop: "30px", marginBottom: "15px" }}>{t("mirea.stackTitle")}</h3>
+        <p style={{ marginBottom: "25px" }}>{t("mirea.stackDesc")}</p>
 
-        {/* Сетка бейджей с технологиями */}
         <div style={{ 
           display: "grid", 
           gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", 
@@ -93,7 +80,6 @@ export default function MireaStudyPage() {
         </div>
       </div>
 
-      {/* Компонент лайтбокса для полноэкранного просмотра картинок */}
       {lightbox.isOpen && (
         <Lightbox 
           src={lightbox.src} 

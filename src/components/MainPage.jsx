@@ -1,57 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next"; 
 import GalleryItem from "./GalleryItem";
 import Lightbox from "./Lightbox";
 
-// 1. ИМПОРТИРУЕМ ВСЕ КАРТИНКИ ИЗ ВАШЕЙ ТЕКУЩЕЙ ПАПКИ ФОТО
+// Импорт изображений
 import avatarImg from "./Фото/image_EMD_AL.png";
 import graduationImg from "./Фото/image_moFeWh.png";
 import vdnkhImg from "./Фото/image_Til1pL.png";
 import dachaImg from "./Фото/image_ZwI4Hf.png";
 
-// Функция автоматического расчета возраста с правильным склонением слова "лет/года"
-const calculateAge = (birthDateString) => {
-  const birthDate = new Date(birthDateString);
-  const today = new Date();
-  
-  let age = today.getFullYear() - birthDate.getFullYear();
-  const monthDiff = today.getMonth() - birthDate.getMonth();
-  
-  // Если день рождения в этом году еще не наступил, вычитаем 1 год
-  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-    age--;
-  }
-  
-  // Подбор правильного слова (год, года, лет)
-  const lastDigit = age % 10;
-  const lastTwoDigits = age % 100;
-  
-  if (lastTwoDigits >= 11 && lastTwoDigits <= 14) return `${age} лет`;
-  if (lastDigit === 1) return `${age} год`;
-  if (lastDigit >= 2 && lastDigit <= 4) return `${age} года`;
-  return `${age} лет`;
-};
-
-const profileConfig = {
-  siteTitle: "Николай Маслов | Персональная страница",
-  name: "Маслов Николай Александрович",
-  tagline: "Студент РТУ МИРЭА | ИИ & Анализ Данных",
-  avatar: avatarImg,
-  // ИСПРАВЛЕНО: строка bio теперь формируется динамически с вызовом функции calculateAge
-  bio: `Мне ${calculateAge("2008-09-02")}, живу в Москве на ВДНХ. С детства обожал Minecraft, пытался запустить свой сервер, что и привело меня в программирование! Сдал ЕГЭ по информатике, изучал JavaScript, Python, HTML/CSS и React. Поступил в Институт кибербезопасности и цифровых технологий РТУ МИРЭА.`,
-  socials: [
-        { title: "Telegram", link: "https://t.me/uzelaaa" },
-        { title: "ВКонтакте", link: "https://vk.com/nikoollaayyy" },
-        { title: "YouTube", link: "https://youtube.com/@u_s_e_r_s?si=E_CkHumsLWadBKgA" }
-    ],
-  galleryHeading: "Моя жизнь, учеба и увлечения",
-  items: [
-    { caption: "Мой Московский Выпускной", src: graduationImg }, // Подставляем импортированные переменные
-    { caption: "Вид на любимый район ВДНХ и Останкино сверху", src: vdnkhImg },
-    { caption: "Дача", src: dachaImg }
-  ]
-};
-
 export default function MainPage() {
+  const { t, i18n } = useTranslation(); 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -61,10 +20,49 @@ export default function MainPage() {
 
   const galleryRef = useRef(null);
 
-  useEffect(() => {
-    document.title = profileConfig.siteTitle;
+  // 1. Автоматический расчет возраста на текущий момент
+  const birthDate = new Date("2008-09-02");
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+  
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+
+  // 2. Формирование строки возраста в зависимости от текущего языка интерфейса
+  let ageString = "";
+  if (i18n.language && i18n.language.startsWith("en")) {
+    ageString = `I am ${age} years old`;
+  } else {
+    // Склонение слова "год/года/лет" для русского языка
+    const lastDigit = age % 10;
+    const lastTwoDigits = age % 100;
+    let word = "лет";
     
-  }, []);
+    if (lastTwoDigits < 11 || lastTwoDigits > 14) {
+      if (lastDigit === 1) word = "год";
+      else if (lastDigit >= 2 && lastDigit <= 4) word = "года";
+    }
+    ageString = `Мне ${age} ${word}`;
+  }
+
+  // Ссылки на социальные сети
+  const socials = [
+    { title: t("main.socials.tg"), link: "https://t.me/uzelaaa" },
+    { title: t("main.socials.vk"), link: "https://vk.com/nikoollaayyy" },
+    { title: t("main.socials.yt"), link: "https://youtube.com/@u_s_e_r_s?si=E_CkHumsLWadBKgA" }
+  ];
+  // Элементы галереи с локализованными подписями
+  const galleryItems = [
+    { caption: t("main.captions.graduation"), src: graduationImg },
+    { caption: t("main.captions.vdnkh"), src: vdnkhImg },
+    { caption: t("main.captions.dacha"), src: dachaImg }
+  ];
+
+  useEffect(() => {
+    document.title = t("main.title");
+  }, [t]);
 
   const scrollToGallery = () => {
     galleryRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -112,23 +110,27 @@ export default function MainPage() {
     }
     setTimeout(() => setFormStatus("idle"), 3000);
   };
+
   return (
     <div className="page-fade-animation" style={{ display: "flex", flexDirection: "column", gap: "60px" }}>
+      
+      {/* Карточка профиля */}
       <section className="profile-card">
         <div className="avatar-container">
-          <img src={profileConfig.avatar}  alt={profileConfig.name} className="avatar" />
+          <img src={avatarImg} alt={t("main.name")} className="avatar" />
         </div>
         <div className="profile-info">
-          <h1>{profileConfig.name}</h1>
-          <p className="tagline">{profileConfig.tagline}</p>
-          <p className="bio">{profileConfig.bio}</p>
+          <h1>{t("main.name")}</h1>
+          <p className="tagline">{t("main.tagline")}</p>
+          {/* Склеиваем вычисленный на JS возраст и остальной текст из локализации */}
+          <p className="bio">{ageString}{t("main.bio")}</p>
           <div className="action-buttons">
             <button onClick={scrollToGallery} className="btn-primary">
-              Посмотреть фото и увлечения 👇
+              {t("main.cta")}
             </button>
           </div>
           <div className="social-links">
-            {profileConfig.socials.map((social, idx) => (
+            {socials.map((social, idx) => (
               <a key={idx} href={social.link} className="btn-social" target="_blank" rel="noopener noreferrer">
                 {social.title}
               </a>
@@ -137,10 +139,11 @@ export default function MainPage() {
         </div>
       </section>
 
+      {/* Секция галереи */}
       <section className="gallery-section" ref={galleryRef}>
-        <h2>{profileConfig.galleryHeading}</h2>
+        <h2>{t("main.galleryHeading")}</h2>
         <div className="gallery-grid">
-          {profileConfig.items.map((item, idx) => (
+          {galleryItems.map((item, idx) => (
             <GalleryItem 
               key={idx} 
               src={item.src} 
@@ -151,88 +154,103 @@ export default function MainPage() {
         </div>
       </section>
 
-      {/* РАЗДЕЛ С КАРТОЙ: Кастомный виджет Яндекс Карты ВДНХ */}
+  {/* Секция с динамической картой (Яндекс для RU / Google для EN) */}
       <section className="map-section">
-        <h2>Мой район — ВДНХ</h2>
+        <h2>{t("main.mapTitle")}</h2>
         <div className="map-wrapper">
           <div style={{ position: "relative", overflow: "hidden" }}>
-            <a 
-              href="https://yandex.ru/maps/213/moscow/?utm_medium=mapframe&utm_source=maps" 
-              style={{ color: "#eee", fontSize: "12px", position: "absolute", top: "0px" }}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Москва
-            </a>
-            <a 
-              href="https://yandex.ru/maps/213/moscow/stops/station__9858797/?from=SO&ll=37.614967%2C55.828197&tab=overview&utm_medium=mapframe&utm_source=maps&z=13.85" 
-              style={{ color: "#eee", fontSize: "12px", position: "absolute", top: "14px" }}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              ВДНХ — Яндекс Карты
-            </a>
-            <iframe 
-              src="https://yandex.ru/map-widget/v1/?from=SO&ll=37.614967%2C55.828197&masstransit%5BstopId%5D=station__9858797&mode=masstransit&tab=overview&z=13.85" 
-              width="100%" 
-              height="400" 
-              frameBorder="0" 
-              allowFullScreen={true} 
-              style={{ position: "relative" }}
-              title="Яндекс Карта ВДНХ"
-            ></iframe>
+            {i18n.language && i18n.language.startsWith("en") ? (
+              /* Предоставленный вами эмбед Google Maps с точными координатами ВДНХ */
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d29855.747659383214!2d37.628801700000004!3d55.829142999999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46b53791d1520ca3%3A0x4a01c35015bc2096!2z0JLQlNCd0KU!5e1!3m2!1sru!2sru!4v1790538161545!5m2!1sru!2sru" 
+                width="100%" 
+                height="400" 
+                style={{ border: 0 }} 
+                allowFullScreen={true} 
+                loading="lazy" 
+                referrerPolicy="strict-origin-when-cross-origin"
+                title="Google Map VDNKh"
+              ></iframe>
+            ) : (
+              /* Оригинальный виджет Яндекс Карты со ссылками для русскоязычной версии */
+              <>
+                <a 
+                  href="https://yandex.ru/maps/213/moscow/?utm_medium=mapframe&utm_source=maps" 
+                  style={{ color: "#eee", fontSize: "12px", position: "absolute", top: "0px" }}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Москва
+                </a>
+                <a 
+                  href="https://yandex.ru/maps/213/moscow/stops/station__9858797/?from=SO&ll=37.614967%2C55.828197&tab=overview&utm_medium=mapframe&utm_source=maps&z=13.85" 
+                  style={{ color: "#eee", fontSize: "12px", position: "absolute", top: "14px" }}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  ВДНХ — Яндекс Карты
+                </a>
+                <iframe 
+                  src="https://yandex.ru/map-widget/v1/?from=SO&ll=37.614967%2C55.828197&masstransit%5BstopId%5D=station__9858797&mode=masstransit&tab=overview&z=13.85" 
+                  width="100%" 
+                  height="400" 
+                  frameBorder="0" 
+                  allowFullScreen={true} 
+                  style={{ position: "relative" }}
+                  title="Яндекс Карта ВДНХ"
+                ></iframe>
+              </>
+            )}
           </div>
         </div>
       </section>
 
-      <section className="contact-section">
-        <h2>Написать мне</h2>
-        <form className="contact-form" onSubmit={handleSubmit}>
-  <div className="form-group">
-    <label>Ваше имя</label>
-    {/* Убрали required */}
-    <input type="text" value={name} onChange={(e) => setName(e.target.value.replace(/[^a-zA-Zа-яА-ЯёЁ\s]/g, ""))} />
-  </div>
-  
-  <div className="form-group">
-    <label>Email</label>
-    {/* Убрали required */}
-    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-  </div>
-  
-  <div className="form-group">
-    <label>Номер телефона</label>
-    {/* Убрали required */}
-    <input type="text" value={phone} onChange={handlePhoneChange} onFocus={() => !phone && setPhone("+7 ")} placeholder="+7 (___) ___-__-__" />
-  </div>
-  
-  <div className="form-group">
-    <label>
-      Сообщение <span style={{ fontSize: "0.8rem", opacity: 0.7, fontWeight: "normal", marginLeft: "5px" }}>(Enter — отправить, Shift+Enter — перенос)</span>
-    </label>
-    {/* Убрали required */}
-    <textarea 
-      rows="5" 
-      value={message} 
-      onChange={(e) => setMessage(e.target.value)} 
-      onKeyDown={(e) => {
-        if (e.key === "Enter" && !e.shiftKey) {
-          e.preventDefault();
-          if (formStatus !== "loading" && formStatus !== "success") {
-            handleSubmit(e);
-          }
-        }
-      }}
-    ></textarea>
-  </div>
 
-  <button type="submit" className={`btn-submit ${formStatus === "success" ? "btn-success" : ""}`} disabled={formStatus === "loading" || formStatus === "success"}>
-    {formStatus === "idle" && "Отправить сообщение"}
-    {formStatus === "loading" && "Отправка..."}
-    {formStatus === "success" && "Успешно отправлено! ✓"}
-    {formStatus === "error" && "Ошибка отправки"}
-  </button>
-</form>
+      {/* Форма обратной связи */}
+      <section className="contact-section">
+        <h2>{t("main.contactTitle")}</h2>
+        <form className="contact-form" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>{t("main.form.name")}</label>
+            <input type="text" value={name} onChange={(e) => setName(e.target.value.replace(/[^a-zA-Zа-яА-ЯёЁ\s]/g, ""))} />
+          </div>
+          
+          <div className="form-group">
+            <label>{t("main.form.email")}</label>
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          </div>
+          
+          <div className="form-group">
+            <label>{t("main.form.phone")}</label>
+            <input type="text" value={phone} onChange={handlePhoneChange} onFocus={() => !phone && setPhone("+7 ")} placeholder="+7 (___) ___-__-__" />
+          </div>
+          
+          <div className="form-group">
+            <label>
+              {t("main.form.message")} <span style={{ fontSize: "0.8rem", opacity: 0.7, fontWeight: "normal", marginLeft: "5px" }}>{t("main.form.messageHint")}</span>
+            </label>
+            <textarea 
+              rows="5" 
+              value={message} 
+              onChange={(e) => setMessage(e.target.value)} 
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  if (formStatus !== "loading" && formStatus !== "success") {
+                    handleSubmit(e);
+                  }
+                }
+              }}
+            ></textarea>
+          </div>
+
+          <button type="submit" className={`btn-submit ${formStatus === "success" ? "btn-success" : ""}`} disabled={formStatus === "loading" || formStatus === "success"}>
+            {formStatus === "idle" && t("main.form.submit")}
+            {formStatus === "loading" && t("main.form.loading")}
+            {formStatus === "success" && t("main.form.success")}
+            {formStatus === "error" && t("main.form.error")}
+          </button>
+        </form>
       </section>
 
       {lightbox.isOpen && (

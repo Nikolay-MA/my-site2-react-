@@ -403,3 +403,57 @@ button.btn-social.donghua-tab-btn.tab-active { background: var(--primary-gradien
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     .top-navigation, .container, .anime-card, .school-info-card, .legal-info-card { border-width: 0.5px; }
 }
+
+
+/* Фиксированный контейнер в правом верхнем углу экрана */
+.lang-switcher-fixed {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  z-index: 9999; /* Поверх всех элементов сайта */
+  background: rgba(35, 31, 32, 0.6); /* Полупрозрачный темный фон под кнопками */
+  padding: 6px;
+  border-radius: 12px;
+  backdrop-filter: blur(8px); /* Красивое размытие заднего фона */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Стили для маленьких фиксированных кнопок */
+.lang-fixed-btn {
+  background: transparent;
+  color: #888;
+  border: none;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+/* Эффект наведения */
+.lang-fixed-btn:hover {
+  color: #fff;
+}
+
+/* Активная кнопка выбранного языка (стиль взят на основе ваших синих кнопок) */
+.lang-fixed-btn.active {
+  background: #1565c0; /* Тот же цвет, что и у ваших активных страниц */
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(21, 101, 192, 0.4);
+}
+
+/* Адаптивность для мобильных телефонов (чтобы кнопки не перекрывали контент) */
+@media (max-width: 768px) {
+  .lang-switcher-fixed {
+    top: 10px;
+    right: 10px;
+    padding: 4px;
+  }
+  .lang-fixed-btn {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+  }
+}

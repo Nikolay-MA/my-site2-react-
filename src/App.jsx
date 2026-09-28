@@ -1,24 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next"; 
 import MainPage from "./components/MainPage";
 import SchoolStudyPage from "./components/SchoolStudyPage";
 import NameChangePage from "./components/NameChangePage";
 import MireaStudyPage from "./components/MireaStudyPage";
 import ProjectsPage from "./components/ProjectsPage";
 import EventsPage from "./components/EventsPage";
-import DonghuaPage from "./components/DonghuaPage"; // 1. Импортируем новый компонент
+import DonghuaPage from "./components/DonghuaPage"; 
 import "./App.css";
-
-// 2. Добавляем новую вкладку в панель навигации
-const navItems = [
-  { title: "Главная страница", path: "/" },
-  { title: "Учеба в школе", path: "/school-study" },
-  { title: "Смена фамилии", path: "/name-change" },
-  { title: "Учеба в МИРЭА", path: "/mirea-study" },
-  { title: "Проекты", path: "/projects" },
-  { title: "События", path: "/events" },
-  { title: "Дунхуа", path: "/donghua" } 
-];
 
 const schoolData = {
   title: "Школа №1415 «Останкино»",
@@ -33,10 +23,21 @@ const legalData = {
 };
 
 function AppContent() {
+  const { t, i18n } = useTranslation(); 
   const navigate = useNavigate();
   const location = useLocation();
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isDesktop, setIsDesktop] = useState(true);
+
+  const navItems = [
+    { title: t("nav.main"), path: "/" },
+    { title: t("nav.school"), path: "/school-study" },
+    { title: t("nav.nameChange"), path: "/name-change" },
+    { title: t("nav.mirea"), path: "/mirea-study" },
+    { title: t("nav.projects"), path: "/projects" },
+    { title: t("nav.events"), path: "/events" },
+    { title: t("nav.donghua"), path: "/donghua" } 
+  ];
 
   useEffect(() => {
     const handleResize = () => setIsDesktop(window.innerWidth > 768);
@@ -70,7 +71,6 @@ function AppContent() {
     };
   };
 
-  // Выносим вычисление года в переменную для читаемости
   const startYear = 2026;
   const currentYear = new Date().getFullYear();
   const displayYear = startYear === currentYear ? startYear : `${startYear}–${currentYear}`;
@@ -81,6 +81,22 @@ function AppContent() {
       <div className="eps-shape hexagon-1" style={getShapeStyle(1)}></div>
       <div className="eps-shape hexagon-2" style={getShapeStyle(2)}></div>
       <div className="eps-shape pentagon-1" style={getShapeStyle(3)}></div>
+
+      {/* ФИКСИРОВАННЫЙ ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКОВ В ПРАВОМ ВЕРХНЕМ УГЛУ */}
+      <div className="lang-switcher-fixed">
+        <button 
+          onClick={() => i18n.changeLanguage("ru")} 
+          className={`lang-fixed-btn ${i18n.language.startsWith("ru") ? "active" : ""}`}
+        >
+          RU
+        </button>
+        <button 
+          onClick={() => i18n.changeLanguage("en")} 
+          className={`lang-fixed-btn ${i18n.language.startsWith("en") ? "active" : ""}`}
+        >
+          EN
+        </button>
+      </div>
 
       <div className="page-wrapper">
         <nav className="top-navigation">
@@ -112,13 +128,12 @@ function AppContent() {
         </div>
 
         <footer className="page-footer">
-          <p>© {displayYear} Авторские права защищены. Маслов Николай Александрович</p>
+          <p>© {displayYear} {t("footer.rights")} {t("footer.author")}</p>
         </footer>
       </div>
     </>
   );
 }
-
 
 export default function App() {
   return (

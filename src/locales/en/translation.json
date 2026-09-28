@@ -1,0 +1,170 @@
+{
+  "nav": {
+    "main": "Home",
+    "school": "School Study",
+    "nameChange": "Name Change",
+    "mirea": "Mirea Study",
+    "projects": "Projects",
+    "events": "Events",
+    "donghua": "Donghua"
+  },
+  "footer": {
+    "rights": "All rights reserved.",
+    "author": "Nikolai Maslov"
+  },
+  "main": {
+    "title": "Nikolai Maslov | Personal Page",
+    "name": "Nikolai Maslov",
+    "tagline": "RTU MIREA Student | AI & Data Analysis",
+    "bio": ", I live in Moscow at VDNKh. Since childhood I loved Minecraft, tried to launch my own server, which led me into programming! Passed the Unified State Exam in Computer Science, studied JavaScript, Python, HTML/CSS, and React. Entered the Institute of Cybersecurity and Digital Technologies of RTU MIREA.",
+    "cta": "See photos and hobbies 👇",
+    "galleryHeading": "My life, study and hobbies",
+    "mapTitle": "My neighborhood — VDNKh",
+    "contactTitle": "Contact me",
+    "form": {
+      "name": "Your Name",
+      "email": "Email",
+      "phone": "Phone Number",
+      "message": "Message",
+      "messageHint": "(Enter — send, Shift+Enter — new line)",
+      "submit": "Send Message",
+      "loading": "Sending...",
+      "success": "Successfully sent! ✓",
+      "error": "Sending error"
+    },
+    "captions": {
+      "graduation": "My Moscow Graduation",
+      "vdnkh": "View of my favorite VDNKh and Ostankino district from above",
+      "dacha": "Country house"
+    },
+    "socials": {
+      "tg": "Telegram",
+      "vk": "VK",
+      "yt": "YouTube"
+    }
+  },
+  "school": {
+    "title": "School Study",
+    "birthDate": "Date of Birth:",
+    "birthDateVal": "September 2, 2008",
+    "period": "Study Period:",
+    "periodVal": "Started school in 2015",
+    "director": "Last School Director:",
+    "direction": "Profile:",
+    "sportsTitle": "Sports Activities",
+    "sportsDesc": "Over the years of study, I have tried different areas of physical activity:",
+    "ogeTitle": "OGE Results (Year 2024)",
+    "eegTitle": "USE Results (Year 2026)",
+    "math": "Mathematics (profile)",
+    "mathShort": "Mathematics",
+    "physics": "Physics",
+    "inf": "Computer Science",
+    "rus": "Russian Language",
+    "excellent": "5 (Excellent)",
+    "good": "4 (Good)",
+    "scores": "points"
+  },
+  "nameChange": {
+    "title": "The Process of Changing Surname",
+    "text": "Since my father is Komanin Andrey Nikolaevich, in the future my name will be Komanin Nikolai Andreevich. To resolve this matter, in the summer of 2026, Andrey filed an application with the court located in our district so that I could officially change my surname and patronymic. I am fond of Chinese 3D donghua"
+  },
+  "mirea": {
+    "title": "Mirea Study",
+    "sub": "MIREA — Russian Technological University",
+    "institute": "Institute:",
+    "instVal": "Cybersecurity and Digital Technologies",
+    "direction": "Major:",
+    "dirVal": "Artificial Intelligence & Data Analysis",
+    "gallery": "Institute Gallery",
+    "stackTitle": "Tech Stack being Studied",
+    "stackDesc": "Currently, I am concurrently mastering the fundamental basis: development in C++, C#, and the scripting language Python. In the second year, deepening into web engineering through Java and SQL databases will begin. Furthermore, as an AI specialist, I am actively learning to professionally interact with models and engineer effective prompts for neural networks.",
+    "captions": {
+      "campus1": "Campus of the Institute of Cybersecurity (ICB) RTU MIREA at Stromynka, 20",
+      "campus2": "Campus of the Institute of Cybersecurity (ICB) RTU MIREA at Stromynka, 20 right side",
+      "flag": "Flag of the Institute of Cybersecurity and Digital Technologies"
+    },
+    "tech": {
+      "py": "AI & data analysis fundamentals",
+      "cpp": "Algorithms & OOP basics",
+      "cs": "Compiled applications",
+      "java": "Enterprise development (2nd year)",
+      "sql": "Database management (2nd year)",
+      "prompt": "Neural network prompting & AI"
+    }
+  },
+  "projects": {
+    "title": "My Projects",
+    "desc": "Personal and educational software developments created during my studies.",
+    "techLabel": "Technologies:",
+    "items": {
+      "site": {
+        "title": "Personal Portfolio Website",
+        "desc": "This very website! Responsive single-page web application featuring parallax effects, interactive forms, and an integrated multi-language (localization) system."
+      },
+      "ai": {
+        "title": "Python Data Analyzer",
+        "desc": "Educational project for RTU MIREA. The script parses open data, conducts basic statistical analysis, and plots distribution graphs using Pandas and Matplotlib libraries."
+      }
+    }
+  },
+  "events": {
+    "title": "Timeline of Events",
+    "desc": "Key life milestones, achievements, and plans for the future.",
+    "items": {
+      "e1": {
+        "year": "2015",
+        "title": "Start of School Journey",
+        "desc": "Entered the first grade at School No. 1415 'Ostankino'."
+      },
+      "e2": {
+        "year": "2024",
+        "title": "Successful OGE Exams",
+        "desc": "Graduated from the 9th grade with excellent grades (straight '5' A-grades in Math, Physics, and Computer Science)."
+      },
+      "e3": {
+        "year": "2026",
+        "title": "Entering RTU MIREA",
+        "desc": "Passed the Unified State Exam (USE), graduated from the Physics and Mathematics class, and enrolled in the Institute of Cybersecurity majoring in AI and Data Analysis."
+      }
+    }
+  },
+  "donghua": {
+    "title": "My Hobby",
+    "bio": "I am fond of Chinese 3D donghua and follow the release of new episodes. Chinese animation attracts me with amazing combat dynamics, well-developed cultivation worlds, beautiful graphics, and deep philosophy of martial arts.",
+    "sectionTitle": "My Personal TOP & Favorite Universes",
+    "tabs": {
+      "desc": "Description",
+      "opinion": "My Opinion"
+    },
+    "btnMore": "Read More",
+    "btnLess": "Collapse",
+    "watch": "Watch Title:",
+    "titles": {
+      "sl1": "Soul Land (Douluo Dalu)",
+      "sl2": "Douluo Dalu II: Jueshi Tangmen",
+      "btth": "Battle Through the Heavens",
+      "tos": "Throne of Seal",
+      "mj": "Fan Ren Xiu Xian Chuan"
+    },
+        "ranks": {
+      "sl1": "Top-1",
+      "sl2": "Top-1 (Sequel)",
+      "btth": "Top-2",
+      "tos": "Top-3",
+      "mj": "Top-3 (Shared place)"
+    },
+    "status": {
+      "completed": "Completed (263 eps.)",
+      "ongoing": "Ongoing",
+      "newSeason": "New season airing",
+      "seasons": "8 seasons (2022-2026)"
+    },
+    "tags": {
+      "sl1": "Shounen / Fantasy / Reincarnation",
+      "sl2": "Technomagic / Martial Arts",
+      "btth": "16+ / China / Anime / Fantasy / Adventure",
+      "tos": "16+ / China / Anime / Fantasy / Adventure",
+      "mj": "Realistic Xianxia / Adventure"
+    }
+  }
+}
