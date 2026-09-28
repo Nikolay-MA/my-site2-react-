@@ -3,14 +3,18 @@ import { useTranslation } from "react-i18next";
 import GalleryItem from "./GalleryItem";
 import Lightbox from "./Lightbox";
 
+// Импорт изображений
 import flagImg from "./Фото/image_c58R0X.png";
 import mireaImg from "./Фото/image_qplLkv.png";
 import currentPhotoImg from "./Фото/image_kt9XQv.jpg";
 
 export default function MireaStudyPage() {
   const { t } = useTranslation();
-  const [lightbox, setLightbox] = useState({ isOpen: false, src: "", caption: "" });
+  
+  // Состояние лайтбокса: храним флаг открытия и индекс стартовой фотографии
+  const [lightbox, setLightbox] = useState({ isOpen: false, initialIndex: 0 });
 
+  // Массив технологий
   const techStack = [
     { name: "Python", desc: t("mirea.tech.py"), color: "linear-gradient(135deg, #306998, #FFD43B)", textLight: true },
     { name: "C++", desc: t("mirea.tech.cpp"), color: "linear-gradient(135deg, #00599C, #5E97D0)", textLight: true },
@@ -20,12 +24,12 @@ export default function MireaStudyPage() {
     { name: "Prompting", desc: t("mirea.tech.prompt"), color: "linear-gradient(135deg, #9b59b6, #8e44ad)", textLight: true }
   ];
 
+  // Массив фотографий для галереи МИРЭА
   const mireaPhotos = [
     { caption: t("mirea.captions.campus1"), src: mireaImg },
     { caption: t("mirea.captions.campus2"), src: currentPhotoImg },
     { caption: t("mirea.captions.flag"), src: flagImg }
   ];
-
   return (
     <section className="info-section-block page-fade-animation">
       <h2>{t("mirea.title")}</h2>
@@ -41,7 +45,8 @@ export default function MireaStudyPage() {
               key={idx} 
               src={item.src} 
               caption={item.caption} 
-              onOpenLightbox={(src, caption) => setLightbox({ isOpen: true, src, caption })}
+              // Передаем порядковый индекс кликнутой фотографии в галерее МИРЭА
+              onOpenLightbox={() => setLightbox({ isOpen: true, initialIndex: idx })}
             />
           ))}
         </div>
@@ -80,11 +85,12 @@ export default function MireaStudyPage() {
         </div>
       </div>
 
+      {/* Лайтбокс с массивом картинок МИРЭА */}
       {lightbox.isOpen && (
         <Lightbox 
-          src={lightbox.src} 
-          caption={lightbox.caption} 
-          onClose={() => setLightbox({ isOpen: false, src: "", caption: "" })} 
+          images={mireaPhotos} 
+          initialIndex={lightbox.initialIndex} 
+          onClose={() => setLightbox({ isOpen: false, initialIndex: 0 })} 
         />
       )}
     </section>

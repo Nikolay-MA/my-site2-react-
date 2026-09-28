@@ -457,3 +457,50 @@ button.btn-social.donghua-tab-btn.tab-active { background: var(--primary-gradien
     font-size: 0.75rem;
   }
 }
+/* Кнопки переключения */
+.lightbox-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.4);
+  color: #ffffff;
+  border: none;
+  font-size: 2.5rem;
+  padding: 15px 20px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.2s ease, transform 0.1s ease;
+  z-index: 1010;
+  user-select: none;
+}
+
+.lightbox-arrow:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.lightbox-arrow:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.lightbox-arrow-left {
+  left: 30px;
+}
+
+.lightbox-arrow-right {
+  right: 30px;
+}
+
+/* Скрытие прокрутки страницы при открытом лайтбоксе (опционально, для красоты) */
+body:has(.lightbox) {
+  overflow: hidden;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 768px) {
+  .lightbox-arrow {
+    font-size: 1.8rem;
+    padding: 10px 14px;
+  }
+  .lightbox-arrow-left { left: 15px; }
+  .lightbox-arrow-right { right: 15px; }
+}

@@ -16,7 +16,9 @@ export default function MainPage() {
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
   const [formStatus, setFormStatus] = useState("idle");
-  const [lightbox, setLightbox] = useState({ isOpen: false, src: "", caption: "" });
+  
+  // Состояние лайтбокса: храним индекс стартовой фотографии
+  const [lightbox, setLightbox] = useState({ isOpen: false, initialIndex: 0 });
 
   const galleryRef = useRef(null);
 
@@ -49,10 +51,11 @@ export default function MainPage() {
 
   // Ссылки на социальные сети
   const socials = [
-    { title: t("main.socials.tg"), link: "https://t.me/uzelaaa" },
-    { title: t("main.socials.vk"), link: "https://vk.com/nikoollaayyy" },
-    { title: t("main.socials.yt"), link: "https://youtube.com/@u_s_e_r_s?si=E_CkHumsLWadBKgA" }
+    { title: t("main.socials.tg"), link: "https://t.me" },
+    { title: t("main.socials.vk"), link: "https://vk.com" },
+    { title: t("main.socials.yt"), link: "https://youtube.com" }
   ];
+
   // Элементы галереи с локализованными подписями
   const galleryItems = [
     { caption: t("main.captions.graduation"), src: graduationImg },
@@ -94,7 +97,7 @@ export default function MainPage() {
     formData.append("message", message);
 
     try {
-      const response = await fetch("https://formspree.io/f/mnpnpbbn", {
+      const response = await fetch("https://formspree.io", {
         method: "POST",
         body: formData,
         headers: { 'Accept': 'application/json' }
@@ -110,7 +113,6 @@ export default function MainPage() {
     }
     setTimeout(() => setFormStatus("idle"), 3000);
   };
-
   return (
     <div className="page-fade-animation" style={{ display: "flex", flexDirection: "column", gap: "60px" }}>
       
@@ -122,7 +124,6 @@ export default function MainPage() {
         <div className="profile-info">
           <h1>{t("main.name")}</h1>
           <p className="tagline">{t("main.tagline")}</p>
-          {/* Склеиваем вычисленный на JS возраст и остальной текст из локализации */}
           <p className="bio">{ageString}{t("main.bio")}</p>
           <div className="action-buttons">
             <button onClick={scrollToGallery} className="btn-primary">
@@ -148,63 +149,35 @@ export default function MainPage() {
               key={idx} 
               src={item.src} 
               caption={item.caption} 
-              onOpenLightbox={(src, caption) => setLightbox({ isOpen: true, src, caption })}
+              onOpenLightbox={() => setLightbox({ isOpen: true, initialIndex: idx })}
             />
           ))}
         </div>
       </section>
 
-  {/* Секция с динамической картой (Яндекс для RU / Google для EN) */}
+      {/* Секция с динамической картой */}
       <section className="map-section">
         <h2>{t("main.mapTitle")}</h2>
         <div className="map-wrapper">
           <div style={{ position: "relative", overflow: "hidden" }}>
             {i18n.language && i18n.language.startsWith("en") ? (
-              /* Предоставленный вами эмбед Google Maps с точными координатами ВДНХ */
               <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d29855.747659383214!2d37.628801700000004!3d55.829142999999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46b53791d1520ca3%3A0x4a01c35015bc2096!2z0JLQlNCd0KU!5e1!3m2!1sru!2sru!4v1790538161545!5m2!1sru!2sru" 
-                width="100%" 
-                height="400" 
-                style={{ border: 0 }} 
-                allowFullScreen={true} 
-                loading="lazy" 
-                referrerPolicy="strict-origin-when-cross-origin"
-                title="Google Map VDNKh"
+                src="https://google.com" 
+                width="100%" height="400" style={{ border: 0 }} allowFullScreen={true} loading="lazy" referrerPolicy="strict-origin-when-cross-origin" title="Google Map VDNKh"
               ></iframe>
             ) : (
-              /* Оригинальный виджет Яндекс Карты со ссылками для русскоязычной версии */
               <>
-                <a 
-                  href="https://yandex.ru/maps/213/moscow/?utm_medium=mapframe&utm_source=maps" 
-                  style={{ color: "#eee", fontSize: "12px", position: "absolute", top: "0px" }}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Москва
-                </a>
-                <a 
-                  href="https://yandex.ru/maps/213/moscow/stops/station__9858797/?from=SO&ll=37.614967%2C55.828197&tab=overview&utm_medium=mapframe&utm_source=maps&z=13.85" 
-                  style={{ color: "#eee", fontSize: "12px", position: "absolute", top: "14px" }}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  ВДНХ — Яндекс Карты
-                </a>
+                <a href="https://yandex.ru" style={{ color: "#eee", fontSize: "12px", position: "absolute", top: "0px" }} target="_blank" rel="noopener noreferrer">Москва</a>
+                <a href="https://yandex.ru" style={{ color: "#eee", fontSize: "12px", position: "absolute", top: "14px" }} target="_blank" rel="noopener noreferrer">ВДНХ — Яндекс Карты</a>
                 <iframe 
-                  src="https://yandex.ru/map-widget/v1/?from=SO&ll=37.614967%2C55.828197&masstransit%5BstopId%5D=station__9858797&mode=masstransit&tab=overview&z=13.85" 
-                  width="100%" 
-                  height="400" 
-                  frameBorder="0" 
-                  allowFullScreen={true} 
-                  style={{ position: "relative" }}
-                  title="Яндекс Карта ВДНХ"
+                  src="https://yandex.ru" 
+                  width="100%" height="400" frameBorder="0" allowFullScreen={true} style={{ position: "relative" }} title="Яндекс Карта ВДНХ"
                 ></iframe>
               </>
             )}
           </div>
         </div>
       </section>
-
 
       {/* Форма обратной связи */}
       <section className="contact-section">
@@ -230,15 +203,11 @@ export default function MainPage() {
               {t("main.form.message")} <span style={{ fontSize: "0.8rem", opacity: 0.7, fontWeight: "normal", marginLeft: "5px" }}>{t("main.form.messageHint")}</span>
             </label>
             <textarea 
-              rows="5" 
-              value={message} 
-              onChange={(e) => setMessage(e.target.value)} 
+              rows="5" value={message} onChange={(e) => setMessage(e.target.value)} 
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
-                  if (formStatus !== "loading" && formStatus !== "success") {
-                    handleSubmit(e);
-                  }
+                  if (formStatus !== "loading" && formStatus !== "success") { handleSubmit(e); }
                 }
               }}
             ></textarea>
@@ -253,11 +222,12 @@ export default function MainPage() {
         </form>
       </section>
 
+      {/* Лайтбокс с массивом картинок */}
       {lightbox.isOpen && (
         <Lightbox 
-          src={lightbox.src} 
-          caption={lightbox.caption} 
-          onClose={() => setLightbox({ isOpen: false, src: "", caption: "" })} 
+          images={galleryItems} 
+          initialIndex={lightbox.initialIndex} 
+          onClose={() => setLightbox({ isOpen: false, initialIndex: 0 })} 
         />
       )}
     </div>
