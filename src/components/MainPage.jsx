@@ -162,15 +162,15 @@ export default function MainPage() {
           <div style={{ position: "relative", overflow: "hidden" }}>
             {i18n.language && i18n.language.startsWith("en") ? (
               <iframe 
-                src="https://google.com" 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7469.461092424268!2d37.63571642430221!3d55.8248652638279!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46b53677c54bbac5%3A0x9c177293add67c2d!2z0JzQtdGC0YDQviDQktCU0J3QpQ!5e1!3m2!1sru!2sru!4v1790624723259!5m2!1sru!2sru" 
                 width="100%" height="400" style={{ border: 0 }} allowFullScreen={true} loading="lazy" referrerPolicy="strict-origin-when-cross-origin" title="Google Map VDNKh"
               ></iframe>
             ) : (
               <>
-                <a href="https://yandex.ru" style={{ color: "#eee", fontSize: "12px", position: "absolute", top: "0px" }} target="_blank" rel="noopener noreferrer">Москва</a>
-                <a href="https://yandex.ru" style={{ color: "#eee", fontSize: "12px", position: "absolute", top: "14px" }} target="_blank" rel="noopener noreferrer">ВДНХ — Яндекс Карты</a>
+                <a href="https://yandex.ru/maps/213/moscow/?utm_medium=mapframe&utm_source=maps" style={{ color: "#eee", fontSize: "12px", position: "absolute", top: "0px" }} target="_blank" rel="noopener noreferrer">Москва</a>
+                <a href="https://yandex.ru/maps/213/moscow/stops/station__9858797/?from=SO&ll=37.614967%2C55.828197&tab=overview&utm_medium=mapframe&utm_source=maps&z=13.85" style={{ color: "#eee", fontSize: "12px", position: "absolute", top: "14px" }} target="_blank" rel="noopener noreferrer">ВДНХ — Яндекс Карты</a>
                 <iframe 
-                  src="https://yandex.ru" 
+                  src="https://yandex.ru/map-widget/v1/?from=SO&ll=37.614967%2C55.828197&masstransit%5BstopId%5D=station__9858797&mode=masstransit&tab=overview&z=13.85" 
                   width="100%" height="400" frameBorder="0" allowFullScreen={true} style={{ position: "relative" }} title="Яндекс Карта ВДНХ"
                 ></iframe>
               </>

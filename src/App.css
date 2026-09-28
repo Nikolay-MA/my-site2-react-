@@ -504,3 +504,92 @@ body:has(.lightbox) {
   .lightbox-arrow-left { left: 15px; }
   .lightbox-arrow-right { right: 15px; }
 }
+/* ==========================================================================
+   ЧАСТЬ 5: ТЕМНАЯ ТЕМА (DARK MODE)
+   ========================================================================== */
+
+/* Переопределение переменных для темной темы */
+.dark-theme {
+    --text-dark: #f9f6f7;
+    --text-muted: #a4b0be;
+    --bg-base: #131418;
+    --glass-card: rgba(30, 31, 38, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --shadow-smooth: 0 15px 35px rgba(0, 0, 0, 0.3);
+}
+
+/* Инверсия специфичных светлых подложек карточек и полей */
+.dark-theme .anime-card,
+.dark-theme .school-info-card,
+.dark-theme .legal-info-card,
+.dark-theme .map-wrapper,
+.dark-theme a.btn-social {
+    background: #1e1f26 !important;
+    border-color: rgba(255, 255, 255, 0.05) !important;
+    color: var(--text-dark) !important;
+}
+
+.dark-theme .form-group input, 
+.dark-theme .form-group textarea {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-dark);
+}
+
+.dark-theme .form-group input:focus, 
+.dark-theme .form-group textarea:focus {
+    background: #1e1f26;
+}
+
+.dark-theme .top-navigation button.nav-btn {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.08) !important;
+    color: var(--text-dark);
+}
+
+.dark-theme .top-navigation button.nav-btn:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* Адаптация градиентного фона и размытия подложки */
+@media (max-width: 680px) {
+    .dark-theme .container {
+        background: #1e1f26 !important;
+    }
+    .dark-theme .vector-bg-emulation {
+        background: #131418 !important;
+    }
+}
+
+/* Стили кнопки переключения темы */
+.theme-toggle-btn {
+    background: transparent;
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.theme-toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+}
+/* Исправление видимости неактивных таб-кнопок в разделе дунхуа для тёмной темы */
+.dark-theme button.btn-social.donghua-tab-btn:not(.tab-active) {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    color: var(--text-dark) !important;
+}
+
+.dark-theme button.btn-social.donghua-tab-btn:not(.tab-active):hover {
+    background: var(--primary-color) !important;
+    color: #ffffff !important;
+    border-color: transparent !important;
+}

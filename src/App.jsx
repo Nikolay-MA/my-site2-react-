@@ -33,6 +33,22 @@ function MainLayout() {
 
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isDesktop, setIsDesktop] = useState(true);
+  
+  // Состояние для темной темы (по умолчанию считываем из localStorage, если сохраняли)
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    return localStorage.getItem("theme") === "dark";
+  });
+
+  // Эффект для динамического добавления/удаления класса на body
+  useEffect(() => {
+    if (isDarkMode) {
+      document.body.classList.add("dark-theme");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.body.classList.remove("dark-theme");
+      localStorage.setItem("theme", "light");
+    }
+  }, [isDarkMode]);
 
   // Синхронизируем i18n с URL
   useEffect(() => {
@@ -94,10 +110,8 @@ function MainLayout() {
     
     let newPath = location.pathname;
     if (newLng === "en") {
-      // Переключаем с RU на EN: добавляем /en в начало
       newPath = `/en${newPath}`;
     } else {
-      // Переключаем с EN на RU: удаляем /en из начала
       newPath = newPath.replace(/^\/en/, "");
       if (newPath === "") newPath = "/";
     }
@@ -115,7 +129,15 @@ function MainLayout() {
       <div className="eps-shape hexagon-2" style={getShapeStyle(2)}></div>
       <div className="eps-shape pentagon-1" style={getShapeStyle(3)}></div>
 
+      {/* Панель управления: переключатель темы + языки */}
       <div className="lang-switcher-fixed">
+        <button 
+          onClick={() => setIsDarkMode(!isDarkMode)} 
+          className="theme-toggle-btn"
+          title={isDarkMode ? "Включить светлую тему" : "Включить темную тему"}
+        >
+          {isDarkMode ? "☀️" : "🌙"}
+        </button>
         <button 
           onClick={() => handleLangChange("ru")} 
           className={`lang-fixed-btn ${currentLng === "ru" ? "active" : ""}`}
@@ -157,6 +179,7 @@ function MainLayout() {
     </>
   );
 }
+
 
 // Измененная структура путей для предотвращения конфликтов и белого экрана
 export default function App() {
