@@ -593,3 +593,22 @@ body:has(.lightbox) {
     color: #ffffff !important;
     border-color: transparent !important;
 }
+@media (max-width: 680px) {
+    /* Добавляем верхний отступ для всей страницы, чтобы контент не залезал под кнопки */
+    body {
+        padding-top: 70px !important; 
+    }
+
+    /* Аккуратно выстраиваем кнопку темы чуть ниже или правее */
+    .theme-toggle-fixed {
+        top: 15px !important;
+        right: 15px !important;
+    }
+
+    /* Кнопку языка прижимаем к левому краю */
+    .lang-switcher-fixed {
+        top: 15px !important;
+        left: 15px !important;
+        right: auto !important;
+    }
+}
