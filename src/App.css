@@ -38,7 +38,6 @@ body {
     padding-right: calc(20px + env(safe-area-inset-right));
     background-color: var(--bg-base);
 }
-
 .vector-bg-emulation {
     position: fixed;
     top: 0;
@@ -153,7 +152,6 @@ body {
     height: 280px; 
     flex-shrink: 0;
 }
-
 .avatar {
     width: 100%;
     height: 100%;
@@ -221,7 +219,7 @@ button.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 30px 
 .action-buttons { display: flex; width: 100%; margin-bottom: 15px; }
 .social-links { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; }
 /* ==========================================================================
-   ЧАСТЬ 3: ИНФО-КАРТОЧКИ, ФОРМА СВЯЗИ, ЛАЙТБОКС И ПОЛНОЭКРАННЫЕ ФОТОЛЕНТЫ
+   ЧАСТЬ 3: ИНФО-КАРТОЧКИ, ФОРМА СВЯЗИ, СТИЛИ КУРТИН И ПОЛНОЭКРАННЫЕ ЛЕНТЫ
    ========================================================================== */
 a.btn-social {
     display: block;
@@ -264,7 +262,6 @@ a.btn-social:hover { background: var(--primary-color) !important; color: white !
 .scores-list .score { padding: 4px 12px; border-radius: 8px; font-size: 0.9rem; font-weight: 700; }
 .badge-high { background-color: rgba(46, 204, 113, 0.15); color: #27ae60; }
 .badge-medium { background-color: rgba(241, 196, 15, 0.15); color: #d35400; }
-
 .contact-form { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; width: 100%; }
 .form-group { display: flex; flex-direction: column; gap: 8px; position: relative; }
 .contact-form .form-group:nth-child(4), .contact-form .btn-submit { grid-column: span 3; }
@@ -290,40 +287,106 @@ a.btn-social:hover { background: var(--primary-color) !important; color: white !
 .gallery-overlay span { color: white; font-size: 1.05rem; transform: translateY(10px); transition: 0.4s; font-weight: 500; }
 .gallery-item:hover .gallery-overlay span { transform: translateY(0); }
 
-.lightbox { position: fixed; z-index: 999999 !important; top: 0; left: 0; width: 100vw !important; height: 100vh !important; background-color: rgba(15, 15, 18, 0.96) !important; -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); display: flex; justify-content: center; align-items: center; flex-direction: column; margin: 0 !important; padding: 0 !important; }
-.lightbox-content { max-width: 90vw; max-height: 80vh; border-radius: 16px; box-shadow: 0 25px 60px rgba(0,0,0,0.6); object-fit: contain; animation: zoomInLightbox 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-@keyframes zoomInLightbox { from { transform: scale(0.94); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-#lightbox-caption { color: #f9f6f7; margin-top: 20px; font-size: 1.25rem; text-align: center; padding: 0 20px; font-weight: 500; max-width: 80vw; }
-.lightbox-close { position: absolute; top: 30px; right: 40px; color: rgba(255, 255, 255, 0.8); font-size: 45px; cursor: pointer; transition: all 0.2s ease; line-height: 1; }
-.lightbox-close:hover { transform: scale(1.15); color: var(--primary-color); }
 
-.full-bleed-photo { width: 100vw !important; position: relative; left: 50%; right: 50%; margin-left: -50vw !important; margin-right: -50vw !important; max-height: 500px; object-fit: cover; display: block; }
-.gallery-fullbleed-stream { display: flex; flex-direction: column; gap: 40px; width: 100%; }
-.gallery-fullbleed-item { width: 100vw !important; position: relative; left: 50%; right: 50%; margin-left: -50vw !important; margin-right: -50vw !important; height: 60vh; min-height: 400px; max-height: 700px; overflow: hidden; cursor: pointer; }
-.gallery-fullbleed-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
-.gallery-fullbleed-item:hover img { transform: scale(1.03); }
-.gallery-fullbleed-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0.2) 50%, transparent 100%); display: flex; align-items: flex-end; padding: 40px 10px; box-sizing: border-box; }
-.gallery-fullbleed-caption { color: #ffffff; font-size: 1.5rem; font-weight: 600; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); max-width: 800px; line-height: 1.4; }
+
+
+
+/* --- ТЕЛЕГРАМ-ЛАЙТБОКС: КЛИК-ЗОНЫ, ПОЛНАЯ ЧИСТКА ОБВОДОК И ИСПРАВЛЕНИЕ КРЕСТИКА --- */
+.lightbox { 
+    position: fixed; 
+    z-index: 999999 !important; 
+    top: 0; 
+    left: 0; 
+    width: 100vw !important; 
+    height: 100vh !important; 
+    background-color: rgba(10, 11, 14, 0.97) !important; 
+    -webkit-backdrop-filter: blur(15px); 
+    backdrop-filter: blur(15px); 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    flex-direction: column; 
+    margin: 0 !important; 
+    padding: 0 !important;
+    user-select: none;
+    cursor: pointer; /* Указывает, что фон кликабелен для закрытия */
+}
+
+/* Интерактивные прозрачные клик-зоны слева и справа ограничены по высоте контента */
+.lightbox-curtain {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 82vh; /* Высота совпадает с максимальной высотой картинки */
+    width: 50%;
+    z-index: 1000;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+.curtain-left { left: 0; }
+.curtain-right { right: 0; }
+
+.lightbox-media-wrapper {
+    z-index: 1005;
+    position: relative;
+    max-width: 95vw;
+    max-height: 82vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: default; /* Возвращаем обычный курсор на самой картинке */
+}
+
+/* Картинка: БЕЗ закругления углов, БЕЗ черных обводок и БЕЗ теней/свечений */
+.lightbox-content { 
+    max-width: 100%; 
+    max-height: 82vh; 
+    border-radius: 0px !important; 
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important; /* Полностью убрано черное закругленное свечение */
+    object-fit: contain; 
+}
+
+#lightbox-caption { 
+    color: #f9f6f7; 
+    margin-top: 18px; 
+    font-size: 1.15rem; 
+    text-align: center; 
+    padding: 0 20px; 
+    font-weight: 400; 
+    max-width: 80vw; 
+    z-index: 1006;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+    cursor: default;
+}
+
+/* Кнопка закрытия поднята выше штор по z-index и смещена левее (right: 60px) */
+.lightbox-close { 
+    position: absolute; 
+    top: 25px; 
+    right: 60px; /* Отступ увеличен, чтобы крестик встал левее */
+    color: rgba(255, 255, 255, 0.6); 
+    font-size: 38px; 
+    cursor: pointer; 
+    transition: all 0.2s ease; 
+    line-height: 1; 
+    z-index: 1020 !important; /* Выше, чем z-index штор (1000) */
+    -webkit-tap-highlight-color: transparent;
+}
+.lightbox-close:hover { transform: scale(1.1); color: #fff; }
+
+body:has(.lightbox) { overflow: hidden; }
+
+
 /* ==========================================================================
-   ЧАСТЬ 4: КАРТОЧКИ СТРАНИЦЫ ДУНХУА (УВЕЛИЧЕННЫЕ ПОСТЕРЫ) И ВСЯ АДАПТИВНОСТЬ
+   ЧАСТЬ 4: КАРТОЧКИ СТРАНИЦЫ ДУНХУА, ТЕМНАЯ ТЕМА И АДАПТИВНОСТЬ КЛИК-ЗОН
    ========================================================================== */
 .donghua-page-container { display: flex; flex-direction: column; gap: 60px; width: 100%; }
 .donghua-card-wrapper { display: flex; gap: 35px; flex-wrap: wrap; align-items: flex-start; padding: 30px; position: relative; }
-
-/* --- ОБНОВЛЕННЫЙ УВЕЛИЧЕННЫЙ БЛОК КАРТИНКИ --- */
-.donghua-poster-block { 
-    flex: 0 0 260px;          
-    height: 370px;            
-    border-radius: 16px; 
-    overflow: hidden; 
-    position: relative; 
-    margin: 0 auto; 
-    box-shadow: 0 12px 30px rgba(0, 86, 179, 0.15); 
-    transition: transform 0.3s ease;
-}
+.donghua-poster-block { flex: 0 0 260px; height: 370px; border-radius: 16px; overflow: hidden; position: relative; margin: 0 auto; box-shadow: 0 12px 30px rgba(0, 86, 179, 0.15); transition: transform 0.3s ease; }
 .donghua-poster-img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .donghua-card-wrapper:hover .donghua-poster-block { transform: scale(1.02); }
-
 .donghua-rating-badge { position: absolute; bottom: 12px; right: 12px; background-color: #ffeaa7; color: #d63031; padding: 6px 12px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
 .donghua-text-content { display: flex; flex-direction: column; flex: 1; min-width: 280px; }
 .donghua-title { margin: 0 0 5px 0; font-size: 1.45rem; padding-right: 80px; }
@@ -331,17 +394,14 @@ a.btn-social:hover { background: var(--primary-color) !important; color: white !
 .donghua-tags-container { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
 .donghua-tag-status { background: rgba(0, 86, 179, 0.08); color: var(--primary-color); padding: 4px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; }
 .donghua-tag-genre { background: rgba(0, 0, 0, 0.04); color: var(--text-muted); padding: 4px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 500; }
-
 .donghua-description-p { color: var(--text-dark); font-size: 1.05rem; line-height: 1.7; margin: 0 0 15px 0; overflow: hidden; transition: max-height 0.4s ease-in-out; position: relative; }
 .donghua-text-fade-overlay { position: absolute; bottom: 0; right: 0; left: 0; height: 25px; background: linear-gradient(transparent, rgba(255, 255, 255, 0.9)); }
 .donghua-btn-more { padding: 8px 20px; font-size: 0.85rem; border-radius: 10px; width: fit-content; white-space: nowrap; }
-
 .donghua-tabs-container { display: flex; gap: 10px; margin-bottom: 15px; }
 button.btn-social.donghua-tab-btn { padding: 12px 20px !important; font-size: 0.9rem !important; font-weight: 500 !important; border-radius: 14px !important; transition: all 0.3s ease !important; text-align: center !important; white-space: nowrap !important; cursor: pointer !important; outline: none !important; width: auto !important; }
 button.btn-social.donghua-tab-btn:not(.tab-active) { background: #ffffff !important; color: var(--text-dark) !important; border: 1px solid rgba(0, 0, 0, 0.08) !important; box-shadow: none !important; }
 button.btn-social.donghua-tab-btn:not(.tab-active):hover { background: var(--primary-color) !important; color: #ffffff !important; border-color: transparent !important; }
 button.btn-social.donghua-tab-btn.tab-active { background: var(--primary-gradient) !important; color: #ffffff !important; border: 1px solid transparent !important; box-shadow: 0 8px 25px rgba(0, 86, 179, 0.2) !important; }
-
 .donghua-watch-section { margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(0, 0, 0, 0.06); }
 .donghua-watch-title { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 8px; }
 .donghua-links-inline { display: flex; gap: 10px; flex-wrap: wrap; }
@@ -374,7 +434,7 @@ button.btn-social.donghua-tab-btn.tab-active { background: var(--primary-gradien
 }
 
 @media (max-width: 680px) {
-    body { padding: 20px 10px; }
+    body { padding: 20px 10px; padding-top: 70px !important; }
     .page-wrapper { gap: 15px; }
     .top-navigation { padding: 10px; border-radius: 16px; gap: 8px; }
     .top-navigation button.nav-btn { font-size: 0.85rem; padding: 8px; min-width: 120px; }
@@ -391,8 +451,8 @@ button.btn-social.donghua-tab-btn.tab-active { background: var(--primary-gradien
     .school-grid-layout { grid-template-columns: 1fr !important; }
     .gallery-section h2::after, .contact-section h2::after, .anime-widget h2::after, .map-section h2::after, .info-section-block h2::after { left: 50%; transform: translateX(-50%); }
     .gallery-section h2, .contact-section h2, .anime-widget h2, .map-section h2, .info-section-block h2 { text-align: center; }
-    .lightbox-content { max-width: 95%; max-height: 65%; }
-    .lightbox-close { top: 15px; right: 20px; font-size: 35px; }
+    .lightbox-content { max-width: 100%; max-height: 70vh; }
+    .lightbox-close { top: 15px; right: 20px; font-size: 32px; }
     .full-bleed-photo { max-height: 300px; }
     .gallery-fullbleed-item { height: 45vh; min-height: 280px; }
     .gallery-fullbleed-overlay { padding: 20px 20px; }
@@ -404,211 +464,31 @@ button.btn-social.donghua-tab-btn.tab-active { background: var(--primary-gradien
     .top-navigation, .container, .anime-card, .school-info-card, .legal-info-card { border-width: 0.5px; }
 }
 
+.lang-switcher-fixed { position: fixed; top: 20px; right: 20px; display: flex; gap: 8px; z-index: 9999; background: rgba(35, 31, 32, 0.6); padding: 6px; border-radius: 12px; backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.1); }
+.lang-fixed-btn { background: transparent; color: #888; border: none; padding: 6px 12px; font-size: 0.85rem; font-weight: 700; cursor: pointer; border-radius: 8px; transition: all 0.2s ease; }
+.lang-fixed-btn:hover { color: #fff; }
+.lang-fixed-btn.active { background: #1565c0; color: #fff; box-shadow: 0 2px 8px rgba(21, 101, 192, 0.4); }
 
-/* Фиксированный контейнер в правом верхнем углу экрана */
-.lang-switcher-fixed {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  display: flex;
-  gap: 8px;
-  z-index: 9999; /* Поверх всех элементов сайта */
-  background: rgba(35, 31, 32, 0.6); /* Полупрозрачный темный фон под кнопками */
-  padding: 6px;
-  border-radius: 12px;
-  backdrop-filter: blur(8px); /* Красивое размытие заднего фона */
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* Стили для маленьких фиксированных кнопок */
-.lang-fixed-btn {
-  background: transparent;
-  color: #888;
-  border: none;
-  padding: 6px 12px;
-  font-size: 0.85rem;
-  font-weight: 700;
-  cursor: pointer;
-  border-radius: 8px;
-  transition: all 0.2s ease;
-}
-
-/* Эффект наведения */
-.lang-fixed-btn:hover {
-  color: #fff;
-}
-
-/* Активная кнопка выбранного языка (стиль взят на основе ваших синих кнопок) */
-.lang-fixed-btn.active {
-  background: #1565c0; /* Тот же цвет, что и у ваших активных страниц */
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(21, 101, 192, 0.4);
-}
-
-/* Адаптивность для мобильных телефонов (чтобы кнопки не перекрывали контент) */
 @media (max-width: 768px) {
-  .lang-switcher-fixed {
-    top: 10px;
-    right: 10px;
-    padding: 4px;
-  }
-  .lang-fixed-btn {
-    padding: 4px 8px;
-    font-size: 0.75rem;
-  }
-}
-/* Кнопки переключения */
-.lightbox-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.4);
-  color: #ffffff;
-  border: none;
-  font-size: 2.5rem;
-  padding: 15px 20px;
-  cursor: pointer;
-  border-radius: 8px;
-  transition: background 0.2s ease, transform 0.1s ease;
-  z-index: 1010;
-  user-select: none;
+  .lang-switcher-fixed { top: 10px; right: 10px; padding: 4px; }
+  .lang-fixed-btn { padding: 4px 8px; font-size: 0.75rem; }
 }
 
-.lightbox-arrow:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
+.dark-theme { --text-dark: #f9f6f7; --text-muted: #a4b0be; --bg-base: #131418; --glass-card: rgba(30, 31, 38, 0.85); --glass-border: rgba(255, 255, 255, 0.08); --shadow-smooth: 0 15px 35px rgba(0, 0, 0, 0.3); }
+.dark-theme .anime-card, .dark-theme .school-info-card, .dark-theme .legal-info-card, .dark-theme .map-wrapper, .dark-theme a.btn-social { background: #1e1f26 !important; border-color: rgba(255, 255, 255, 0.05) !important; color: var(--text-dark) !important; }
+.dark-theme .form-group input, .dark-theme .form-group textarea { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.1); color: var(--text-dark); }
+.dark-theme .form-group input:focus, .dark-theme .form-group textarea:focus { background: #1e1f26; }
+.dark-theme .top-navigation button.nav-btn { background: rgba(255, 255, 255, 0.03); border-color: rgba(255, 255, 255, 0.08) !important; color: var(--text-dark); }
+.dark-theme .top-navigation button.nav-btn:hover { background: var(--primary-color); color: white; }
 
-.lightbox-arrow:active {
-  transform: translateY(-50%) scale(0.95);
-}
-
-.lightbox-arrow-left {
-  left: 30px;
-}
-
-.lightbox-arrow-right {
-  right: 30px;
-}
-
-/* Скрытие прокрутки страницы при открытом лайтбоксе (опционально, для красоты) */
-body:has(.lightbox) {
-  overflow: hidden;
-}
-
-/* Адаптивность для мобильных */
-@media (max-width: 768px) {
-  .lightbox-arrow {
-    font-size: 1.8rem;
-    padding: 10px 14px;
-  }
-  .lightbox-arrow-left { left: 15px; }
-  .lightbox-arrow-right { right: 15px; }
-}
-/* ==========================================================================
-   ЧАСТЬ 5: ТЕМНАЯ ТЕМА (DARK MODE)
-   ========================================================================== */
-
-/* Переопределение переменных для темной темы */
-.dark-theme {
-    --text-dark: #f9f6f7;
-    --text-muted: #a4b0be;
-    --bg-base: #131418;
-    --glass-card: rgba(30, 31, 38, 0.85);
-    --glass-border: rgba(255, 255, 255, 0.08);
-    --shadow-smooth: 0 15px 35px rgba(0, 0, 0, 0.3);
-}
-
-/* Инверсия специфичных светлых подложек карточек и полей */
-.dark-theme .anime-card,
-.dark-theme .school-info-card,
-.dark-theme .legal-info-card,
-.dark-theme .map-wrapper,
-.dark-theme a.btn-social {
-    background: #1e1f26 !important;
-    border-color: rgba(255, 255, 255, 0.05) !important;
-    color: var(--text-dark) !important;
-}
-
-.dark-theme .form-group input, 
-.dark-theme .form-group textarea {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.1);
-    color: var(--text-dark);
-}
-
-.dark-theme .form-group input:focus, 
-.dark-theme .form-group textarea:focus {
-    background: #1e1f26;
-}
-
-.dark-theme .top-navigation button.nav-btn {
-    background: rgba(255, 255, 255, 0.03);
-    border-color: rgba(255, 255, 255, 0.08) !important;
-    color: var(--text-dark);
-}
-
-.dark-theme .top-navigation button.nav-btn:hover {
-    background: var(--primary-color);
-    color: white;
-}
-
-/* Адаптация градиентного фона и размытия подложки */
 @media (max-width: 680px) {
-    .dark-theme .container {
-        background: #1e1f26 !important;
-    }
-    .dark-theme .vector-bg-emulation {
-        background: #131418 !important;
-    }
+    .dark-theme .container { background: #1e1f26 !important; }
+    .dark-theme .vector-bg-emulation { background: #131418 !important; }
+    .theme-toggle-fixed { top: 15px !important; right: 15px !important; }
+    .lang-switcher-fixed { top: 15px !important; left: 15px !important; right: auto !important; }
 }
 
-/* Стили кнопки переключения темы */
-.theme-toggle-btn {
-    background: transparent;
-    border: none;
-    font-size: 1.1rem;
-    cursor: pointer;
-    padding: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-    transition: all 0.2s ease;
-    user-select: none;
-}
-
-.theme-toggle-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: scale(1.1);
-}
-/* Исправление видимости неактивных таб-кнопок в разделе дунхуа для тёмной темы */
-.dark-theme button.btn-social.donghua-tab-btn:not(.tab-active) {
-    background: rgba(255, 255, 255, 0.05) !important;
-    border-color: rgba(255, 255, 255, 0.1) !important;
-    color: var(--text-dark) !important;
-}
-
-.dark-theme button.btn-social.donghua-tab-btn:not(.tab-active):hover {
-    background: var(--primary-color) !important;
-    color: #ffffff !important;
-    border-color: transparent !important;
-}
-@media (max-width: 680px) {
-    /* Добавляем верхний отступ для всей страницы, чтобы контент не залезал под кнопки */
-    body {
-        padding-top: 70px !important; 
-    }
-
-    /* Аккуратно выстраиваем кнопку темы чуть ниже или правее */
-    .theme-toggle-fixed {
-        top: 15px !important;
-        right: 15px !important;
-    }
-
-    /* Кнопку языка прижимаем к левому краю */
-    .lang-switcher-fixed {
-        top: 15px !important;
-        left: 15px !important;
-        right: auto !important;
-    }
-}
+.theme-toggle-btn { background: transparent; border: none; font-size: 1.1rem; cursor: pointer; padding: 6px; display: flex; align-items: center; justify-content: center; border-radius: 8px; transition: all 0.2s ease; user-select: none; }
+.theme-toggle-btn:hover { background: rgba(255, 255, 255, 0.1); transform: scale(1.1); }
+.dark-theme button.btn-social.donghua-tab-btn:not(.tab-active) { background: rgba(255, 255, 255, 0.05) !important; border-color: rgba(255, 255, 255, 0.1) !important; color: var(--text-dark) !important; }
+.dark-theme button.btn-social.donghua-tab-btn:not(.tab-active):hover { background: var(--primary-color) !important; color: #ffffff !important; border-color: transparent !important; }
