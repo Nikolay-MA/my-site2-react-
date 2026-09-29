@@ -3,7 +3,7 @@
     "main": "Home",
     "school": "School Study",
     "nameChange": "Name Change",
-    "mirea": "Mirea Study",
+    "mirea": "MIREA Study",
     "projects": "Projects",
     "events": "Events",
     "donghua": "Donghua"
@@ -30,7 +30,7 @@
       "submit": "Send Message",
       "loading": "Sending...",
       "success": "Successfully sent! ✓",
-      "error": "Sending error"
+      "error": "Failed to send message"
     },
     "captions": {
       "graduation": "My Moscow Graduation",
@@ -45,14 +45,18 @@
   },
   "school": {
     "title": "School Study",
+    "schoolName": "School No. 1415 'Ostankino'",
     "birthDate": "Date of Birth:",
     "birthDateVal": "September 2, 2008",
     "period": "Study Period:",
     "periodVal": "Started school in 2015",
     "director": "Last School Director:",
+    "directorVal": "Ponomarev Alexey Leonidovich",
     "direction": "Profile:",
+    "classType": "Physics and Mathematics Class (Grades 10–11)",
     "sportsTitle": "Sports Activities",
     "sportsDesc": "Over the years of study, I have tried different areas of physical activity:",
+    "sportsList": ["Sambo (Grades 9–10)", "Football", "Karate"],
     "ogeTitle": "OGE Results (Year 2024)",
     "eegTitle": "USE Results (Year 2026)",
     "math": "Mathematics (profile)",
@@ -146,7 +150,21 @@
       "tos": "Throne of Seal",
       "mj": "Fan Ren Xiu Xian Chuan"
     },
-        "ranks": {
+    "descriptions": {
+      "sl1": "The legendary story of Tang San, a disciple of the Tang Sect outer sect, who is reincarnated in the mysterious world of the Soul Land. There is no magic or traditional martial arts here, but everyone possesses an innate Spirit that can be cultivated. Having passed through severe trials, Tang San establishes his team 'Shrek Seven Monsters' and begins his ascent to the divine throne.",
+      "sl2": "Continuation of the cult universe 10,000 years later. The former Tang Sect is declining, and the world is engulfed by the technological progress of soul tools. The main character, Huo Yuhao, an orphan with a weak body but a unique Spirit of Spirit Eyes, enters the Shrek Academy to restore the Tang Sect to its former glory and change the established laws of the continent.",
+      "btth": "The story of a young genius, Xiao Yan, who suddenly loses all his powers and becomes a laughingstock for the clan, and his engagement to his fiancée is broken. The reason for the fading of talent turns out to be the spirit of a great master trapped in a family ring. Becoming a disciple of this spirit, Xiao Yan begins a thorny path of training to restore his honor, perfect a rare flame, and reach unprecedented heights of mastery.",
+      "tos": "In a world where humanity finds itself on the brink of total destruction under the onslaught of the six great Demon Gods, six defensive Temples are founded. To save his mother, young and noble Long Haochen joins the Knight Temple. Possessing incredible innate light abilities, he overcomes the most difficult challenges for the recognition of the Divine Throne.",
+      "mj": "A benchmark representative of the pragmatic cultivation genre. An ordinary village boy, Han Li, having no noble origin or outstanding innate gift, by chance becomes a disciple in a secluded sect. In a world where one pays with betrayal and cruelty for immortality, Han Li survives thanks to exceptional caution, cold-bloodedness, and strategic thinking."
+    },
+    "opinions": {
+      "sl1": "My very first donghua that will forever remain in my heart! Amazing character development of Tang San, a wonderful romantic storyline with Xiao Wu, and an insanely epic finale of the 'Battle of Gods'. My love for Chinese 3D animation started with this title.",
+      "sl2": "A worthy continuation of the great universe. The era of soul tools brought cool variety, and Huo Yuhao is a very interesting and deep character with a complicated destiny.",
+      "btth": "The action and combat dynamics here are among the best in the industry. The year-long series (Three-Year Agreement and beyond) raised the quality bar of graphics to an unreal level. The plot keeps you in constant tension!",
+      "tos": "The atmosphere of chivalry and dark fantasy is brilliantly executed. Haochen's bond with his comrades-in-arms and self-sacrifice for the sake of humanity evoke strong emotions.",
+      "mj": "I read the whole light novel. Han Li is the main character; he is smart, cunning, brave, and down-to-earth, and most importantly, he is extremely cautious. Sometimes, to hit the jackpot, he deceived everyone, but at the same time did not harm anyone. He senses every time someone wants to stab him in the back, which happened more than once. Dishonest people are constantly hunting him, but they fail. This piece is about how Han Li goes to immortality, killing the bad guys and robbing them, he develops. He consumes pills and becomes stronger, but to get them he goes on risky adventures, risking his life. A few spoilers: he takes several disciples and finds a wife. He regressed several times in his development for the interest of the plot."
+    },
+    "ranks": {
       "sl1": "Top-1",
       "sl2": "Top-1 (Sequel)",
       "btth": "Top-2",

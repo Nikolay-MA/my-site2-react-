@@ -1,8 +1,11 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-export default function SchoolStudyPage({ schoolData }) {
+export default function SchoolStudyPage() {
   const { t } = useTranslation();
+
+  // Безопасное получение массива спортивных секций из файлов локализации
+  const sports = t("school.sportsList", { returnObjects: true }) || [];
 
   return (
     <section className="info-section-block page-fade-animation" style={{ width: "100%" }}>
@@ -17,11 +20,11 @@ export default function SchoolStudyPage({ schoolData }) {
         
         {/* Общая информация о школе */}
         <div className="school-info-card">
-          <h3>{t("school.birthDateVal") === "2 сентября 2008 года" ? schoolData.title : "School №1415 \"Ostankino\""}</h3>
+          <h3>{t("school.schoolName")}</h3>
           <p><strong>{t("school.birthDate")}</strong> {t("school.birthDateVal")}</p>
           <p><strong>{t("school.period")}</strong> {t("school.periodVal")}</p>
-          <p><strong>{t("school.director")}</strong> {t("school.birthDateVal") === "2 сентября 2008 года" ? schoolData.director : "Ponomarev Alexey Leonidovich"}</p>
-          <p><strong>{t("school.direction")}</strong> {t("school.birthDateVal") === "2 сентября 2008 года" ? schoolData.classType : "Physics and Mathematics Class (Grades 10–11)"}</p>
+          <p><strong>{t("school.director")}</strong> {t("school.directorVal")}</p>
+          <p><strong>{t("school.direction")}</strong> {t("school.classType")}</p>
         </div>
 
         {/* Спортивные секции */}
@@ -29,10 +32,9 @@ export default function SchoolStudyPage({ schoolData }) {
           <h3>{t("school.sportsTitle")}</h3>
           <p>{t("school.sportsDesc")}</p>
           <ul className="sports-bullet-list">
-            {t("school.birthDateVal") === "2 сентября 2008 года" 
-              ? schoolData.sports.map((sport, i) => <li key={i}>{sport}</li>)
-              : ["Sambo (Grades 9–10)", "Football", "Karate"].map((sport, i) => <li key={i}>{sport}</li>)
-            }
+            {sports.map((sport, i) => (
+              <li key={i}>{sport}</li>
+            ))}
           </ul>
         </div>
 

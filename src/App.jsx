@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { BrowserRouter, Routes, Route, useNavigate, useLocation, useParams, Navigate, Outlet } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate, useLocation, Navigate, Outlet } from "react-router-dom";
 import { useTranslation } from "react-i18next"; 
 import MainPage from "./components/MainPage";
 import SchoolStudyPage from "./components/SchoolStudyPage";
@@ -9,18 +9,6 @@ import ProjectsPage from "./components/ProjectsPage";
 import EventsPage from "./components/EventsPage";
 import DonghuaPage from "./components/DonghuaPage"; 
 import "./App.css";
-
-const schoolData = {
-  title: "Школа №1415 «Останкино»",
-  director: "Пономарев Алексей Леонидович",
-  classType: "Физико-математический класс (10–11 классы)",
-  sports: ["Самбо (9–10 классы)", "Футбол", "Карате"]
-};
-
-const legalData = {
-  title: "Процесс смены фамилии",
-  text: "Так как мой отец — Команин Андрей Николаевич, в будущем меня будут звать Команиным Николаем Андреевичем. Чтобы решить этот вопрос, летом 2026 года Андрей подал заявление в суд, расположенный в нашем районе, чтобы я смог официально изменить фамилию и отчество. Я увлекаюсь китайскими 3D дунхуа"
-};
 
 function MainLayout() {
   const { t, i18n } = useTranslation(); 
@@ -34,9 +22,13 @@ function MainLayout() {
   const [isDesktop, setIsDesktop] = useState(true);
   const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem("theme") === "dark");
 
-  // Состояние для скрытия плашки языков/темы на мобильных при скролле вниз
   const [isScrollingDown, setIsScrollingDown] = useState(false);
   const lastScrollY = useRef(0);
+
+  // SEO: Локализация тега <html lang="..."> в зависимости от выбранного роута
+  useEffect(() => {
+    document.documentElement.setAttribute("lang", currentLng);
+  }, [currentLng]);
 
   useEffect(() => {
     if (isDarkMode) {
@@ -76,7 +68,6 @@ function MainLayout() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Отслеживание скролла для мобильного скрытия плашки
   useEffect(() => {
     const handleScroll = () => {
       if (window.innerWidth > 768) {
@@ -85,7 +76,6 @@ function MainLayout() {
       }
       const currentScrollY = window.scrollY;
       
-      // Скрываем, если скроллим вниз и ушли от верха страницы более чем на 40px
       if (currentScrollY > lastScrollY.current && currentScrollY > 40) {
         setIsScrollingDown(true);
       } else {
@@ -139,6 +129,19 @@ function MainLayout() {
   const currentYear = new Date().getFullYear();
   const displayYear = startYear === currentYear ? startYear : `${startYear}–${currentYear}`;
 
+  // Динамическая локализация внешних данных из файлов перевода
+  const dynamicSchoolData = {
+    title: t("school.schoolName"),
+    director: t("school.directorVal"),
+    classType: t("school.classType"),
+    sports: t("school.sportsList", { returnObjects: true }) || []
+  };
+
+  const dynamicLegalData = {
+    title: t("nameChange.title"),
+    text: t("nameChange.text")
+  };
+
   return (
     <>
       <div className="vector-bg-emulation"></div>
@@ -146,7 +149,6 @@ function MainLayout() {
       <div className="eps-shape hexagon-2" style={getShapeStyle(2)}></div>
       <div className="eps-shape pentagon-1" style={getShapeStyle(3)}></div>
 
-      {/* Контейнер панели управления с поддержкой скролл-анимации */}
       <div className={`lang-switcher-fixed ${isScrollingDown ? "switcher-hidden" : ""}`}>
         <button 
           onClick={() => setIsDarkMode(!isDarkMode)} 
@@ -186,7 +188,8 @@ function MainLayout() {
         </nav>
 
         <div className="container">
-          <Outlet />
+          {/* Передаем контекст с динамическими данными дочерним роутам через Outlet Context */}
+          <Outlet context={{ schoolData: dynamicSchoolData, legalData: dynamicLegalData }} />
         </div>
 
         <footer className="page-footer">
@@ -203,20 +206,22 @@ export default function App() {
       <Routes>
         <Route path="/ru" element={<Navigate to="/" replace />} />
         <Route path="/ru/*" element={<Navigate to="/" replace />} />
+        
         <Route path="/en" element={<MainLayout />}>
           <Route index element={<MainPage />} />
-          <Route path="school-study" element={<SchoolStudyPage schoolData={schoolData} />} />
-          <Route path="name-change" element={<NameChangePage legalData={legalData} />} />
+          <Route path="school-study" element={<SchoolStudyPageWrapper />} />
+          <Route path="name-change" element={<NameChangePageWrapper />} />
           <Route path="mirea-study" element={<MireaStudyPage />} />
           <Route path="projects" element={<ProjectsPage />} />
           <Route path="events" element={<EventsPage />} />
           <Route path="donghua" element={<DonghuaPage />} />
           <Route path="*" element={<Navigate to="/en" replace />} />
         </Route>
+        
         <Route path="/" element={<MainLayout />}>
           <Route index element={<MainPage />} />
-          <Route path="school-study" element={<SchoolStudyPage schoolData={schoolData} />} />
-          <Route path="name-change" element={<NameChangePage legalData={legalData} />} />
+          <Route path="school-study" element={<SchoolStudyPageWrapper />} />
+          <Route path="name-change" element={<NameChangePageWrapper />} />
           <Route path="mirea-study" element={<MireaStudyPage />} />
           <Route path="projects" element={<ProjectsPage />} />
           <Route path="events" element={<EventsPage />} />
@@ -226,4 +231,17 @@ export default function App() {
       </Routes>
     </BrowserRouter>
   );
+}
+
+// Вспомогательные мини-компоненты для безопасного прокидывания динамических пропсов из контекста роута
+import { useOutletContext } from "react-router-dom";
+
+function SchoolStudyPageWrapper() {
+  const { schoolData } = useOutletContext();
+  return <SchoolStudyPage schoolData={schoolData} />;
+}
+
+function NameChangePageWrapper() {
+  const { legalData } = useOutletContext();
+  return <NameChangePage legalData={legalData} />;
 }
