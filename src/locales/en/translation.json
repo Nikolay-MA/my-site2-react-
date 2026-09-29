@@ -56,6 +56,18 @@
     "classType": "Physics and Mathematics Class (Grades 10–11)",
     "sportsTitle": "Sports Activities",
     "sportsDesc": "Over the years of study, I have tried different areas of physical activity:",
+    "sports": [
+      "Sambo (Grades 9–10)",
+      "Football",
+      "Karate"
+    ],
+    "extracurricularTitle": "Extracurricular Activities",
+    "extracurricularDesc": "In addition to sports, I actively developed logical thinking and practical skills:",
+    "extracurricular": [
+      "Chess club",
+      "Scale modeling"
+    ],
+
     "sportsList": ["Sambo (Grades 9–10)", "Football", "Karate"],
     "ogeTitle": "OGE Results (Year 2024)",
     "eegTitle": "USE Results (Year 2026)",
@@ -67,6 +79,7 @@
     "excellent": "5 (Excellent)",
     "good": "4 (Good)",
     "scores": "points"
+    
   },
   "nameChange": {
     "title": "The Process of Changing Surname",

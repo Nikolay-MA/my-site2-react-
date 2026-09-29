@@ -4,8 +4,9 @@ import { useTranslation } from "react-i18next";
 export default function SchoolStudyPage() {
   const { t } = useTranslation();
 
-  // Безопасное получение массива спортивных секций из файлов локализации
-  const sports = t("school.sportsList", { returnObjects: true }) || [];
+  // Получаем локализованные массивы секций напрямую из JSON
+  const sportsList = t("school.sports", { returnObjects: true }) || [];
+  const extraList = t("school.extracurricular", { returnObjects: true }) || [];
 
   return (
     <section className="info-section-block page-fade-animation" style={{ width: "100%" }}>
@@ -20,7 +21,7 @@ export default function SchoolStudyPage() {
         
         {/* Общая информация о школе */}
         <div className="school-info-card">
-          <h3>{t("school.schoolName")}</h3>
+          <h3>{t("school.title")}</h3>
           <p><strong>{t("school.birthDate")}</strong> {t("school.birthDateVal")}</p>
           <p><strong>{t("school.period")}</strong> {t("school.periodVal")}</p>
           <p><strong>{t("school.director")}</strong> {t("school.directorVal")}</p>
@@ -32,8 +33,19 @@ export default function SchoolStudyPage() {
           <h3>{t("school.sportsTitle")}</h3>
           <p>{t("school.sportsDesc")}</p>
           <ul className="sports-bullet-list">
-            {sports.map((sport, i) => (
+            {sportsList.map((sport, i) => (
               <li key={i}>{sport}</li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Внеурочная деятельность */}
+        <div className="school-info-card">
+          <h3>{t("school.extracurricularTitle")}</h3>
+          <p>{t("school.extracurricularDesc")}</p>
+          <ul className="sports-bullet-list">
+            {extraList.map((activity, i) => (
+              <li key={i}>{activity}</li>
             ))}
           </ul>
         </div>

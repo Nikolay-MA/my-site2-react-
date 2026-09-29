@@ -25,9 +25,17 @@ function MainLayout() {
   const [isScrollingDown, setIsScrollingDown] = useState(false);
   const lastScrollY = useRef(0);
 
-  // SEO: Локализация тега <html lang="..."> в зависимости от выбранного роута
+  // SEO и управление автопереводчиком браузера
   useEffect(() => {
-    document.documentElement.setAttribute("lang", currentLng);
+    if (currentLng === "en") {
+      document.documentElement.setAttribute("lang", "en");
+      // Разрешаем автоперевод на английских страницах
+      document.documentElement.removeAttribute("translate"); 
+    } else {
+      document.documentElement.setAttribute("lang", "ru");
+      // Запрещаем переводчику ломать русский текст, когда локаль русская
+      document.documentElement.setAttribute("translate", "no");
+    }
   }, [currentLng]);
 
   useEffect(() => {
@@ -129,7 +137,6 @@ function MainLayout() {
   const currentYear = new Date().getFullYear();
   const displayYear = startYear === currentYear ? startYear : `${startYear}–${currentYear}`;
 
-  // Динамическая локализация внешних данных из файлов перевода
   const dynamicSchoolData = {
     title: t("school.schoolName"),
     director: t("school.directorVal"),
@@ -188,7 +195,6 @@ function MainLayout() {
         </nav>
 
         <div className="container">
-          {/* Передаем контекст с динамическими данными дочерним роутам через Outlet Context */}
           <Outlet context={{ schoolData: dynamicSchoolData, legalData: dynamicLegalData }} />
         </div>
 
@@ -233,7 +239,6 @@ export default function App() {
   );
 }
 
-// Вспомогательные мини-компоненты для безопасного прокидывания динамических пропсов из контекста роута
 import { useOutletContext } from "react-router-dom";
 
 function SchoolStudyPageWrapper() {
