@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { BrowserRouter, Routes, Route, useNavigate, useLocation, useParams, Navigate, Outlet } from "react-router-dom";
 import { useTranslation } from "react-i18next"; 
 import MainPage from "./components/MainPage";
@@ -27,19 +27,17 @@ function MainLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   
-  // Определяем текущий язык на основе URL
   const isEn = location.pathname.startsWith("/en");
   const currentLng = isEn ? "en" : "ru";
 
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isDesktop, setIsDesktop] = useState(true);
-  
-  // Состояние для темной темы (по умолчанию считываем из localStorage, если сохраняли)
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    return localStorage.getItem("theme") === "dark";
-  });
+  const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem("theme") === "dark");
 
-  // Эффект для динамического добавления/удаления класса на body
+  // Состояние для скрытия плашки языков/темы на мобильных при скролле вниз
+  const [isScrollingDown, setIsScrollingDown] = useState(false);
+  const lastScrollY = useRef(0);
+
   useEffect(() => {
     if (isDarkMode) {
       document.body.classList.add("dark-theme");
@@ -50,14 +48,12 @@ function MainLayout() {
     }
   }, [isDarkMode]);
 
-  // Синхронизируем i18n с URL
   useEffect(() => {
     if (i18n.language !== currentLng) {
       i18n.changeLanguage(currentLng);
     }
   }, [currentLng, i18n]);
 
-  // Функция для генерации правильного пути с учетом языка
   const getLocalizedPath = (path) => {
     if (currentLng === "ru") return path;
     return `/en${path === "/" ? "" : path}`;
@@ -78,6 +74,28 @@ function MainLayout() {
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Отслеживание скролла для мобильного скрытия плашки
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.innerWidth > 768) {
+        setIsScrollingDown(false);
+        return;
+      }
+      const currentScrollY = window.scrollY;
+      
+      // Скрываем, если скроллим вниз и ушли от верха страницы более чем на 40px
+      if (currentScrollY > lastScrollY.current && currentScrollY > 40) {
+        setIsScrollingDown(true);
+      } else {
+        setIsScrollingDown(false);
+      }
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
@@ -107,7 +125,6 @@ function MainLayout() {
 
   const handleLangChange = (newLng) => {
     if (newLng === currentLng) return;
-    
     let newPath = location.pathname;
     if (newLng === "en") {
       newPath = `/en${newPath}`;
@@ -129,8 +146,8 @@ function MainLayout() {
       <div className="eps-shape hexagon-2" style={getShapeStyle(2)}></div>
       <div className="eps-shape pentagon-1" style={getShapeStyle(3)}></div>
 
-      {/* Панель управления: переключатель темы + языки */}
-      <div className="lang-switcher-fixed">
+      {/* Контейнер панели управления с поддержкой скролл-анимации */}
+      <div className={`lang-switcher-fixed ${isScrollingDown ? "switcher-hidden" : ""}`}>
         <button 
           onClick={() => setIsDarkMode(!isDarkMode)} 
           className="theme-toggle-btn"
@@ -180,17 +197,12 @@ function MainLayout() {
   );
 }
 
-
-// Измененная структура путей для предотвращения конфликтов и белого экрана
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Старый редирект с /ru на главный корень без префикса */}
         <Route path="/ru" element={<Navigate to="/" replace />} />
         <Route path="/ru/*" element={<Navigate to="/" replace />} />
-
-        {/* 1. Английская версия (остается с префиксом /en) */}
         <Route path="/en" element={<MainLayout />}>
           <Route index element={<MainPage />} />
           <Route path="school-study" element={<SchoolStudyPage schoolData={schoolData} />} />
@@ -201,8 +213,6 @@ export default function App() {
           <Route path="donghua" element={<DonghuaPage />} />
           <Route path="*" element={<Navigate to="/en" replace />} />
         </Route>
-
-        {/* 2. Русская версия по умолчанию (без префикса) */}
         <Route path="/" element={<MainLayout />}>
           <Route index element={<MainPage />} />
           <Route path="school-study" element={<SchoolStudyPage schoolData={schoolData} />} />

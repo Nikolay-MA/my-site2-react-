@@ -397,11 +397,13 @@ body:has(.lightbox) { overflow: hidden; }
 .donghua-description-p { color: var(--text-dark); font-size: 1.05rem; line-height: 1.7; margin: 0 0 15px 0; overflow: hidden; transition: max-height 0.4s ease-in-out; position: relative; }
 .donghua-text-fade-overlay { position: absolute; bottom: 0; right: 0; left: 0; height: 25px; background: linear-gradient(transparent, rgba(255, 255, 255, 0.9)); }
 .donghua-btn-more { padding: 8px 20px; font-size: 0.85rem; border-radius: 10px; width: fit-content; white-space: nowrap; }
+
 .donghua-tabs-container { display: flex; gap: 10px; margin-bottom: 15px; }
 button.btn-social.donghua-tab-btn { padding: 12px 20px !important; font-size: 0.9rem !important; font-weight: 500 !important; border-radius: 14px !important; transition: all 0.3s ease !important; text-align: center !important; white-space: nowrap !important; cursor: pointer !important; outline: none !important; width: auto !important; }
 button.btn-social.donghua-tab-btn:not(.tab-active) { background: #ffffff !important; color: var(--text-dark) !important; border: 1px solid rgba(0, 0, 0, 0.08) !important; box-shadow: none !important; }
 button.btn-social.donghua-tab-btn:not(.tab-active):hover { background: var(--primary-color) !important; color: #ffffff !important; border-color: transparent !important; }
 button.btn-social.donghua-tab-btn.tab-active { background: var(--primary-gradient) !important; color: #ffffff !important; border: 1px solid transparent !important; box-shadow: 0 8px 25px rgba(0, 86, 179, 0.2) !important; }
+
 .donghua-watch-section { margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(0, 0, 0, 0.06); }
 .donghua-watch-title { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 8px; }
 .donghua-links-inline { display: flex; gap: 10px; flex-wrap: wrap; }
@@ -484,8 +486,15 @@ button.btn-social.donghua-tab-btn.tab-active { background: var(--primary-gradien
 @media (max-width: 680px) {
     .dark-theme .container { background: #1e1f26 !important; }
     .dark-theme .vector-bg-emulation { background: #131418 !important; }
-    .theme-toggle-fixed { top: 15px !important; right: 15px !important; }
-    .lang-switcher-fixed { top: 15px !important; left: 15px !important; right: auto !important; }
+    
+    /* Меняем fixed на absolute: плашка встает в правый угол страницы 
+       и уходит вверх синхронно со скроллом контента */
+    .lang-switcher-fixed {
+        position: absolute !important;
+        top: 15px !important;
+        right: 15px !important;
+        left: auto !important;
+    }
 }
 
 .theme-toggle-btn { background: transparent; border: none; font-size: 1.1rem; cursor: pointer; padding: 6px; display: flex; align-items: center; justify-content: center; border-radius: 8px; transition: all 0.2s ease; user-select: none; }
