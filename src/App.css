@@ -981,3 +981,129 @@ button.btn-social.donghua-tab-btn.tab-active { background: var(--primary-gradien
         }
     }
 }
+.lightbox-content {
+    /* Точка масштабирования должна строго оставаться по центру для правильного смещения координат */
+    transform-origin: center center !important;
+    transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+    will-change: transform;
+    display: block;
+}
+/* --- ТАКТИЛЬНЫЕ КУРСОРЫ ДЛЯ ПК (БЕЗ ЛУПЫ) --- */
+@media (pointer: fine) {
+    /* Когда картинка в обычном размере — показываем стандартную стрелку вместо лупы */
+    .lightbox-content.lightbox-normal { 
+        cursor: default !important; 
+    }
+    
+    /* Когда картинка увеличена — показываем руку для перетаскивания вместо лупы-минус */
+    .lightbox-content.lightbox-zoomed { 
+        cursor: grab !important; 
+    }
+    
+    /* В момент активного перетаскивания зажатой мышкой */
+    .lightbox-content.lightbox-zoomed.is-dragging { 
+        cursor: grabbing !important; 
+    }
+}
+.lightbox-content {
+    /* Точка масштабирования должна быть строго по центру для корректной работы математики координат */
+    transform-origin: center center !important;
+    transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+    will-change: transform;
+}
+/* ОБНОВЛЕНИЕ ДЛЯ КОРРЕКТНОГО МАСШТАБИРОВАНИЯ В ТОЧКУ */
+.lightbox-content {
+    /* Точка масштабирования строго по центру для предсказуемых смещений ректа */
+    transform-origin: center center !important;
+    
+    /* will-change изолирует слой отрисовки, убирая микро-фризы и размытие при масштабировании */
+    will-change: transform;
+    
+    /* Отключаем стандартное выделение и системное контекстное меню при долгом тапе */
+    -webkit-user-drag: none;
+    user-select: none;
+}
+
+/* Плавный переход масштаба только тогда, когда пользователь НЕ тащит картинку вручную */
+.lightbox-content:not(.is-dragging) {
+    transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+/* Полностью убираем любые анимации переходов во время свободного перемещения (drag-and-drop) */
+.lightbox-content.is-dragging {
+    transition: none !important;
+}
+
+/* Стилизация курсоров для десктопов */
+@media (pointer: fine) {
+    .lightbox-content.lightbox-normal { 
+        cursor: zoom-in !important; 
+    }
+    .lightbox-content.lightbox-zoomed { 
+        cursor: grab !important; 
+    }
+    .lightbox-content.lightbox-zoomed.is-dragging { 
+        cursor: grabbing !important; 
+    }
+}
+/* УДАЛЕНИЕ ЛУПЫ И НАСТРОЙКА КУРСОРОВ ПК */
+.lightbox-content {
+    transform-origin: center center !important;
+    will-change: transform;
+    -webkit-user-drag: none;
+    user-select: none;
+}
+
+/* Обычное состояние: стандартный курсор-стрелка вместо лупы */
+.lightbox-content.lightbox-normal { 
+    cursor: default !important; 
+}
+
+/* Приближенное состояние: «рука» для захвата вместо лупы-минус */
+.lightbox-content.lightbox-zoomed { 
+    cursor: grab !important; 
+}
+
+/* В момент активного перетаскивания зажатой мышкой */
+.lightbox-content.lightbox-zoomed.is-dragging { 
+    cursor: grabbing !important; 
+}
+
+/* Плавность смены состояний при отпускании */
+.lightbox-content:not(.is-dragging) {
+    transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+.lightbox-content.is-dragging {
+    transition: none !important;
+}
+/* ФИКСАЦИЯ СЛОЯ КАРТИНКИ ДЛЯ КОНТРОЛЯ ГРАНИЦ */
+.lightbox-media-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    max-width: 100vw !important;
+    max-height: 100vh !important;
+    overflow: hidden;
+}
+
+.lightbox-content {
+    transform-origin: center center !important;
+    will-change: transform;
+    -webkit-user-drag: none;
+    user-select: none;
+    /* Убираем аппаратное размытие текстуры на границах */
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+/* Настройки плавности возврата к границам */
+.lightbox-content:not(.is-dragging) {
+    transition: transform 0.22s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+.lightbox-content.is-dragging {
+    transition: none !important;
+}
