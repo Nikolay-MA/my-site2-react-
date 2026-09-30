@@ -340,11 +340,13 @@ export default function Lightbox({ images, initialIndex, onClose }) {
           }}
         />
 
-        {zoom === 1 && currentImage.caption && (
-          <div id="lightbox-caption" onClick={(e) => e.stopPropagation()}>
-            {currentImage.caption}
-          </div>
-        )}
+        {zoom === 1 && currentImage.caption && currentImage.caption.trim() !== "" && (
+  <div id="lightbox-caption" onClick={(e) => e.stopPropagation()}>
+    {currentImage.caption}
+  </div>
+)}
+
+
       </div>
     </div>
   );

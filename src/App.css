@@ -647,3 +647,337 @@ button.btn-social.donghua-tab-btn.tab-active { background: var(--primary-gradien
     .lightbox-content.lightbox-zoomed:hover { cursor: grab; }
     .lightbox-content.lightbox-zoomed.is-dragging { cursor: grabbing !important; }
 }
+/* Переопределение стилей плашки строго для мобильных телефонов (до 680px) */
+@media (max-width: 680px) {
+    #lightbox-caption {
+        /* Меняем цвет фона на прозрачно-серый (без сильного размытия и матовости) */
+        background-color: rgba(40, 40, 40, 0.65) !important; 
+        -webkit-backdrop-filter: blur(4px) !important;
+        backdrop-filter: blur(4px) !important;
+        
+        /* Сжатие строго по ширине текста */
+        width: max-content !important;
+        display: inline-block !important;
+        
+        /* Стилизация аккуратного компактного овала */
+        border-radius: 20px !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        padding: 6px 16px !important;
+        font-size: 0.9rem !important;
+        
+        /* Позиционирование */
+        bottom: 15px !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+    }
+}
+/* ==========================================================================
+   МОБИЛЬНАЯ АДАПТАЦИЯ ПОДПИСИ (СТРОГО ДЛЯ ТЕЛЕФОНОВ)
+   ========================================================================== */
+@media (max-width: 680px) {
+    #lightbox-caption {
+        /* Прозрачно-серый фон без сильного эффекта матового стекла */
+        background-color: rgba(35, 35, 35, 0.75) !important; 
+        -webkit-backdrop-filter: blur(5px) !important;
+        backdrop-filter: blur(5px) !important;
+        
+        /* Сжатие ровно по ширине текста и защита от выходов за экран */
+        width: max-content !important;
+        max-width: 88% !important;
+        white-space: normal !important; /* Разрешаем перенос строк внутри овала */
+        word-break: break-word !important;
+        
+        /* Компактные размеры аккуратного овала */
+        border-radius: 20px !important; 
+        border: 1px solid rgba(255, 255, 255, 0.18) !important;
+        padding: 8px 18px !important;
+        font-size: 0.9rem !important;
+        line-height: 1.35;
+        
+        /* Стандартное позиционирование поверх картинки снизу */
+        position: absolute !important;
+        bottom: 15px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+    }
+
+    /* ЕСЛИ ВЫСОТА ЭКРАНА МАЛА (например, телефон перевернут горизонтально):
+       Выталкиваем текст из-под картинки в поток ниже */
+    @media (max-height: 480px) {
+        /* Переводим обертку в flex-режим для выстраивания элементов друг за другом */
+        .lightbox-media-wrapper {
+            flex-direction: column !important;
+            justify-content: flex-start !important;
+            overflow-y: auto !important; /* Разрешаем скролл, если текст очень длинный */
+            height: 100% !important;
+            max-height: 100vh !important;
+            padding-bottom: 20px !important;
+        }
+
+        .lightbox-content {
+            max-height: 65vh !important; /* Сжимаем картинку, освобождая место снизу */
+        }
+
+        #lightbox-caption {
+            /* Отменяем абсолютное позиционирование поверх картинки */
+            position: relative !important;
+            bottom: auto !important;
+            left: auto !important;
+            transform: none !important;
+            
+            /* Размещаем в обычном блочном потоке строго под картинкой */
+            margin-top: 15px !important; 
+            margin-bottom: 10px !important;
+            display: block !important;
+            
+            /* Корректируем ширину под обычный текстовый блок */
+            width: auto !important;
+            max-width: 90% !important;
+        }
+    }
+}
+/* ==========================================================================
+   АДАПТИВНАЯ ЛОГИКА ПОДПИСИ СТРОГО ДЛЯ СМАРТФОНОВ (до 680px)
+   ========================================================================== */
+@media (max-width: 680px) {
+    
+    /* СЦЕНАРИЙ 1: ВЫСОТА ПОЗВОЛЯЕТ (Обычный режим). Текст располагается ПОД картинкой */
+    @media (min-height: 481px) {
+        .lightbox-media-wrapper {
+            flex-direction: column !important; /* Выстраиваем элементы вертикально */
+            justify-content: center !important;
+            height: auto !important;
+        }
+
+        .lightbox-content {
+            max-height: 72vh !important; /* Слегка уменьшаем картинку, освобождая место снизу */
+        }
+
+        #lightbox-caption {
+            /* Отменяем позиционирование поверх картинки, ставим в поток ПОД ней */
+            position: relative !important;
+            bottom: auto !important;
+            left: auto !important;
+            transform: none !important;
+            
+            /* Стили простого прозрачно-серого текстового блока */
+            background-color: rgba(30, 30, 30, 0.4) !important;
+            -webkit-backdrop-filter: blur(2px) !important;
+            backdrop-filter: blur(2px) !important;
+            border: none !important;
+            box-shadow: none !important;
+            
+            /* Размеры обычного блока */
+            margin-top: 15px !important;
+            width: auto !important;
+            max-width: 90% !important;
+            padding: 8px 12px !important;
+            border-radius: 8px !important;
+            font-size: 0.95rem !important;
+        }
+    }
+
+    /* СЦЕНАРИЙ 2: ВЫСОТА НЕ ПОЗВОЛЯЕТ (Низкий экран / Альбомный режим). 
+       Текст возвращается ПОВЕРХ картинки в полупрозрачный компактный овал */
+    @media (max-height: 480px) {
+        .lightbox-media-wrapper {
+            flex-direction: row !important;
+            justify-content: center !important;
+        }
+
+        .lightbox-content {
+            max-height: 82vh !important; /* Картинка занимает максимум места */
+        }
+
+        #lightbox-caption {
+            /* Позиционируем овал поверх нижнего края картинки */
+            position: absolute !important;
+            bottom: 12px !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            
+            /* Сжатие строго по ширине текста */
+            width: max-content !important;
+            max-width: 85% !important;
+            display: inline-block !important;
+            white-space: normal !important;
+            word-break: break-word !important;
+            
+            /* Аккуратный полупрозрачный овал */
+            background-color: rgba(40, 40, 40, 0.75) !important;
+            -webkit-backdrop-filter: blur(6px) !important;
+            backdrop-filter: blur(6px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            border-radius: 20px !important;
+            padding: 6px 16px !important;
+            font-size: 0.85rem !important;
+            line-height: 1.3;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+        }
+    }
+}
+/* ==========================================================================
+   АДАПТИВНАЯ ПОДПИСЬ ДЛЯ МОБИЛЬНЫХ ТЕЛЕФОНОВ (max-width: 680px)
+   ========================================================================== */
+@media (max-width: 680px) {
+    
+    /* СЦЕНАРИЙ 1: Высота ПОЗВОЛЯЕТ. Текст находится ПОД картинкой БЕЗ ОВАЛА */
+    @media (min-height: 481px) {
+        .lightbox-media-wrapper {
+            flex-direction: column !important; /* Выстраиваем элементы вертикально */
+            justify-content: center !important;
+            height: auto !important;
+        }
+
+        .lightbox-content {
+            max-height: 74vh !important; /* Освобождаем место для текста снизу */
+        }
+
+        #lightbox-caption {
+            /* Отменяем абсолютное позиционирование овала, спускаем вниз под картинку */
+            position: relative !important;
+            bottom: auto !important;
+            left: auto !important;
+            transform: none !important;
+            
+            /* Полностью убираем овальную форму, границы и тени */
+            border-radius: 0px !important;
+            border: none !important;
+            box-shadow: none !important;
+            -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+            
+            /* Обычный плоский прозрачно-серый фон для текста */
+            background-color: rgba(20, 20, 20, 0.4) !important; 
+            
+            /* Размеры стандартного текстового блока */
+            margin-top: 14px !important;
+            width: 100% !important;
+            max-width: 90% !important;
+            padding: 6px 4px !important;
+            font-size: 0.95rem !important;
+            line-height: 1.4;
+        }
+    }
+
+    /* СЦЕНАРИЙ 2: Высота НЕ ПОЗВОЛЯЕТ. Текст превращается в ОВАЛ ПОВЕРХ картинки */
+    @media (max-height: 480px) {
+        .lightbox-media-wrapper {
+            flex-direction: row !important;
+            justify-content: center !important;
+        }
+
+        .lightbox-content {
+            max-height: 82vh !important; /* Картинка берет максимум высоты */
+        }
+
+        #lightbox-caption {
+            /* Возвращаем позиционирование овала поверх нижнего края картинки */
+            position: absolute !important;
+            bottom: 12px !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            
+            /* Сжатие строго по ширине текста */
+            width: max-content !important;
+            max-width: 85% !important;
+            display: inline-block !important;
+            white-space: normal !important;
+            word-break: break-word !important;
+            
+            /* Аккуратный полупрозрачный овал серого цвета */
+            background-color: rgba(45, 45, 45, 0.7) !important;
+            -webkit-backdrop-filter: blur(6px) !important;
+            backdrop-filter: blur(6px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            border-radius: 20px !important;
+            padding: 6px 16px !important;
+            font-size: 0.85rem !important;
+            line-height: 1.3;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+        }
+    }
+}
+/* ==========================================================================
+   АДАПТИВНАЯ ПОДПИСЬ ДЛЯ МОБИЛЬНЫХ ТЕЛЕФОНОВ (max-width: 680px)
+   ========================================================================== */
+@media (max-width: 680px) {
+    
+    /* СЦЕНАРИЙ 1: Высота ПОЗВОЛЯЕТ. Текст находится ПОД картинкой БЕЗ ОВАЛА И БЕЗ СЕРОГО ФОНА */
+    @media (min-height: 481px) {
+        .lightbox-media-wrapper {
+            flex-direction: column !important; /* Выстраиваем элементы вертикально */
+            justify-content: center !important;
+            height: auto !important;
+        }
+
+        .lightbox-content {
+            max-height: 74vh !important; /* Освобождаем место для текста снизу */
+        }
+
+        #lightbox-caption {
+            /* Отменяем абсолютное позиционирование овала, спускаем вниз под картинку */
+            position: relative !important;
+            bottom: auto !important;
+            left: auto !important;
+            transform: none !important;
+            
+            /* Полностью убираем овальную форму, границы, тени и размытие */
+            border-radius: 0px !important;
+            border: none !important;
+            box-shadow: none !important;
+            -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+            
+            /* ПОЛНОЕ УДАЛЕНИЕ ФОНА (чистый текст на фоне подложки лайтбокса) */
+            background-color: transparent !important; 
+            background: transparent !important;
+            
+            /* Размеры стандартного текстового блока */
+            margin-top: 14px !important;
+            width: 100% !important;
+            max-width: 90% !important;
+            padding: 6px 0px !important; /* Убираем боковые отступы, так как фона нет */
+            font-size: 0.95rem !important;
+            line-height: 1.4;
+        }
+    }
+
+    /* СЦЕНАРИЙ 2: Высота НЕ ПОЗВОЛЯЕТ. Текст превращается в СЕРЫЙ ОВАЛ ПОВЕРХ картинки */
+    @media (max-height: 480px) {
+        .lightbox-media-wrapper {
+            flex-direction: row !important;
+            justify-content: center !important;
+        }
+
+        .lightbox-content {
+            max-height: 82vh !important; /* Картинка берет максимум высоты */
+        }
+
+        #lightbox-caption {
+            /* Возвращаем позиционирование овала поверх нижнего края картинки */
+            position: absolute !important;
+            bottom: 12px !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            
+            /* Сжатие строго по ширине текста */
+            width: max-content !important;
+            max-width: 85% !important;
+            display: inline-block !important;
+            white-space: normal !important;
+            word-break: break-word !important;
+            
+            /* Полупрозрачный серый овал */
+            background-color: rgba(50, 50, 50, 0.65) !important;
+            -webkit-backdrop-filter: blur(6px) !important;
+            backdrop-filter: blur(6px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.18) !important;
+            border-radius: 20px !important;
+            padding: 6px 16px !important;
+            font-size: 0.85rem !important;
+            line-height: 1.3;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+        }
+    }
+}
