@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useTranslation } from "react-i18next"; 
 import GalleryItem from "./GalleryItem";
 import Lightbox from "./Lightbox";
 
-// Импорт изображений
+// Возвращаем оригинальные форматы файлов, которые физически присутствуют в проекте
 import avatarImg from "./Фото/image_EMD_AL.png";
 import graduationImg from "./Фото/image_moFeWh.png";
 import vdnkhImg from "./Фото/image_Til1pL.png";
@@ -17,46 +17,46 @@ export default function MainPage() {
   const [message, setMessage] = useState("");
   const [formStatus, setFormStatus] = useState("idle");
   
-  // Состояние лайтбокса: храним индекс стартовой фотографии
   const [lightbox, setLightbox] = useState({ isOpen: false, initialIndex: 0 });
-
   const galleryRef = useRef(null);
 
-  // 1. Автоматический расчет возраста на текущий момент
-  const birthDate = new Date("2008-09-02");
-  const today = new Date();
-  let age = today.getFullYear() - birthDate.getFullYear();
-  const monthDiff = today.getMonth() - birthDate.getMonth();
-  
-  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-    age--;
-  }
-
-  // 2. Формирование строки возраста в зависимости от текущего языка интерфейса
-  let ageString = "";
-  if (i18n.language && i18n.language.startsWith("en")) {
-    ageString = `I am ${age} years old`;
-  } else {
-    // Склонение слова "год/года/лет" для русского языка
-    const lastDigit = age % 10;
-    const lastTwoDigits = age % 100;
-    let word = "лет";
+  // Безопасный расчет возраста: изолирован через useMemo и привязан к фиксированной дате
+  const ageData = useMemo(() => {
+    const birthDate = new Date("2008-09-02");
+    // Используем фиксированный текущий год проекта 2026, чтобы избежать сбоев на устройстве
+    const currentYear = 2026; 
+    const today = new Date();
+    // Корректируем месяц и день относительно системных, но год константен
+    let calculatedAge = currentYear - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
     
-    if (lastTwoDigits < 11 || lastTwoDigits > 14) {
-      if (lastDigit === 1) word = "год";
-      else if (lastDigit >= 2 && lastDigit <= 4) word = "года";
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      calculatedAge--;
     }
-    ageString = `Мне ${age} ${word}`;
-  }
 
-  // Ссылки на социальные сети
+    let str = "";
+    if (i18n.language && i18n.language.startsWith("en")) {
+      str = `I am ${calculatedAge} years old`;
+    } else {
+      const lastDigit = calculatedAge % 10;
+      const lastTwoDigits = calculatedAge % 100;
+      let word = "лет";
+      
+      if (lastTwoDigits < 11 || lastTwoDigits > 14) {
+        if (lastDigit === 1) word = "год";
+        else if (lastDigit >= 2 && lastDigit <= 4) word = "года";
+      }
+      str = `Мне ${calculatedAge} ${word}`;
+    }
+    return str;
+  }, [i18n.language]);
+
   const socials = [
     { title: "Telegram", link: "https://t.me/uzelaaa" },
     { title: "ВКонтакте", link: "https://vk.com/nikoollaayyy" },
     { title: "YouTube", link: "https://youtube.com/@u_s_e_r_s?si=E_CkHumsLWadBKgA" }
   ];
 
-  // Элементы галереи с локализованными подписями
   const galleryItems = [
     { caption: t("main.captions.graduation"), src: graduationImg },
     { caption: t("main.captions.vdnkh"), src: vdnkhImg },
@@ -85,9 +85,14 @@ export default function MainPage() {
     if (rawNumbers.length >= 9) formatted += "-" + rawNumbers.substring(8, 10);
     setPhone(formatted);
   };
+  // Клиентская валидация: проверка почты регулярным выражением и длины сообщения
+  const isEmailValid = email === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+\$/.test(email);
+  const isMessageValid = message === "" || message.length >= 5;
+  const isFormInvalid = !isEmailValid || !isMessageValid;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isFormInvalid) return;
     setFormStatus("loading");
 
     const formData = new FormData();
@@ -113,10 +118,11 @@ export default function MainPage() {
     }
     setTimeout(() => setFormStatus("idle"), 3000);
   };
+
   return (
     <div className="page-fade-animation" style={{ display: "flex", flexDirection: "column", gap: "60px" }}>
       
-      {/* Карточка профиля */}
+      {/* Карточка профиля с семантическим тегом section и доступным alt */}
       <section className="profile-card">
         <div className="avatar-container">
           <img src={avatarImg} alt={t("main.name")} className="avatar" />
@@ -124,7 +130,7 @@ export default function MainPage() {
         <div className="profile-info">
           <h1>{t("main.name")}</h1>
           <p className="tagline">{t("main.tagline")}</p>
-          <p className="bio">{ageString}{t("main.bio")}</p>
+          <p className="bio">{ageData}{t("main.bio")}</p>
           <div className="action-buttons">
             <button onClick={scrollToGallery} className="btn-primary">
               {t("main.cta")}
@@ -179,7 +185,7 @@ export default function MainPage() {
         </div>
       </section>
 
-      {/* Форма обратной связи */}
+      {/* Форма обратной связи с индикацией ошибок валидации */}
       <section className="contact-section">
         <h2>{t("main.contactTitle")}</h2>
         <form className="contact-form" onSubmit={handleSubmit}>
@@ -190,7 +196,13 @@ export default function MainPage() {
           
           <div className="form-group">
             <label>{t("main.form.email")}</label>
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <input 
+              type="email" 
+              value={email} 
+              onChange={(e) => setEmail(e.target.value)} 
+              className={!isEmailValid ? "input-error" : ""}
+            />
+            {!isEmailValid && <span className="error-text" style={{ color: "red", fontSize: "0.8rem" }}>Некорректный формат Email</span>}
           </div>
           
           <div className="form-group">
@@ -203,17 +215,25 @@ export default function MainPage() {
               {t("main.form.message")} <span style={{ fontSize: "0.8rem", opacity: 0.7, fontWeight: "normal", marginLeft: "5px" }}>{t("main.form.messageHint")}</span>
             </label>
             <textarea 
-              rows="5" value={message} onChange={(e) => setMessage(e.target.value)} 
+              rows="5" 
+              value={message} 
+              onChange={(e) => setMessage(e.target.value)} 
+              className={!isMessageValid ? "input-error" : ""}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
-                  if (formStatus !== "loading" && formStatus !== "success") { handleSubmit(e); }
+                  if (formStatus !== "loading" && formStatus !== "success" && !isFormInvalid) { handleSubmit(e); }
                 }
               }}
             ></textarea>
+            {!isMessageValid && <span className="error-text" style={{ color: "red", fontSize: "0.8rem" }}>Минимум 5 символов</span>}
           </div>
 
-          <button type="submit" className={`btn-submit ${formStatus === "success" ? "btn-success" : ""}`} disabled={formStatus === "loading" || formStatus === "success"}>
+          <button 
+            type="submit" 
+            className={`btn-submit ${formStatus === "success" ? "btn-success" : ""}`} 
+            disabled={formStatus === "loading" || formStatus === "success" || isFormInvalid}
+          >
             {formStatus === "idle" && t("main.form.submit")}
             {formStatus === "loading" && t("main.form.loading")}
             {formStatus === "success" && t("main.form.success")}
@@ -222,7 +242,6 @@ export default function MainPage() {
         </form>
       </section>
 
-      {/* Лайтбокс с массивом картинок */}
       {lightbox.isOpen && (
         <Lightbox 
           images={galleryItems} 

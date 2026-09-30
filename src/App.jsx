@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { BrowserRouter, Routes, Route, useNavigate, useLocation, Navigate, Outlet } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate, useLocation, Navigate, Outlet, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next"; 
 import MainPage from "./components/MainPage";
 import SchoolStudyPage from "./components/SchoolStudyPage";
@@ -9,6 +9,20 @@ import ProjectsPage from "./components/ProjectsPage";
 import EventsPage from "./components/EventsPage";
 import DonghuaPage from "./components/DonghuaPage"; 
 import "./App.css";
+
+// Новый семантический компонент для несуществующих страниц (404)
+function NotFoundPage() {
+  const { t } = useTranslation();
+  return (
+    <section className="error-404-section" style={{ textAlign: "center", padding: "100px 20px" }}>
+      <h1>404</h1>
+      <p>Упс! Страница не найдена или была перемещена.</p>
+      <Link to="/" className="btn-primary" style={{ display: "inline-block", marginTop: "20px", textDecoration: "none" }}>
+        Вернуться на главную
+      </Link>
+    </section>
+  );
+}
 
 function MainLayout() {
   const { t, i18n } = useTranslation(); 
@@ -25,15 +39,12 @@ function MainLayout() {
   const [isScrollingDown, setIsScrollingDown] = useState(false);
   const lastScrollY = useRef(0);
 
-  // SEO и управление автопереводчиком браузера
   useEffect(() => {
     if (currentLng === "en") {
       document.documentElement.setAttribute("lang", "en");
-      // Разрешаем автоперевод на английских страницах
       document.documentElement.removeAttribute("translate"); 
     } else {
       document.documentElement.setAttribute("lang", "ru");
-      // Запрещаем переводчику ломать русский текст, когда локаль русская
       document.documentElement.setAttribute("translate", "no");
     }
   }, [currentLng]);
@@ -156,7 +167,7 @@ function MainLayout() {
       <div className="eps-shape hexagon-2" style={getShapeStyle(2)}></div>
       <div className="eps-shape pentagon-1" style={getShapeStyle(3)}></div>
 
-      <div className={`lang-switcher-fixed ${isScrollingDown ? "switcher-hidden" : ""}`}>
+      <header className={`lang-switcher-fixed ${isScrollingDown ? "switcher-hidden" : ""}`}>
         <button 
           onClick={() => setIsDarkMode(!isDarkMode)} 
           className="theme-toggle-btn"
@@ -176,7 +187,7 @@ function MainLayout() {
         >
           EN
         </button>
-      </div>
+      </header>
 
       <div className="page-wrapper">
         <nav className="top-navigation">
@@ -194,9 +205,9 @@ function MainLayout() {
           ))}
         </nav>
 
-        <div className="container">
+        <main className="container">
           <Outlet context={{ schoolData: dynamicSchoolData, legalData: dynamicLegalData }} />
-        </div>
+        </main>
 
         <footer className="page-footer">
           <p>© {displayYear} {t("footer.rights")} {t("footer.author")}</p>
@@ -221,7 +232,7 @@ export default function App() {
           <Route path="projects" element={<ProjectsPage />} />
           <Route path="events" element={<EventsPage />} />
           <Route path="donghua" element={<DonghuaPage />} />
-          <Route path="*" element={<Navigate to="/en" replace />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
         
         <Route path="/" element={<MainLayout />}>
@@ -232,7 +243,7 @@ export default function App() {
           <Route path="projects" element={<ProjectsPage />} />
           <Route path="events" element={<EventsPage />} />
           <Route path="donghua" element={<DonghuaPage />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
