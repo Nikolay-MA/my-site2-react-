@@ -4,9 +4,9 @@ import GalleryItem from "./GalleryItem";
 import Lightbox from "./Lightbox";
 
 // Импорт изображений
-import flagImg from "./Фото/image_c58R0X.png";
-import mireaImg from "./Фото/image_qplLkv.png";
-import currentPhotoImg from "./Фото/image_kt9XQv.jpg";
+import flagImg from "./Фото/image_c58R0X.webp";
+import mireaImg from "./Фото/image_qplLkv.webp";
+import currentPhotoImg from "./Фото/image_kt9XQv.webp";
 
 export default function MireaStudyPage() {
   const { t } = useTranslation();

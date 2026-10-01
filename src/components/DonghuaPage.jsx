@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import soulLand1Img from "./Фото/soulLand1.webp";
-import soulLand2Img from "./Фото/soulLand2.jpg";
-import btthImg from "./Фото/btth.jpg";
+import soulLand2Img from "./Фото/soulLand2.webp";
+import btthImg from "./Фото/btth.webp";
 import throneOfSealImg from "./Фото/throneOfSeal.webp";
-import mortalJourneyImg from "./Фото/mortalJourney.jpg";
+import mortalJourneyImg from "./Фото/mortalJourney.webp";
 
 export default function DonghuaPage() {
   const { t, i18n } = useTranslation();

@@ -4,10 +4,10 @@ import GalleryItem from "./GalleryItem";
 import Lightbox from "./Lightbox";
 
 // Возвращаем оригинальные форматы файлов, которые физически присутствуют в проекте
-import avatarImg from "./Фото/image_EMD_AL.png";
-import graduationImg from "./Фото/image_moFeWh.png";
-import vdnkhImg from "./Фото/image_Til1pL.png";
-import dachaImg from "./Фото/image_ZwI4Hf.png";
+import avatarImg from "./Фото/image_EMD_AL.webp";
+import graduationImg from "./Фото/image_moFeWh.webp";
+import vdnkhImg from "./Фото/image_Til1pL.webp";
+import dachaImg from "./Фото/image_ZwI4Hf.webp";
 
 export default function MainPage() {
   const { t, i18n } = useTranslation(); 
