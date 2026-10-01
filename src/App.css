@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ЧАСТЬ 1: ГЛОБАЛЬНЫЕ НАСТРОЙКИ, ГЕОМЕТРИЧЕСКИЙ ФОН И СЕТКА ИНТЕРФЕЙСА
+   БЛОК 1: ПЕРЕМЕННЫЕ ТЕМЫ, СБРОС И БАЗОВАЯ ГЕОМЕТРИЯ BODY
    ========================================================================== */
 :root {
     --primary-color: #0984e3;
@@ -38,6 +38,9 @@ body {
     padding-right: calc(20px + env(safe-area-inset-right));
     background-color: var(--bg-base);
 }
+/* ==========================================================================
+   БЛОК 2: ГЕОМЕТРИЧЕСКИЙ ФОН, АНИМАЦИИ И ГЛАВНЫЕ КОНТЕЙНЕРЫ (ОБЕРТКИ)
+   ========================================================================== */
 .vector-bg-emulation {
     position: fixed;
     top: 0;
@@ -89,8 +92,11 @@ body {
     flex-direction: column;
     gap: 60px;
 }
+
+.page-fade-animation { animation: fadeInPage 0.4s ease forwards; }
+@keyframes fadeInPage { from { opacity: 0; } to { opacity: 1; } }
 /* ==========================================================================
-   ЧАСТЬ 2: НАВИГАЦИЯ, ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ, КНОПКИ И ОБЩИЕ ВИДЖЕТЫ
+   БЛОК 3: ВЕРХНЯЯ НАВИГАЦИЯ, ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ И ЛЕВИЦАЦИЯ АВАТАРА
    ========================================================================== */
 .top-navigation {
     background: var(--glass-card);
@@ -152,6 +158,7 @@ body {
     height: 280px; 
     flex-shrink: 0;
 }
+
 .avatar {
     width: 100%;
     height: 100%;
@@ -188,16 +195,11 @@ body {
 .tagline { font-size: 1.15rem; color: var(--text-muted); margin-bottom: 20px; font-weight: 500; }
 .bio { font-size: 1.05rem; line-height: 1.7; color: var(--text-dark); margin-bottom: 25px; }
 
-.gallery-section h2, .contact-section h2, .anime-widget h2, .map-section h2, .info-section-block h2 {
-    font-size: 1.6rem;
-    margin-bottom: 25px;
-    position: relative;
-}
-
-.gallery-section h2::after, .contact-section h2::after, .anime-widget h2::after, .map-section h2::after, .info-section-block h2::after {
-    content: ''; position: absolute; width: 35px; height: 4px; background: var(--primary-color); bottom: -8px; left: 0; border-radius: 4px;
-}
-
+.action-buttons { display: flex; width: 100%; margin-bottom: 15px; }
+.social-links { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; }
+/* ==========================================================================
+   БЛОК 4: КНОПКИ, ИНТЕРФЕЙСНЫЕ СЕТКИ ГАЛЕРЕИ, ИНФО-КАРТЫ И СВЯЗЬ (ФОРМА, КАРТА)
+   ========================================================================== */
 button.btn-primary {
     padding: 14px 28px;
     border: none;
@@ -216,11 +218,7 @@ button.btn-primary {
 }
 
 button.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0, 86, 179, 0.35); }
-.action-buttons { display: flex; width: 100%; margin-bottom: 15px; }
-.social-links { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; }
-/* ==========================================================================
-   ЧАСТЬ 3: ИНФО-КАРТОЧКИ, ФОРМА СВЯЗИ, СТИЛИ КУРТИН И ПОЛНОЭКРАННЫЕ ЛЕНТЫ
-   ========================================================================== */
+
 a.btn-social {
     display: block;
     padding: 12px 20px;
@@ -241,13 +239,43 @@ a.btn-social {
 
 a.btn-social:hover { background: var(--primary-color) !important; color: white !important; }
 
-.anime-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 24px; }
-.anime-card { background: white; padding: 25px; border-radius: 20px; border: 1px solid rgba(0,0,0,0.05); position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.01); display: flex; flex-direction: column; justify-content: center; min-height: 140px; transition: transform 0.3s ease, box-shadow 0.3s ease; }
-.anime-card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); }
-.anime-badge { position: absolute; top: 15px; right: 15px; background: #ffeaa7; color: #d63031; font-size: 0.8rem; font-weight: 700; padding: 4px 10px; border-radius: 8px; }
-.anime-card h3 { font-size: 1.15rem; margin-bottom: 8px; color: var(--text-dark); padding-right: 45px; }
-.anime-card p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.4; }
+.gallery-section h2, .contact-section h2, .anime-widget h2, .map-section h2, .info-section-block h2 {
+    font-size: 1.6rem;
+    margin-bottom: 25px;
+    position: relative;
+}
 
+.gallery-section h2::after, .contact-section h2::after, .anime-widget h2::after, .map-section h2::after, .info-section-block h2::after {
+    content: ''; position: absolute; width: 35px; height: 4px; background: var(--primary-color); bottom: -8px; left: 0; border-radius: 4px;
+}
+
+.gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+.gallery-item { position: relative; border-radius: 20px; overflow: hidden; aspect-ratio: 4/3; background: #e2e7ea; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+.gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+.gallery-item:hover img { transform: scale(1.07); }
+.gallery-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, rgba(35, 31, 32, 0.7) 0%, transparent 60%); opacity: 0; transition: opacity 0.3s ease; display: flex; align-items: flex-end; padding: 20px; }
+.gallery-item:hover .gallery-overlay { opacity: 1; }
+.gallery-overlay span { color: white; font-size: 1.05rem; transform: translateY(10px); transition: 0.4s; font-weight: 500; }
+.gallery-item:hover .gallery-overlay span { transform: translateY(0); }
+
+.map-section { display: flex; flex-direction: column; }
+.map-wrapper { width: 100%; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); border: 1px solid rgba(0, 0, 0, 0.05); background: #fff; padding: 5px; }
+.map-wrapper iframe { border-radius: 16px; display: block; width: 100%; }
+
+.contact-form { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; width: 100%; }
+.form-group { display: flex; flex-direction: column; gap: 8px; position: relative; }
+.contact-form .form-group:nth-child(4), .contact-form .btn-submit { grid-column: span 3; }
+.form-group label { font-size: 0.95rem; font-weight: 600; }
+.form-group input, .form-group textarea { width: 100%; padding: 14px 18px; border-radius: 14px; border: 1px solid rgba(0,0,0,0.08); background: rgba(255, 255, 255, 0.7); outline: none; transition: 0.3s; -webkit-appearance: none; }
+.form-group input:focus, .form-group textarea:focus { background: #fff; border-color: var(--primary-color); }
+
+.btn-submit { padding: 14px; background: var(--primary-color); color: #fff; border: none; border-radius: 14px; font-weight: 600; cursor: pointer; transition: 0.3s; text-align: center; -webkit-appearance: none; }
+.btn-submit:hover { background: #0056b3; transform: translateY(-2px); }
+.btn-submit:disabled { background: var(--text-muted); opacity: 0.6; cursor: not-allowed; transform: none; }
+.btn-submit.btn-success { background: var(--success-color) !important; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4); transform: scale(1.02); }
+/* ==========================================================================
+   БЛОК 5: ШКОЛЬНЫЕ СТРАНИЦЫ, РЕЗУЛЬТАТЫ ОГЭ / ЕГЭ И СПИСКИ УСПЕВАЕМОСТИ
+   ========================================================================== */
 .school-grid-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
 .school-info-card, .legal-info-card { background: white; padding: 25px; border-radius: 20px; border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 4px 15px rgba(0,0,0,0.01); line-height: 1.7; font-size: 1.05rem; }
 .school-info-card h3 { font-size: 1.25rem; margin-bottom: 15px; color: var(--text-dark); }
@@ -262,36 +290,30 @@ a.btn-social:hover { background: var(--primary-color) !important; color: white !
 .scores-list .score { padding: 4px 12px; border-radius: 8px; font-size: 0.9rem; font-weight: 700; }
 .badge-high { background-color: rgba(46, 204, 113, 0.15); color: #27ae60; }
 .badge-medium { background-color: rgba(241, 196, 15, 0.15); color: #d35400; }
-.contact-form { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; width: 100%; }
-.form-group { display: flex; flex-direction: column; gap: 8px; position: relative; }
-.contact-form .form-group:nth-child(4), .contact-form .btn-submit { grid-column: span 3; }
-.form-group label { font-size: 0.95rem; font-weight: 600; }
-.form-group input, .form-group textarea { width: 100%; padding: 14px 18px; border-radius: 14px; border: 1px solid rgba(0,0,0,0.08); background: rgba(255, 255, 255, 0.7); outline: none; transition: 0.3s; -webkit-appearance: none; }
-.form-group input:focus, .form-group textarea:focus { background: #fff; border-color: var(--primary-color); }
 
-.btn-submit { padding: 14px; background: var(--primary-color); color: #fff; border: none; border-radius: 14px; font-weight: 600; cursor: pointer; transition: 0.3s; text-align: center; -webkit-appearance: none; }
-.btn-submit:hover { background: #0056b3; transform: translateY(-2px); }
-.btn-submit:disabled { background: var(--text-muted); opacity: 0.6; cursor: not-allowed; transform: none; }
-.btn-submit.btn-success { background: var(--success-color) !important; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4); transform: scale(1.02); }
+.anime-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 24px; }
+.anime-card { background: white; padding: 25px; border-radius: 20px; border: 1px solid rgba(0,0,0,0.05); position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.01); display: flex; flex-direction: column; justify-content: center; min-height: 140px; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.anime-card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); }
+.anime-badge { position: absolute; top: 15px; right: 15px; background: #ffeaa7; color: #d63031; font-size: 0.8rem; font-weight: 700; padding: 4px 10px; border-radius: 8px; }
+.anime-card h3 { font-size: 1.15rem; margin-bottom: 8px; color: var(--text-dark); padding-right: 45px; }
+.anime-card p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.4; }
 
-.map-section { display: flex; flex-direction: column; }
-.map-wrapper { width: 100%; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); border: 1px solid rgba(0, 0, 0, 0.05); background: #fff; padding: 5px; }
-.map-wrapper iframe { border-radius: 16px; display: block; width: 100%; }
+.page-footer { width: 100%; text-align: center; padding: 15px 0; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
 
-.gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
-.gallery-item { position: relative; border-radius: 20px; overflow: hidden; aspect-ratio: 4/3; background: #e2e7ea; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
-.gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
-.gallery-item:hover img { transform: scale(1.07); }
-.gallery-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, rgba(35, 31, 32, 0.7) 0%, transparent 60%); opacity: 0; transition: opacity 0.3s ease; display: flex; align-items: flex-end; padding: 20px; }
-.gallery-item:hover .gallery-overlay { opacity: 1; }
-.gallery-overlay span { color: white; font-size: 1.05rem; transform: translateY(10px); transition: 0.4s; font-weight: 500; }
-.gallery-item:hover .gallery-overlay span { transform: translateY(0); }
-
-
-
-
-
-/* --- ТЕЛЕГРАМ-ЛАЙТБОКС: КЛИК-ЗОНЫ, ПОЛНАЯ ЧИСТКА ОБВОДОК И ИСПРАВЛЕНИЕ КРЕСТИКА --- */
+.full-bleed-photo {
+    width: 100vw !important;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw !important;
+    margin-right: -50vw !important;
+    max-height: 500px; 
+    object-fit: cover;
+    display: block;
+}
+/* ==========================================================================
+   БЛОК 6: ЛАЙТБОКС С ЛОГИКОЙ СУПЕР-ЗУМА, ТАКТИЛЬНЫМИ КУРСОРAМИ И ПОДПИСЯМИ
+   ========================================================================== */
 .lightbox { 
     position: fixed; 
     z-index: 999999 !important; 
@@ -309,78 +331,96 @@ a.btn-social:hover { background: var(--primary-color) !important; color: white !
     margin: 0 !important; 
     padding: 0 !important;
     user-select: none;
-    cursor: pointer; /* Указывает, что фон кликабелен для закрытия */
-}
-
-/* Интерактивные прозрачные клик-зоны слева и справа ограничены по высоте контента */
-.lightbox-curtain {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    height: 82vh; /* Высота совпадает с максимальной высотой картинки */
-    width: 50%;
-    z-index: 1000;
     cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
+    touch-action: none; 
+    transition: background-color 0.2s ease-out;
 }
-.curtain-left { left: 0; }
-.curtain-right { right: 0; }
 
 .lightbox-media-wrapper {
-    z-index: 1005;
     position: relative;
-    max-width: 95vw;
-    max-height: 82vh;
+    overflow: hidden;
+    transition: transform 0.1s ease-out;
     display: flex;
     justify-content: center;
     align-items: center;
-    cursor: default; /* Возвращаем обычный курсор на самой картинке */
+    width: 100vw;
+    height: 100vh;
+    max-width: 100vw !important;
+    max-height: 100vh !important;
+    pointer-events: auto;
+    z-index: 1005 !important;
 }
 
-/* Картинка: БЕЗ закругления углов, БЕЗ черных обводок и БЕЗ теней/свечений */
 .lightbox-content { 
     max-width: 100%; 
     max-height: 82vh; 
     border-radius: 0px !important; 
     border: none !important;
     outline: none !important;
-    box-shadow: none !important; /* Полностью убрано черное закругленное свечение */
-    object-fit: contain; 
+    box-shadow: none !important; 
+    object-fit: contain;
+    transform-origin: center center !important;
+    will-change: transform;
+    -webkit-user-drag: none;
+    user-select: none;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
 
-#lightbox-caption { 
-    color: #f9f6f7; 
-    margin-top: 18px; 
-    font-size: 1.15rem; 
-    text-align: center; 
-    padding: 0 20px; 
-    font-weight: 400; 
-    max-width: 80vw; 
-    z-index: 1006;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+.lightbox-content:not(.is-dragging) { transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1) !important; }
+.lightbox-content.is-dragging { transition: none !important; }
+.lightbox:has(.is-dragging) { transition: none !important; }
+
+#lightbox-caption {
+    position: absolute;
+    bottom: 25px; 
+    left: 50%;
+    transform: translateX(-50%); 
+    width: fit-content !important; 
+    max-width: 88% !important; 
+    margin-top: 0 !important;
+    padding: 12px 24px !important; 
+    background-color: rgba(30, 31, 36, 0.5) !important; 
+    -webkit-backdrop-filter: blur(16px) saturate(120%);
+    backdrop-filter: blur(16px) saturate(120%);
+    border-radius: 30px !important; 
+    border: 1px solid rgba(255, 255, 255, 0.15); 
+    color: #ffffff !important;
+    font-size: 1rem;
+    font-weight: 500; 
+    line-height: 1.4;
+    text-align: center !important;
+    z-index: 1020;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35); 
+    box-sizing: border-box;
     cursor: default;
+    pointer-events: auto;
 }
 
-/* Кнопка закрытия поднята выше штор по z-index и смещена левее (right: 60px) */
 .lightbox-close { 
     position: absolute; 
     top: 25px; 
-    right: 60px; /* Отступ увеличен, чтобы крестик встал левее */
+    right: 60px; 
     color: rgba(255, 255, 255, 0.6); 
     font-size: 38px; 
     cursor: pointer; 
     transition: all 0.2s ease; 
     line-height: 1; 
-    z-index: 1020 !important; /* Выше, чем z-index штор (1000) */
+    z-index: 1020 !important; 
     -webkit-tap-highlight-color: transparent;
 }
 .lightbox-close:hover { transform: scale(1.1); color: #fff; }
+.lightbox-close.hidden-on-zoom { opacity: 0; pointer-events: none; }
 
 body:has(.lightbox) { overflow: hidden; }
 
-
+@media (pointer: fine) {
+    .lightbox-content.lightbox-normal { cursor: default !important; }
+    .lightbox-content.lightbox-zoomed { cursor: grab !important; }
+    .lightbox-content.lightbox-zoomed.is-dragging { cursor: grabbing !important; }
+}
 /* ==========================================================================
-   ЧАСТЬ 4: КАРТОЧКИ СТРАНИЦЫ ДУНХУА, ТЕМНАЯ ТЕМА И АДАПТИВНОСТЬ КЛИК-ЗОН
+   БЛОК 7: ОТОБРАЖЕНИЕ КАРТОЧЕК ДУНХУА, ИНТЕРАКТИВНЫЕ ВКЛАДКИ И ТАЙТЛЫ
    ========================================================================== */
 .donghua-page-container { display: flex; flex-direction: column; gap: 60px; width: 100%; }
 .donghua-card-wrapper { display: flex; gap: 35px; flex-wrap: wrap; align-items: flex-start; padding: 30px; position: relative; }
@@ -414,11 +454,34 @@ button.btn-social.donghua-tab-btn.tab-active { background: var(--primary-gradien
     .legal-info-card .donghua-description-p { max-height: none !important; margin-bottom: 0 !important; }
     .legal-info-card .donghua-text-fade-overlay { display: none !important; }
     .legal-info-card .donghua-btn-more { display: none !important; }
+    .lightbox-media-wrapper { max-width: 100vw; max-height: 100vh; width: auto; height: auto; }
+    .lightbox-content { max-width: 100vw !important; max-height: 100vh !important; width: auto; height: auto; object-fit: contain; }
+    #lightbox-caption { font-size: 1.05rem; padding: 14px 28px !important; }
+}
+/* ==========================================================================
+   БЛОК 8: ТЕМНАЯ ТЕМА, ФИКСИРОВАННЫЙ СВИТЧЕР ЯЗЫКОВ И МОБИЛЬНЫЙ АДАПТИВ @MEDIA
+   ========================================================================== */
+.lang-switcher-fixed { position: fixed; top: 20px; right: 20px; display: flex; gap: 8px; z-index: 9999; background: rgba(35, 31, 32, 0.6); padding: 6px; border-radius: 12px; backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.1); }
+.lang-fixed-btn { background: transparent; color: #888; border: none; padding: 6px 12px; font-size: 0.85rem; font-weight: 700; cursor: pointer; border-radius: 8px; transition: all 0.2s ease; }
+.lang-fixed-btn:hover { color: #fff; }
+.lang-fixed-btn.active { background: #1565c0; color: #fff; box-shadow: 0 2px 8px rgba(21, 101, 192, 0.4); }
+
+@media (max-width: 768px) {
+  .lang-switcher-fixed { top: 10px; right: 10px; padding: 4px; }
+  .lang-fixed-btn { padding: 4px 8px; font-size: 0.75rem; }
 }
 
-.page-footer { width: 100%; text-align: center; padding: 15px 0; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
-.page-fade-animation { animation: fadeInPage 0.4s ease forwards; }
-@keyframes fadeInPage { from { opacity: 0; } to { opacity: 1; } }
+.theme-toggle-btn { background: transparent; border: none; font-size: 1.1rem; cursor: pointer; padding: 6px; display: flex; align-items: center; justify-content: center; border-radius: 8px; transition: all 0.2s ease; user-select: none; }
+.theme-toggle-btn:hover { background: rgba(255, 255, 255, 0.1); transform: scale(1.1); }
+
+.dark-theme { --text-dark: #f9f6f7; --text-muted: #a4b0be; --bg-base: #131418; --glass-card: rgba(30, 31, 38, 0.85); --glass-border: rgba(255, 255, 255, 0.08); --shadow-smooth: 0 15px 35px rgba(0, 0, 0, 0.3); }
+.dark-theme .anime-card, .dark-theme .school-info-card, .dark-theme .legal-info-card, .dark-theme .map-wrapper, .dark-theme a.btn-social { background: #1e1f26 !important; border-color: rgba(255, 255, 255, 0.05) !important; color: var(--text-dark) !important; }
+.dark-theme .form-group input, .dark-theme .form-group textarea { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.1); color: var(--text-dark); }
+.dark-theme .form-group input:focus, .dark-theme .form-group textarea:focus { background: #1e1f26; }
+.dark-theme .top-navigation button.nav-btn { background: rgba(255, 255, 255, 0.03); border-color: rgba(255, 255, 255, 0.08) !important; color: var(--text-dark); }
+.dark-theme .top-navigation button.nav-btn:hover { background: var(--primary-color); color: white; }
+.dark-theme button.btn-social.donghua-tab-btn:not(.tab-active) { background: rgba(255, 255, 255, 0.05) !important; border-color: rgba(255, 255, 255, 0.1) !important; color: var(--text-dark) !important; }
+.dark-theme button.btn-social.donghua-tab-btn:not(.tab-active):hover { background: var(--primary-color) !important; color: #ffffff !important; border-color: transparent !important; }
 
 @media (max-width: 1024px) {
     .container { padding: 40px 30px; gap: 40px; }
@@ -453,1226 +516,29 @@ button.btn-social.donghua-tab-btn.tab-active { background: var(--primary-gradien
     .school-grid-layout { grid-template-columns: 1fr !important; }
     .gallery-section h2::after, .contact-section h2::after, .anime-widget h2::after, .map-section h2::after, .info-section-block h2::after { left: 50%; transform: translateX(-50%); }
     .gallery-section h2, .contact-section h2, .anime-widget h2, .map-section h2, .info-section-block h2 { text-align: center; }
-    .lightbox-content { max-width: 100%; max-height: 70vh; }
+    .lightbox-media-wrapper { max-width: 100vw !important; width: 100vw !important; max-height: 82vh; }
+    .lightbox-content { width: 100% !important; max-width: 100% !important; max-height: 82vh; object-fit: contain; }
     .lightbox-close { top: 15px; right: 20px; font-size: 32px; }
     .full-bleed-photo { max-height: 300px; }
-    .gallery-fullbleed-item { height: 45vh; min-height: 280px; }
-    .gallery-fullbleed-overlay { padding: 20px 20px; }
-    .gallery-fullbleed-caption { font-size: 1.1rem; }
     .donghua-poster-block { flex: 0 0 240px; height: 340px; }
+    .dark-theme .container { background: #1e1f26 !important; }
+    .dark-theme .vector-bg-emulation { background: #131418 !important; }
+    .lang-switcher-fixed { position: absolute !important; top: 15px !important; right: 15px !important; left: auto !important; }
+    #lightbox-caption { background-color: rgba(35, 35, 35, 0.75) !important; -webkit-backdrop-filter: blur(5px) !important; backdrop-filter: blur(5px) !important; width: max-content !important; max-width: 88% !important; white-space: normal !important; word-break: break-word !important; border-radius: 20px !important; border: 1px solid rgba(255, 255, 255, 0.18) !important; padding: 8px 18px !important; font-size: 0.9rem !important; line-height: 1.35; position: absolute !important; bottom: 15px !important; left: 50% !important; transform: translateX(-50%) !important; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important; }
+    
+    @media (max-height: 480px) {
+        .lightbox-media-wrapper { flex-direction: row !important; justify-content: center !important; }
+        .lightbox-content { max-height: 82vh !important; }
+        #lightbox-caption { position: absolute !important; bottom: 12px !important; left: 50% !important; transform: translateX(-50%) !important; width: max-content !important; max-width: 85% !important; display: inline-block !important; white-space: normal !important; word-break: break-word !important; background-color: rgba(45, 45, 45, 0.7) !important; -webkit-backdrop-filter: blur(6px) !important; backdrop-filter: blur(6px) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; border-radius: 20px !important; padding: 6px 16px !important; font-size: 0.85rem !important; line-height: 1.3; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important; }
+    }
+    
+    @media (min-height: 481px) {
+        .lightbox-media-wrapper { flex-direction: column !important; justify-content: center !important; height: auto !important; }
+        .lightbox-content { max-height: 74vh !important; }
+        #lightbox-caption { position: relative !important; bottom: auto !important; left: auto !important; transform: none !important; border-radius: 0px !important; border: none !important; box-shadow: none !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; background-color: transparent !important; background: transparent !important; margin-top: 14px !important; width: 100% !important; max-width: 90% !important; padding: 6px 0px !important; font-size: 0.95rem !important; line-height: 1.4; }
+    }
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     .top-navigation, .container, .anime-card, .school-info-card, .legal-info-card { border-width: 0.5px; }
-}
-
-.lang-switcher-fixed { position: fixed; top: 20px; right: 20px; display: flex; gap: 8px; z-index: 9999; background: rgba(35, 31, 32, 0.6); padding: 6px; border-radius: 12px; backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.1); }
-.lang-fixed-btn { background: transparent; color: #888; border: none; padding: 6px 12px; font-size: 0.85rem; font-weight: 700; cursor: pointer; border-radius: 8px; transition: all 0.2s ease; }
-.lang-fixed-btn:hover { color: #fff; }
-.lang-fixed-btn.active { background: #1565c0; color: #fff; box-shadow: 0 2px 8px rgba(21, 101, 192, 0.4); }
-
-@media (max-width: 768px) {
-  .lang-switcher-fixed { top: 10px; right: 10px; padding: 4px; }
-  .lang-fixed-btn { padding: 4px 8px; font-size: 0.75rem; }
-}
-
-.dark-theme { --text-dark: #f9f6f7; --text-muted: #a4b0be; --bg-base: #131418; --glass-card: rgba(30, 31, 38, 0.85); --glass-border: rgba(255, 255, 255, 0.08); --shadow-smooth: 0 15px 35px rgba(0, 0, 0, 0.3); }
-.dark-theme .anime-card, .dark-theme .school-info-card, .dark-theme .legal-info-card, .dark-theme .map-wrapper, .dark-theme a.btn-social { background: #1e1f26 !important; border-color: rgba(255, 255, 255, 0.05) !important; color: var(--text-dark) !important; }
-.dark-theme .form-group input, .dark-theme .form-group textarea { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.1); color: var(--text-dark); }
-.dark-theme .form-group input:focus, .dark-theme .form-group textarea:focus { background: #1e1f26; }
-.dark-theme .top-navigation button.nav-btn { background: rgba(255, 255, 255, 0.03); border-color: rgba(255, 255, 255, 0.08) !important; color: var(--text-dark); }
-.dark-theme .top-navigation button.nav-btn:hover { background: var(--primary-color); color: white; }
-
-@media (max-width: 680px) {
-    .dark-theme .container { background: #1e1f26 !important; }
-    .dark-theme .vector-bg-emulation { background: #131418 !important; }
-    
-    /* Меняем fixed на absolute: плашка встает в правый угол страницы 
-       и уходит вверх синхронно со скроллом контента */
-    .lang-switcher-fixed {
-        position: absolute !important;
-        top: 15px !important;
-        right: 15px !important;
-        left: auto !important;
-    }
-}
-
-.theme-toggle-btn { background: transparent; border: none; font-size: 1.1rem; cursor: pointer; padding: 6px; display: flex; align-items: center; justify-content: center; border-radius: 8px; transition: all 0.2s ease; user-select: none; }
-.theme-toggle-btn:hover { background: rgba(255, 255, 255, 0.1); transform: scale(1.1); }
-.dark-theme button.btn-social.donghua-tab-btn:not(.tab-active) { background: rgba(255, 255, 255, 0.05) !important; border-color: rgba(255, 255, 255, 0.1) !important; color: var(--text-dark) !important; }
-.dark-theme button.btn-social.donghua-tab-btn:not(.tab-active):hover { background: var(--primary-color) !important; color: #ffffff !important; border-color: transparent !important; }
-
-/* --- СТИЛИ ДЛЯ ИНТЕРАКТИВНОГО МАСШТАБИРОВАНИЯ КАРТИНКИ --- */
-.lightbox {
-    touch-action: none; 
-    transition: background-color 0.2s ease-out;
-}
-
-.lightbox-media-wrapper {
-    position: relative;
-    overflow: visible !important;
-    transition: transform 0.1s ease-out;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.lightbox-content {
-    transform-origin: center center;
-    transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
-    will-change: transform;
-    display: block;
-}
-
-/* --- ЕДИНЫЙ СТИЛЬ ОВАЛЬНОЙ ПЛАШКИ ДЛЯ ВСЕХ УСТРОЙСТВ (ПК и ТЕЛЕФОНЫ) --- */
-#lightbox-caption {
-    position: absolute;
-    bottom: 25px; /* Отступ от нижнего края картинки */
-    left: 50%;
-    transform: translateX(-50%); /* Центрирование овала строго по середине */
-    
-    width: fit-content !important; /* Сжатие плашки ровно по ширине текста */
-    max-width: 88% !important; /* Безопасный отступ от краев экрана на смартфонах */
-    margin-top: 0 !important;
-    padding: 12px 24px !important; /* Умеренные внутренние отступы для аккуратной формы */
-    
-    /* Полупрозрачный светлый фон с эффектом матового стекла */
-    background-color: rgba(30, 31, 36, 0.5) !important; 
-    -webkit-backdrop-filter: blur(16px) saturate(120%);
-    backdrop-filter: blur(16px) saturate(120%);
-    
-    /* Форма идеального овала/капсулы */
-    border-radius: 30px !important; 
-    border: 1px solid rgba(255, 255, 255, 0.15); /* Деликатная светлая обводка */
-    
-    color: #ffffff !important;
-    font-size: 1rem;
-    font-weight: 500; /* Чуть увеличили плотность шрифта для идеальной читаемости на телефонах */
-    line-height: 1.4;
-    text-align: center !important;
-    z-index: 1020;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35); 
-    box-sizing: border-box;
-}
-
-/* Отключаем переходы во время активного drag-перемещения */
-.lightbox:has(.is-dragging) {
-    transition: none !important;
-}
-.lightbox-media-wrapper.zoomed .lightbox-content.is-dragging {
-    transition: none !important;
-}
-
-/* Мобильная анимация возврата на место при отпускании */
-.lightbox-content:not(.is-dragging) {
-    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
-}
-
-.lightbox-close {
-    transition: opacity 0.2s ease;
-}
-.lightbox-close.hidden-on-zoom {
-    opacity: 0;
-    pointer-events: none;
-}
-
-.lightbox-mobile-curtain {
-    display: none;
-}
-
-/* --- НАСТРОЙКА ГЕОМЕТРИИ ПОД КОНКРЕТНЫЕ ЭКРАНЫ --- */
-
-/* 1. Компьютеры и ноутбуки */
-@media (min-width: 681px) {
-    .lightbox-media-wrapper {
-        max-width: 100vw;
-        max-height: 100vh;
-        width: auto;
-        height: auto;
-    }
-
-    .lightbox-content {
-        max-width: 100vw !important;
-        max-height: 100vh !important;
-        width: auto;
-        height: auto;
-        object-fit: contain;
-    }
-    
-    #lightbox-caption {
-        font-size: 1.05rem;
-        padding: 14px 28px !important;
-    }
-}
-
-/* 2. Мобильные телефоны */
-@media (max-width: 680px) {
-    .lightbox-desktop-curtains-wrapper {
-        display: none !important;
-    }
-
-    .lightbox-media-wrapper {
-        max-width: 100vw !important;
-        width: 100vw !important;
-        max-height: 82vh;
-    }
-
-    .lightbox-content {
-        width: 100% !important;
-        max-width: 100% !important;
-        max-height: 82vh;
-        object-fit: contain;
-    }
-
-    .lightbox-mobile-curtain {
-        display: block;
-        position: absolute;
-        top: 0;
-        height: 100%;
-        width: 20%; 
-        z-index: 1010;
-        background: transparent;
-        -webkit-tap-highlight-color: transparent;
-        cursor: pointer;
-    }
-
-    .mobile-curtain-left { left: 0; }
-    .mobile-curtain-right { right: 0; }
-}
-
-/* --- ТАКТИЛЬНЫЕ КУРСОРЫ ДЛЯ ПК --- */
-@media (pointer: fine) {
-    .lightbox-content.lightbox-normal { cursor: zoom-in !important; }
-    .lightbox-content.lightbox-zoomed { cursor: zoom-out !important; }
-    .lightbox-content.lightbox-zoomed:hover { cursor: grab; }
-    .lightbox-content.lightbox-zoomed.is-dragging { cursor: grabbing !important; }
-}
-/* Переопределение стилей плашки строго для мобильных телефонов (до 680px) */
-@media (max-width: 680px) {
-    #lightbox-caption {
-        /* Меняем цвет фона на прозрачно-серый (без сильного размытия и матовости) */
-        background-color: rgba(40, 40, 40, 0.65) !important; 
-        -webkit-backdrop-filter: blur(4px) !important;
-        backdrop-filter: blur(4px) !important;
-        
-        /* Сжатие строго по ширине текста */
-        width: max-content !important;
-        display: inline-block !important;
-        
-        /* Стилизация аккуратного компактного овала */
-        border-radius: 20px !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        padding: 6px 16px !important;
-        font-size: 0.9rem !important;
-        
-        /* Позиционирование */
-        bottom: 15px !important;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
-    }
-}
-/* ==========================================================================
-   МОБИЛЬНАЯ АДАПТАЦИЯ ПОДПИСИ (СТРОГО ДЛЯ ТЕЛЕФОНОВ)
-   ========================================================================== */
-@media (max-width: 680px) {
-    #lightbox-caption {
-        /* Прозрачно-серый фон без сильного эффекта матового стекла */
-        background-color: rgba(35, 35, 35, 0.75) !important; 
-        -webkit-backdrop-filter: blur(5px) !important;
-        backdrop-filter: blur(5px) !important;
-        
-        /* Сжатие ровно по ширине текста и защита от выходов за экран */
-        width: max-content !important;
-        max-width: 88% !important;
-        white-space: normal !important; /* Разрешаем перенос строк внутри овала */
-        word-break: break-word !important;
-        
-        /* Компактные размеры аккуратного овала */
-        border-radius: 20px !important; 
-        border: 1px solid rgba(255, 255, 255, 0.18) !important;
-        padding: 8px 18px !important;
-        font-size: 0.9rem !important;
-        line-height: 1.35;
-        
-        /* Стандартное позиционирование поверх картинки снизу */
-        position: absolute !important;
-        bottom: 15px !important;
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
-    }
-
-    /* ЕСЛИ ВЫСОТА ЭКРАНА МАЛА (например, телефон перевернут горизонтально):
-       Выталкиваем текст из-под картинки в поток ниже */
-    @media (max-height: 480px) {
-        /* Переводим обертку в flex-режим для выстраивания элементов друг за другом */
-        .lightbox-media-wrapper {
-            flex-direction: column !important;
-            justify-content: flex-start !important;
-            overflow-y: auto !important; /* Разрешаем скролл, если текст очень длинный */
-            height: 100% !important;
-            max-height: 100vh !important;
-            padding-bottom: 20px !important;
-        }
-
-        .lightbox-content {
-            max-height: 65vh !important; /* Сжимаем картинку, освобождая место снизу */
-        }
-
-        #lightbox-caption {
-            /* Отменяем абсолютное позиционирование поверх картинки */
-            position: relative !important;
-            bottom: auto !important;
-            left: auto !important;
-            transform: none !important;
-            
-            /* Размещаем в обычном блочном потоке строго под картинкой */
-            margin-top: 15px !important; 
-            margin-bottom: 10px !important;
-            display: block !important;
-            
-            /* Корректируем ширину под обычный текстовый блок */
-            width: auto !important;
-            max-width: 90% !important;
-        }
-    }
-}
-/* ==========================================================================
-   АДАПТИВНАЯ ЛОГИКА ПОДПИСИ СТРОГО ДЛЯ СМАРТФОНОВ (до 680px)
-   ========================================================================== */
-@media (max-width: 680px) {
-    
-    /* СЦЕНАРИЙ 1: ВЫСОТА ПОЗВОЛЯЕТ (Обычный режим). Текст располагается ПОД картинкой */
-    @media (min-height: 481px) {
-        .lightbox-media-wrapper {
-            flex-direction: column !important; /* Выстраиваем элементы вертикально */
-            justify-content: center !important;
-            height: auto !important;
-        }
-
-        .lightbox-content {
-            max-height: 72vh !important; /* Слегка уменьшаем картинку, освобождая место снизу */
-        }
-
-        #lightbox-caption {
-            /* Отменяем позиционирование поверх картинки, ставим в поток ПОД ней */
-            position: relative !important;
-            bottom: auto !important;
-            left: auto !important;
-            transform: none !important;
-            
-            /* Стили простого прозрачно-серого текстового блока */
-            background-color: rgba(30, 30, 30, 0.4) !important;
-            -webkit-backdrop-filter: blur(2px) !important;
-            backdrop-filter: blur(2px) !important;
-            border: none !important;
-            box-shadow: none !important;
-            
-            /* Размеры обычного блока */
-            margin-top: 15px !important;
-            width: auto !important;
-            max-width: 90% !important;
-            padding: 8px 12px !important;
-            border-radius: 8px !important;
-            font-size: 0.95rem !important;
-        }
-    }
-
-    /* СЦЕНАРИЙ 2: ВЫСОТА НЕ ПОЗВОЛЯЕТ (Низкий экран / Альбомный режим). 
-       Текст возвращается ПОВЕРХ картинки в полупрозрачный компактный овал */
-    @media (max-height: 480px) {
-        .lightbox-media-wrapper {
-            flex-direction: row !important;
-            justify-content: center !important;
-        }
-
-        .lightbox-content {
-            max-height: 82vh !important; /* Картинка занимает максимум места */
-        }
-
-        #lightbox-caption {
-            /* Позиционируем овал поверх нижнего края картинки */
-            position: absolute !important;
-            bottom: 12px !important;
-            left: 50% !important;
-            transform: translateX(-50%) !important;
-            
-            /* Сжатие строго по ширине текста */
-            width: max-content !important;
-            max-width: 85% !important;
-            display: inline-block !important;
-            white-space: normal !important;
-            word-break: break-word !important;
-            
-            /* Аккуратный полупрозрачный овал */
-            background-color: rgba(40, 40, 40, 0.75) !important;
-            -webkit-backdrop-filter: blur(6px) !important;
-            backdrop-filter: blur(6px) !important;
-            border: 1px solid rgba(255, 255, 255, 0.2) !important;
-            border-radius: 20px !important;
-            padding: 6px 16px !important;
-            font-size: 0.85rem !important;
-            line-height: 1.3;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
-        }
-    }
-}
-/* ==========================================================================
-   АДАПТИВНАЯ ПОДПИСЬ ДЛЯ МОБИЛЬНЫХ ТЕЛЕФОНОВ (max-width: 680px)
-   ========================================================================== */
-@media (max-width: 680px) {
-    
-    /* СЦЕНАРИЙ 1: Высота ПОЗВОЛЯЕТ. Текст находится ПОД картинкой БЕЗ ОВАЛА */
-    @media (min-height: 481px) {
-        .lightbox-media-wrapper {
-            flex-direction: column !important; /* Выстраиваем элементы вертикально */
-            justify-content: center !important;
-            height: auto !important;
-        }
-
-        .lightbox-content {
-            max-height: 74vh !important; /* Освобождаем место для текста снизу */
-        }
-
-        #lightbox-caption {
-            /* Отменяем абсолютное позиционирование овала, спускаем вниз под картинку */
-            position: relative !important;
-            bottom: auto !important;
-            left: auto !important;
-            transform: none !important;
-            
-            /* Полностью убираем овальную форму, границы и тени */
-            border-radius: 0px !important;
-            border: none !important;
-            box-shadow: none !important;
-            -webkit-backdrop-filter: none !important;
-            backdrop-filter: none !important;
-            
-            /* Обычный плоский прозрачно-серый фон для текста */
-            background-color: rgba(20, 20, 20, 0.4) !important; 
-            
-            /* Размеры стандартного текстового блока */
-            margin-top: 14px !important;
-            width: 100% !important;
-            max-width: 90% !important;
-            padding: 6px 4px !important;
-            font-size: 0.95rem !important;
-            line-height: 1.4;
-        }
-    }
-
-    /* СЦЕНАРИЙ 2: Высота НЕ ПОЗВОЛЯЕТ. Текст превращается в ОВАЛ ПОВЕРХ картинки */
-    @media (max-height: 480px) {
-        .lightbox-media-wrapper {
-            flex-direction: row !important;
-            justify-content: center !important;
-        }
-
-        .lightbox-content {
-            max-height: 82vh !important; /* Картинка берет максимум высоты */
-        }
-
-        #lightbox-caption {
-            /* Возвращаем позиционирование овала поверх нижнего края картинки */
-            position: absolute !important;
-            bottom: 12px !important;
-            left: 50% !important;
-            transform: translateX(-50%) !important;
-            
-            /* Сжатие строго по ширине текста */
-            width: max-content !important;
-            max-width: 85% !important;
-            display: inline-block !important;
-            white-space: normal !important;
-            word-break: break-word !important;
-            
-            /* Аккуратный полупрозрачный овал серого цвета */
-            background-color: rgba(45, 45, 45, 0.7) !important;
-            -webkit-backdrop-filter: blur(6px) !important;
-            backdrop-filter: blur(6px) !important;
-            border: 1px solid rgba(255, 255, 255, 0.2) !important;
-            border-radius: 20px !important;
-            padding: 6px 16px !important;
-            font-size: 0.85rem !important;
-            line-height: 1.3;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
-        }
-    }
-}
-/* ==========================================================================
-   АДАПТИВНАЯ ПОДПИСЬ ДЛЯ МОБИЛЬНЫХ ТЕЛЕФОНОВ (max-width: 680px)
-   ========================================================================== */
-@media (max-width: 680px) {
-    
-    /* СЦЕНАРИЙ 1: Высота ПОЗВОЛЯЕТ. Текст находится ПОД картинкой БЕЗ ОВАЛА И БЕЗ СЕРОГО ФОНА */
-    @media (min-height: 481px) {
-        .lightbox-media-wrapper {
-            flex-direction: column !important; /* Выстраиваем элементы вертикально */
-            justify-content: center !important;
-            height: auto !important;
-        }
-
-        .lightbox-content {
-            max-height: 74vh !important; /* Освобождаем место для текста снизу */
-        }
-
-        #lightbox-caption {
-            /* Отменяем абсолютное позиционирование овала, спускаем вниз под картинку */
-            position: relative !important;
-            bottom: auto !important;
-            left: auto !important;
-            transform: none !important;
-            
-            /* Полностью убираем овальную форму, границы, тени и размытие */
-            border-radius: 0px !important;
-            border: none !important;
-            box-shadow: none !important;
-            -webkit-backdrop-filter: none !important;
-            backdrop-filter: none !important;
-            
-            /* ПОЛНОЕ УДАЛЕНИЕ ФОНА (чистый текст на фоне подложки лайтбокса) */
-            background-color: transparent !important; 
-            background: transparent !important;
-            
-            /* Размеры стандартного текстового блока */
-            margin-top: 14px !important;
-            width: 100% !important;
-            max-width: 90% !important;
-            padding: 6px 0px !important; /* Убираем боковые отступы, так как фона нет */
-            font-size: 0.95rem !important;
-            line-height: 1.4;
-        }
-    }
-
-    /* СЦЕНАРИЙ 2: Высота НЕ ПОЗВОЛЯЕТ. Текст превращается в СЕРЫЙ ОВАЛ ПОВЕРХ картинки */
-    @media (max-height: 480px) {
-        .lightbox-media-wrapper {
-            flex-direction: row !important;
-            justify-content: center !important;
-        }
-
-        .lightbox-content {
-            max-height: 82vh !important; /* Картинка берет максимум высоты */
-        }
-
-        #lightbox-caption {
-            /* Возвращаем позиционирование овала поверх нижнего края картинки */
-            position: absolute !important;
-            bottom: 12px !important;
-            left: 50% !important;
-            transform: translateX(-50%) !important;
-            
-            /* Сжатие строго по ширине текста */
-            width: max-content !important;
-            max-width: 85% !important;
-            display: inline-block !important;
-            white-space: normal !important;
-            word-break: break-word !important;
-            
-            /* Полупрозрачный серый овал */
-            background-color: rgba(50, 50, 50, 0.65) !important;
-            -webkit-backdrop-filter: blur(6px) !important;
-            backdrop-filter: blur(6px) !important;
-            border: 1px solid rgba(255, 255, 255, 0.18) !important;
-            border-radius: 20px !important;
-            padding: 6px 16px !important;
-            font-size: 0.85rem !important;
-            line-height: 1.3;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
-        }
-    }
-}
-.lightbox-content {
-    /* Точка масштабирования должна строго оставаться по центру для правильного смещения координат */
-    transform-origin: center center !important;
-    transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
-    will-change: transform;
-    display: block;
-}
-/* --- ТАКТИЛЬНЫЕ КУРСОРЫ ДЛЯ ПК (БЕЗ ЛУПЫ) --- */
-@media (pointer: fine) {
-    /* Когда картинка в обычном размере — показываем стандартную стрелку вместо лупы */
-    .lightbox-content.lightbox-normal { 
-        cursor: default !important; 
-    }
-    
-    /* Когда картинка увеличена — показываем руку для перетаскивания вместо лупы-минус */
-    .lightbox-content.lightbox-zoomed { 
-        cursor: grab !important; 
-    }
-    
-    /* В момент активного перетаскивания зажатой мышкой */
-    .lightbox-content.lightbox-zoomed.is-dragging { 
-        cursor: grabbing !important; 
-    }
-}
-.lightbox-content {
-    /* Точка масштабирования должна быть строго по центру для корректной работы математики координат */
-    transform-origin: center center !important;
-    transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
-    will-change: transform;
-}
-/* ОБНОВЛЕНИЕ ДЛЯ КОРРЕКТНОГО МАСШТАБИРОВАНИЯ В ТОЧКУ */
-.lightbox-content {
-    /* Точка масштабирования строго по центру для предсказуемых смещений ректа */
-    transform-origin: center center !important;
-    
-    /* will-change изолирует слой отрисовки, убирая микро-фризы и размытие при масштабировании */
-    will-change: transform;
-    
-    /* Отключаем стандартное выделение и системное контекстное меню при долгом тапе */
-    -webkit-user-drag: none;
-    user-select: none;
-}
-
-/* Плавный переход масштаба только тогда, когда пользователь НЕ тащит картинку вручную */
-.lightbox-content:not(.is-dragging) {
-    transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1) !important;
-}
-
-/* Полностью убираем любые анимации переходов во время свободного перемещения (drag-and-drop) */
-.lightbox-content.is-dragging {
-    transition: none !important;
-}
-
-/* Стилизация курсоров для десктопов */
-@media (pointer: fine) {
-    .lightbox-content.lightbox-normal { 
-        cursor: zoom-in !important; 
-    }
-    .lightbox-content.lightbox-zoomed { 
-        cursor: grab !important; 
-    }
-    .lightbox-content.lightbox-zoomed.is-dragging { 
-        cursor: grabbing !important; 
-    }
-}
-/* УДАЛЕНИЕ ЛУПЫ И НАСТРОЙКА КУРСОРОВ ПК */
-.lightbox-content {
-    transform-origin: center center !important;
-    will-change: transform;
-    -webkit-user-drag: none;
-    user-select: none;
-}
-
-/* Обычное состояние: стандартный курсор-стрелка вместо лупы */
-.lightbox-content.lightbox-normal { 
-    cursor: default !important; 
-}
-
-/* Приближенное состояние: «рука» для захвата вместо лупы-минус */
-.lightbox-content.lightbox-zoomed { 
-    cursor: grab !important; 
-}
-
-/* В момент активного перетаскивания зажатой мышкой */
-.lightbox-content.lightbox-zoomed.is-dragging { 
-    cursor: grabbing !important; 
-}
-
-/* Плавность смены состояний при отпускании */
-.lightbox-content:not(.is-dragging) {
-    transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1) !important;
-}
-
-.lightbox-content.is-dragging {
-    transition: none !important;
-}
-/* ФИКСАЦИЯ СЛОЯ КАРТИНКИ ДЛЯ КОНТРОЛЯ ГРАНИЦ */
-.lightbox-media-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100vw;
-    height: 100vh;
-    max-width: 100vw !important;
-    max-height: 100vh !important;
-    overflow: hidden;
-}
-
-.lightbox-content {
-    transform-origin: center center !important;
-    will-change: transform;
-    -webkit-user-drag: none;
-    user-select: none;
-    /* Убираем аппаратное размытие текстуры на границах */
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-}
-
-/* Настройки плавности возврата к границам */
-.lightbox-content:not(.is-dragging) {
-    transition: transform 0.22s cubic-bezier(0.25, 1, 0.5, 1) !important;
-}
-
-.lightbox-content.is-dragging {
-    transition: none !important;
-}
-/* --- ДЕСКТОПНЫЕ ШТОРЫ: ОТ КРАЕВ ЭКРАНА ДО ИЗОБРАЖЕНИЯ --- */
-.lightbox-desktop-curtains-wrapper {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    pointer-events: none; /* Пропускает события сквозь обертку */
-    z-index: 1012; /* Выше мобильных клик-зон (1010) и медиа-обертки (1005) */
-}
-
-.lightbox-curtain {
-    position: absolute;
-    top: 0;
-    height: 100vh;
-    width: calc(50vw - (82vh * 0.66) / 2); /* Авто-расчет: половина экрана минус половина примерной ширины фото */
-    min-width: 15vw; /* Гарантированный отступ, если картинка слишком широкая */
-    background: transparent;
-    cursor: pointer;
-    pointer-events: auto; /* Включаем кликабельность обратно для самих штор */
-    -webkit-tap-highlight-color: transparent;
-}
-
-.curtain-left {
-    left: 0;
-}
-
-.curtain-right {
-    right: 0;
-}
-
-/* --- СТИЛЬНЫЕ СТРЕЛОЧКИ НА ПК --- */
-.lightbox-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 56px;
-    height: 56px;
-    background-color: rgba(30, 31, 36, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 50%;
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 24px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    z-index: 1015; /* Выше десктопных штор, но ниже крестика */
-    user-select: none;
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
-    border-style: solid;
-}
-
-.lightbox-arrow:hover {
-    background-color: rgba(30, 31, 36, 0.75);
-    color: #ffffff;
-    transform: translateY(-50%) scale(1.05);
-}
-
-/* Прижимаем стрелки к краям изображения внутри штор */
-.arrow-left { left: 25px; }
-.arrow-right { right: 25px; }
-
-/* --- АДАПТИВНОСТЬ: ПОЛНОЕ ОТКЛЮЧЕНИЕ НА СМАРТФОНАХ --- */
-@media (max-width: 680px) {
-    .lightbox-desktop-curtains-wrapper,
-    .lightbox-arrow {
-        display: none !important;
-    }
-}
-/* --- ДЕСКТОПНЫЕ БЛОКИ ДЛЯ КЛИКА ОКОЛО КАРТИНКИ --- */
-.lightbox-desktop-curtains-wrapper {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    pointer-events: none; /* Пропускаем клики к центру экрана */
-    z-index: 1012;
-}
-
-.lightbox-curtain {
-    position: absolute;
-    top: 0;
-    height: 100vh;
-    /* Расчет ширины: ровно половина экрана минус половина максимальной ширины изображения */
-    width: calc(50vw - (82vh * 0.66) / 2); 
-    min-width: 12vw; /* Гарантированный блок для клика, если картинка слишком широкая */
-    background: transparent;
-    cursor: pointer;
-    pointer-events: auto; /* Включаем кликабельность обратно */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.curtain-left { left: 0; }
-.curtain-right { right: 0; }
-
-/* --- СТРЕЛОЧКИ НА ПК (ВЛОЖЕНЫ ВНУТРЬ БЛОКОВ) --- */
-.lightbox-arrow {
-    width: 56px;
-    height: 56px;
-    background-color: rgba(30, 31, 36, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 50%;
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 24px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: all 0.2s ease;
-    user-select: none;
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
-    border-style: solid;
-}
-
-/* Эффект при наведении на весь боковой блок, чтобы пользователю было легче кликать */
-.lightbox-curtain:hover .lightbox-arrow {
-    background-color: rgba(30, 31, 36, 0.75);
-    color: #ffffff;
-    transform: scale(1.05);
-}
-
-/* --- АДАПТИВНОЕ ИСКЛЮЧЕНИЕ МОБИЛЬНЫХ БЛОКОВ НА ПК --- */
-@media (min-width: 681px) {
-    /* Полностью удаляем мобильные 12% зоны на компьютерах */
-    .lightbox-mobile-curtain {
-        display: none !important;
-    }
-}
-
-/* --- МОБИЛЬНАЯ АДАПТАЦИЯ (СМАРТФОНЫ ДО 680px) --- */
-@media (max-width: 680px) {
-    /* Полностью убираем десктопные шторы и стрелки */
-    .lightbox-desktop-curtains-wrapper {
-        display: none !important;
-    }
-    /* Возвращаем стандартные мобильные зоны тапа поверх картинки */
-    .lightbox-mobile-curtain {
-        display: block;
-    }
-}
-
-/* ==========================================================================
-   ФИКС ДЕСКТОПНЫХ БЛОКОВ И СТРЕЛОК ПЕРЕКЛЮЧЕНИЯ
-   ========================================================================== */
-
-/* Контейнер десктопных штор на весь экран */
-.lightbox-desktop-curtains-wrapper {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    pointer-events: none; /* Пропускает клики к центру экрана */
-    z-index: 1012;
-}
-
-/* Боковые кликабельные зоны (расчет ширины: 50% экрана минус половина ширины фото) */
-.lightbox-curtain {
-    position: absolute;
-    top: 0;
-    height: 100vh;
-    width: calc(50vw - (82vh * 0.66) / 2); 
-    min-width: 12vw; /* Гарантированный блок для клика, если картинка слишком широкая */
-    background: transparent;
-    cursor: pointer;
-    pointer-events: auto; /* Включаем кликабельность обратно */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.curtain-left { left: 0; }
-.curtain-right { right: 0; }
-
-/* Стилизация круглых стрелок */
-.lightbox-arrow {
-    width: 56px;
-    height: 56px;
-    background-color: rgba(30, 31, 36, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 50%;
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 24px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: all 0.2s ease;
-    user-select: none;
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
-    border-style: solid;
-    outline: none;
-}
-
-/* Подсвечиваем стрелку при наведении на всю боковую область шторы */
-.lightbox-curtain:hover .lightbox-arrow {
-    background-color: rgba(30, 31, 36, 0.75);
-    color: #ffffff;
-    transform: scale(1.05);
-}
-
-/* Позиционирование стрелок внутри блоков */
-.arrow-left { margin-right: auto; margin-left: 30px; }
-.arrow-right { margin-left: auto; margin-right: 30px; }
-
-/* Отключаем мобильные curtain-зоны на дескрипторах */
-@media (min-width: 681px) {
-    .lightbox-mobile-curtain {
-        display: none !important;
-    }
-}
-
-/* Полная адаптивность: отключаем десктопные шторы на смартфонах */
-@media (max-width: 680px) {
-    .lightbox-desktop-curtains-wrapper {
-        display: none !important;
-    }
-    .lightbox-mobile-curtain {
-        display: block !important;
-    }
-}
-/* ==========================================================================
-   КОРРЕКЦИЯ ДВУХПАНЕЛЬНОГО БЛОКА ВНУТРИ ЛАЙТБОКСА
-   ========================================================================== */
-
-/* Предотвращаем конфликты: центрируем медиа-блок поверх разделенных панелей */
-.lightbox .lightbox-media-wrapper {
-    position: relative;
-    z-index: 1015 !important; /* Картинка должна быть выше панелей */
-    pointer-events: auto;
-}
-
-/* Делаем так, чтобы текстовые блоки реагировали на наведение, но не мешали кликать на фото */
-.md\:flex.absolute.inset-0 {
-    background-color: transparent !important; /* Оставляем подложку лайтбокса главной */
-}
-
-/* Стилизация встроенных стрелок кнопок */
-.lightbox-close, 
-.md\:flex button {
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-}
-
-/* Плавное затемнение панелей при наведении для индикации кликабельности */
-.md\:flex .w-1\/2 {
-    transition: opacity 0.3s ease, background-color 0.3s ease;
-    opacity: 0.15; /* В обычном состоянии панели полупрозрачные, чтобы видеть фото */
-}
-
-.md\:flex .w-1\/2:hover {
-    opacity: 0.95; /* При наведении на панель текст и градиент становятся четкими */
-}
-
-/* Если картинка развернута на весь экран (зум), полностью изолируем десктопную сетку */
-.lightbox:has(.zoomed) .hidden.md\:flex {
-    display: none !important;
-}
-
-/* Скрытие мобильныхカーテン-зон на десктопе, чтобы не дублировать клики */
-@media (min-width: 681px) {
-    .lightbox-mobile-curtain {
-        display: none !important;
-    }
-}
-/* ==========================================================================
-   ФИКСАТОР СЛОЕВ И БОКОВЫХ ПАНЕЛЕЙ ДЛЯ ЛАЙТБОКСА
-   ========================================================================== */
-
-/* Изолируем центральный медиа-блок, выталкивая его на передний план над панелями текста */
-.lightbox .lightbox-media-wrapper {
-    position: relative;
-    z-index: 1005 !important;
-    pointer-events: auto;
-}
-
-/* Принудительно задаем поведение боковых карточек, чтобы они не растягивались на пол-экрана */
-.lightbox-side-panel {
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
-}
-
-/* Легкий интерактивный эффект при наведении на текстовые блоки */
-.lightbox-side-panel:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
-}
-
-/* Прячем всю сетку панелей, если пользователь использует зум/зум-колесико */
-.lightbox:has(.zoomed) .hidden.md\:flex,
-.lightbox:has(.lightbox-zoomed) .hidden.md\:flex {
-    display: none !important;
-}
-
-/* Убираем конфликты с мобильной версткой на ПК */
-@media (min-width: 681px) {
-    .lightbox-mobile-curtain {
-        display: none !important;
-    }
-}
-/* ==========================================================================
-   НЕВИДИМЫЕ КЛИК-ЗОНЫ НА ВЕСЬ ЭКРАН (ПК)
-   ========================================================================== */
-
-/* Изолируем центральный медиа-блок, чтобы клики по самой картинке (для зума) не перехватывались */
-.lightbox .lightbox-media-wrapper {
-    position: relative;
-    z-index: 1015 !important; /* Картинка и подпись встают выше невидимых половин экрана */
-    pointer-events: auto;
-}
-
-/* Полностью отключаем клик-зоны, если картинка приближена (зум) */
-.lightbox:has(.zoomed) .hidden.md\:block,
-.lightbox:has(.lightbox-zoomed) .hidden.md\:block {
-    display: none !important;
-}
-
-/* Убираем мобильные шторки на ПК, чтобы избежать дублирования */
-@media (min-width: 681px) {
-    .lightbox-mobile-curtain {
-        display: none !important;
-    }
-}
-/* ==========================================================================
-   ФИКС НЕВИДИМЫХ КЛИК-ЗОН НА ПОЛ-ЭКРАНА ДЛЯ ПК
-   ========================================================================== */
-
-/* Невидимые зоны на половину экрана */
-.lightbox-desktop-zone {
-    position: fixed;
-    top: 0;
-    height: 100vh;
-    width: 50vw;
-    background: transparent !important;
-    border: none !important;
-    outline: none !important;
-    z-index: 1000; /* Ниже, чем картинка (1005), но покрывает весь задний фон */
-    cursor: pointer;
-}
-
-.zone-left {
-    left: 0;
-}
-
-.zone-right {
-    right: 0;
-}
-
-/* Центральный медиа-блок ставим строго выше невидимых половин, 
-   чтобы клик по самому фото активировал handleImageClick (зум) */
-.lightbox .lightbox-media-wrapper {
-    position: relative;
-    z-index: 1005 !important;
-    pointer-events: auto;
-}
-
-/* Полностью отключаем зоны на ПК при зуме */
-.lightbox:has(.zoomed) .lightbox-desktop-zone,
-.lightbox:has(.lightbox-zoomed) .lightbox-desktop-zone {
-    display: none !important;
-    pointer-events: none !important;
-}
-
-/* Отключаем десктопные зоны на мобильных устройствах */
-@media (max-width: 680px) {
-    .lightbox-desktop-zone {
-        display: none !important;
-    }
-}
-/* ==========================================================================
-   ФИКСАТОР ЧИСТЫХ КЛИК-ЗОН ДЛЯ ПЕРЕКЛЮЧЕНИЯ НА ПК
-   ========================================================================== */
-
-/* Главный контейнер лайтбокса */
-.lightbox {
-    position: fixed;
-    z-index: 999999 !important;
-    top: 0;
-    left: 0;
-    width: 100vw !important;
-    height: 100vh !important;
-    user-select: none;
-}
-
-/* Вспомогательный слой для отлова координат */
-.lightbox-desktop-zone-wrapper {
-    z-index: 1001;
-}
-
-/* Центральный медиа-блок имеет приоритет на клик (для зума) */
-.lightbox .lightbox-media-wrapper {
-    position: relative;
-    z-index: 1005 !important;
-    pointer-events: auto;
-}
-
-/* Сама картинка */
-.lightbox-content {
-    pointer-events: auto !important;
-}
-
-/* Стилизация курсора для фона на ПК: показываем стрелочки влево/вправо в зависимости от половины экрана */
-@media (pointer: fine) {
-    .lightbox:not(:has(.zoomed)):not(:has(.lightbox-zoomed)) {
-        cursor: url("data:image/svg+xml,%3Csvg xmlns='http://w3.org' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M12 5l7 7-7 7'/%3E%3C/svg%3E"), auto !important;
-    }
-}
-/* ==========================================================================
-   ПОЛНОЭКРАННЫЕ НЕВИДИМЫЕ ЗОНЫ ПЕРЕКЛЮЧЕНИЯ ДЛЯ ПК
-   ========================================================================== */
-
-/* Обертка для кнопок на весь экран */
-.lightbox-fullscreen-pc-triggers {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    z-index: 1012; /* Встает поверх оберток, клики больше не блокируются кодом JS */
-    pointer-events: none; /* Пропускает события сквозь основной контейнер */
-}
-
-/* Разделение экрана ровно на две невидимые половины */
-.pc-trigger-half {
-    width: 50vw;
-    height: 100vh;
-    background: transparent !important;
-    border: none !important;
-    outline: none !important;
-    pointer-events: auto; /* Включаем кликабельность обратно только для самих половин */
-}
-
-/* Настройка стандартных указателей мыши влево-вправо */
-.pc-left { cursor: left; }
-.pc-right { cursor: right; }
-
-/* КРИТИЧЕСКИЙ ФИКС ДЛЯ ЗУМА: Если мышка находится НАД картинкой, 
-   невидимые зоны временно отключаются, позволяя кликнуть по фото для зума */
-.lightbox-fullscreen-pc-triggers:has(+ .lightbox-media-wrapper:hover) .pc-trigger-half {
-    pointer-events: none !important;
-}
-
-/* Принудительно выставляем приоритеты для медиа-контента */
-.lightbox .lightbox-media-wrapper {
-    position: relative;
-    z-index: 1005 !important;
-    pointer-events: auto !important;
-}
-
-/* Полностью отключаем невидимые зоны на ПК при активном зуме */
-.lightbox:has(.zoomed) .lightbox-fullscreen-pc-triggers,
-.lightbox:has(.lightbox-zoomed) .lightbox-fullscreen-pc-triggers {
-    display: none !important;
-    pointer-events: none !important;
-}
-
-/* Исключаем десктопную логику на смартфонах */
-@media (max-width: 680px) {
-    .lightbox-fullscreen-pc-triggers {
-        display: none !important;
-    }
-}
-/* ==========================================================================
-   ФИКСАТОР КЛИКА ПО ФОНУ ДЛЯ ПЕРЕКЛЮЧЕНИЯ СЛАЙДОВ (ПК)
-   ========================================================================== */
-
-/* Главный контейнер лайтбокса на весь экран */
-.lightbox {
-    position: fixed;
-    z-index: 999999 !important;
-    top: 0;
-    left: 0;
-    width: 100vw !important;
-    height: 100vh !important;
-    user-select: none;
-    cursor: pointer; /* Делает фон визуально кликабельным */
-}
-
-/* Центральный медиа-блок (обертка картинки) */
-.lightbox .lightbox-media-wrapper {
-    position: relative;
-    z-index: 1005 !important;
-    pointer-events: auto !important;
-    max-width: 95vw;
-    max-height: 82vh;
-}
-
-/* Сама картинка */
-.lightbox-content {
-    pointer-events: auto !important;
-}
-
-/* Отключаем перехват кликов у подписи, чтобы клик по ней не триггерил фон */
-#lightbox-caption {
-    pointer-events: auto;
-}
-/* ==========================================================================
-   ФИНАЛЬНЫЙ ФИКСАТОР КЛИКА ПО 100% ФОНА БЕЗ ИСПОЛЬЗОВАНИЯ ШТОР
-   ========================================================================== */
-
-/* Контейнер лайтбокса на 100% экрана */
-.lightbox {
-    position: fixed;
-    z-index: 999999 !important;
-    top: 0;
-    left: 0;
-    width: 100vw !important;
-    height: 100vh !important;
-    user-select: none;
-    cursor: pointer; /* Делает весь фон интерактивно кликабельным */
-}
-
-/* Медиа-враппер на 100% ширины и высоты */
-.lightbox .lightbox-media-wrapper {
-    position: relative;
-    z-index: 1005 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    max-width: 100vw !important;
-    max-height: 100vh !important;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    pointer-events: auto; /* Позволяет кликам проходить сквозь пустые места враппера к фону */
-}
-
-/* Сама картинка сохраняет индивидуальный клик для зума */
-.lightbox-content {
-    pointer-events: auto !important;
-}
-
-/* Изолируем подпись от ложных кликов */
-#lightbox-caption {
-    pointer-events: auto;
-    cursor: default;
-}
-
-/* Отключаем мобильные curtain-зоны на ПК, чтобы избежать конфликта эвентов */
-@media (min-width: 681px) {
-    .lightbox-mobile-curtain {
-        display: none !important;
-    }
-}
-/* Оптимизация супер-зума и аппаратного ускорения на телефонах */
-@media (max-width: 680px) {
-  .lightbox-content {
-    /* Изолирует слой текстуры, убирая размытие и микро-фризы при экстремальном зуме */
-    will-change: transform;
-    -webkit-user-drag: none;
-    user-select: none;
-    touch-action: none;
-  }
-  
-  /* Мягкий тактильный возврат картинки на место при сбросе жеста */
-  .lightbox-content:not(.is-dragging) {
-    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  }
 }
