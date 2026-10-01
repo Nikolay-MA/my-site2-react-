@@ -112,11 +112,9 @@ export default function Lightbox({ images, initialIndex, onClose }) {
       const imgElem = document.querySelector(".lightbox-content");
       if (!imgElem) return;
 
-      // Проверяем, находится ли курсор мыши в данный момент над картинкой
       const isMouseOverImage = e.target === imgElem || imgElem.contains(e.target);
 
       if (isMouseOverImage) {
-        // ЕСЛИ МЫШКА НА КАРТИНКЕ: только зумируем (через Ctrl или обычный скролл)
         setZoom((prevZoom) => {
           const newZoom = prevZoom - e.deltaY * 0.005;
           const clampedZoom = Math.min(Math.max(newZoom, 1), 5);
@@ -130,7 +128,6 @@ export default function Lightbox({ images, initialIndex, onClose }) {
           return clampedZoom;
         });
       } else {
-        // ЕСЛИ МЫШКА НА ФОНЕ: переключаем изображения в любом режиме
         if (e.deltaY > 0 || e.deltaX > 0) {
           handleNext();
         } else {
@@ -251,22 +248,28 @@ export default function Lightbox({ images, initialIndex, onClose }) {
     if (e.touches.length < 2) isPinching.current = false;
     isDragging.current = false;
 
-    if (zoom === 1) {
-      if (Math.abs(position.y) > 120) {
-        onClose();
+    if (e.changedTouches.length === 1) {
+      touchEndX.current = e.changedTouches[0].clientX;
+      touchEndY.current = e.changedTouches[0].clientY;
+      const diffX = touchStartX.current - touchEndX.current;
+      const diffY = touchStartY.current - touchEndY.current;
+
+      // Проверка на свайп: если сдвиг по горизонтали значительный и больше, чем по вертикали
+      if (Math.abs(diffX) > 60 && Math.abs(diffX) > Math.abs(diffY)) {
+        if (diffX > 0) {
+          handleNext();
+        } else {
+          handlePrev();
+        }
         return;
-      } else {
-        resetZoom();
       }
 
-      if (e.changedTouches.length === 1) {
-        touchEndX.current = e.changedTouches[0].clientX;
-        touchEndY.current = e.changedTouches[0].clientY;
-        const diffX = touchStartX.current - touchEndX.current;
-        const diffY = touchStartY.current - touchEndY.current;
-
-        if (Math.abs(diffX) > 50 && Math.abs(diffX) > Math.abs(diffY)) {
-          if (diffX > 0) handleNext(); else handlePrev();
+      // Если зума нет, проверяем вертикальный свайп для закрытия
+      if (zoom === 1) {
+        if (Math.abs(position.y) > 120) {
+          onClose();
+        } else {
+          resetZoom();
         }
       }
     }
