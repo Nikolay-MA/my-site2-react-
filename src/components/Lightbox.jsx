@@ -56,7 +56,6 @@ export default function Lightbox({ images, initialIndex, onClose }) {
     const imgElem = document.querySelector(".lightbox-content");
     if (!imgElem || currentZoom <= 1) return { x: 0, y: 0 };
 
-    // Вычисляем реальные физические размеры отрисованного изображения внутри object-fit
     const wRatio = imgElem.naturalWidth / imgElem.clientWidth;
     const hRatio = imgElem.naturalHeight / imgElem.clientHeight;
     const maxRatio = Math.max(wRatio, hRatio);
@@ -64,11 +63,9 @@ export default function Lightbox({ images, initialIndex, onClose }) {
     const visibleWidth = imgElem.naturalWidth / maxRatio;
     const visibleHeight = imgElem.naturalHeight / maxRatio;
 
-    // Считаем излишек размеров при текущем уровне зума относительно экрана
     const overflowX = visibleWidth * currentZoom - window.innerWidth;
     const overflowY = visibleHeight * currentZoom - window.innerHeight;
 
-    // Устанавливаем лимиты сдвига матрицы для удержания краев фото
     const limitX = overflowX > 0 ? overflowX / 2 : 0;
     const limitY = overflowY > 0 ? overflowY / 2 : 0;
 
@@ -115,7 +112,11 @@ export default function Lightbox({ images, initialIndex, onClose }) {
       const imgElem = document.querySelector(".lightbox-content");
       if (!imgElem) return;
 
-      if (e.ctrlKey || Math.abs(e.deltaY) > 20) {
+      // Проверяем, находится ли курсор мыши в данный момент над картинкой
+      const isMouseOverImage = e.target === imgElem || imgElem.contains(e.target);
+
+      if (isMouseOverImage) {
+        // ЕСЛИ МЫШКА НА КАРТИНКЕ: только зумируем (через Ctrl или обычный скролл)
         setZoom((prevZoom) => {
           const newZoom = prevZoom - e.deltaY * 0.005;
           const clampedZoom = Math.min(Math.max(newZoom, 1), 5);
@@ -128,10 +129,8 @@ export default function Lightbox({ images, initialIndex, onClose }) {
           }
           return clampedZoom;
         });
-        return;
-      }
-
-      if (zoom === 1) {
+      } else {
+        // ЕСЛИ МЫШКА НА ФОНЕ: переключаем изображения в любом режиме
         if (e.deltaY > 0 || e.deltaX > 0) {
           handleNext();
         } else {
@@ -216,11 +215,16 @@ export default function Lightbox({ images, initialIndex, onClose }) {
       e.preventDefault();
       const currentDistance = getTouchDistance(e.touches);
       if (currentDistance === 0) return;
-      const factor = currentDistance / startTouchDistance.current;
+      
+      const isMobilePhone = window.innerWidth <= 680;
+      const speedFactor = isMobilePhone ? 4.5 : 2.2;
+      const factor = 1 + (currentDistance / startTouchDistance.current - 1) * speedFactor;
       
       setZoom(() => {
         const newZoom = startZoom.current * factor;
-        const clampedZoom = Math.min(Math.max(newZoom, 1), 5);
+        const maxZoomLimit = isMobilePhone ? 16 : 12;
+        const clampedZoom = Math.min(Math.max(newZoom, 1), maxZoomLimit);
+        
         if (clampedZoom === 1) {
           setPosition({ x: 0, y: 0 });
         } else {
@@ -256,8 +260,8 @@ export default function Lightbox({ images, initialIndex, onClose }) {
       }
 
       if (e.changedTouches.length === 1) {
-        touchEndX.current = e.changedTouches.clientX;
-        touchEndY.current = e.changedTouches.clientY;
+        touchEndX.current = e.changedTouches[0].clientX;
+        touchEndY.current = e.changedTouches[0].clientY;
         const diffX = touchStartX.current - touchEndX.current;
         const diffY = touchStartY.current - touchEndY.current;
 
@@ -271,24 +275,20 @@ export default function Lightbox({ images, initialIndex, onClose }) {
   if (!images || images.length === 0) return null;
   const currentImage = images[currentIndex];
 
- return ReactDOM.createPortal(
+  return ReactDOM.createPortal(
     <div 
       className="lightbox" 
       onClick={(e) => {
         const imgElem = document.querySelector(".lightbox-content");
         
-        // 1. ЕСЛИ КЛИКНУЛИ ПО КАРТИНКЕ: вызываем встроенный зум
         if (imgElem && imgElem.contains(e.target)) {
           handleImageClick(e);
           return;
         }
 
-        // 2. ЕСЛИ КЛИКНУЛИ МИМО КАРТИНКИ (ПО ФОНУ В ЛЮБОМ МЕСТЕ):
         if (zoom === 1) {
-          // Игнорируем подпись, чтобы клик по тексту подписи не перелистывал фото
           if (e.target.id === "lightbox-caption") return;
 
-          // Делим экран ровно пополам (100% ширины) и переключаем слайды
           const halfWidth = window.innerWidth / 2;
           if (e.clientX < halfWidth) {
             handlePrev(e);
@@ -296,7 +296,6 @@ export default function Lightbox({ images, initialIndex, onClose }) {
             handleNext(e);
           }
         } else {
-          // Если картинка приближена (активный зум) — клик по фону закрывает лайтбокс
           onClose();
         }
       }}
@@ -308,17 +307,12 @@ export default function Lightbox({ images, initialIndex, onClose }) {
       onMouseLeave={handleMouseUp}
       style={{ backgroundColor: `rgba(10, 11, 14, ${bgOpacity})` }}
     >
-      {/* 1. КРЕСТИК НА САМОМ ВЕРХУ (z-index: 1020) */}
       <span className={`lightbox-close ${zoom > 1 ? "hidden-on-zoom" : ""}`} onClick={onClose}>&times;</span>
       
-      {/* 2. ВСЕ ЛИШНИЕ СЛОИ И ШТОРЫ УДАЛЕНЫ — РАСЧЕТ ИДЕТ ОТ КООРДИНАТ КЛИКА ПО ФОНУ */}
-          
-      {/* 3. ЦЕНТРАЛЬНЫЙ МЕДИА-БЛОК — РАСТЯНУТ НА 100% ЭКРАНА */}
       <div 
         className={`lightbox-media-wrapper ${zoom > 1 ? "zoomed" : ""}`}
         onMouseDown={handleMouseDown}
       >
-        {/* МОБИЛЬНЫЕ КЛИК-ЗОНЫ (Скроются на ПК через CSS автоматически) */}
         {zoom === 1 && (
           <>
             <div className="lightbox-mobile-curtain mobile-curtain-left" onClick={(e) => { e.stopPropagation(); handlePrev(e); }}></div>
@@ -342,5 +336,4 @@ export default function Lightbox({ images, initialIndex, onClose }) {
     </div>,
     document.body
   );
-
 }

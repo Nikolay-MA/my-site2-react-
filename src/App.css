@@ -1661,3 +1661,18 @@ button.btn-social.donghua-tab-btn.tab-active { background: var(--primary-gradien
         display: none !important;
     }
 }
+/* Оптимизация супер-зума и аппаратного ускорения на телефонах */
+@media (max-width: 680px) {
+  .lightbox-content {
+    /* Изолирует слой текстуры, убирая размытие и микро-фризы при экстремальном зуме */
+    will-change: transform;
+    -webkit-user-drag: none;
+    user-select: none;
+    touch-action: none;
+  }
+  
+  /* Мягкий тактильный возврат картинки на место при сбросе жеста */
+  .lightbox-content:not(.is-dragging) {
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+}
