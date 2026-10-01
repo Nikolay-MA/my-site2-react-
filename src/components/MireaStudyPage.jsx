@@ -30,13 +30,15 @@ export default function MireaStudyPage() {
     { caption: t("mirea.captions.campus2"), src: currentPhotoImg },
     { caption: t("mirea.captions.flag"), src: flagImg }
   ];
+
   return (
     <section className="info-section-block page-fade-animation">
       <h2>{t("mirea.title")}</h2>
       <div className="legal-info-card">
         <h3>{t("mirea.sub")}</h3>
         <p style={{ marginBottom: "12px" }}><strong>{t("mirea.institute")}</strong> {t("mirea.instVal")}</p>
-        <p style={{ marginBottom: "25px" }}><strong>{t("mirea.direction")}</strong> {t("mirea.dirVal")}</p>
+        <p style={{ marginBottom: "12px" }}><strong>{t("mirea.direction")}</strong> {t("mirea.dirVal")}</p>
+        <p style={{ marginBottom: "25px" }}><strong>{t("mirea.educationForm")}</strong> {t("mirea.educationFormVal")}</p>
         
         <h3 style={{ marginTop: "30px", marginBottom: "15px" }}>{t("mirea.gallery")}</h3>
         <div className="gallery-grid" style={{ marginBottom: "30px" }}>

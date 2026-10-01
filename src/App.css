@@ -542,3 +542,32 @@ button.btn-social.donghua-tab-btn.tab-active { background: var(--primary-gradien
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     .top-navigation, .container, .anime-card, .school-info-card, .legal-info-card { border-width: 0.5px; }
 }
+/* Изменения только для мобильных телефонов */
+@media (max-width: 680px) {
+    /* 1. Постер аниме встает по всей ширине экрана */
+    .donghua-poster-block {
+        width: 100% !important;
+        flex: 0 0 100% !important;
+        height: auto !important;
+        aspect-ratio: 2/3; /* Сохраняет правильные пропорции постера */
+    }
+
+    /* Дополнительно убираем боковые внутренние отступы у самой карточки, 
+       чтобы постер прижимался к краям на телефоне */
+    .donghua-card-wrapper {
+        padding: 15px 0px !important;
+    }
+    
+    .donghua-text-content {
+        padding: 0 15px !important; /* Возвращаем отступы для текста под фото */
+    }
+
+    /* 2. Количество звезд (рейтинг) внутри картинки справа снизу */
+    .donghua-rating-badge {
+        position: absolute !important;
+        bottom: 15px !important;
+        right: 15px !important;
+        top: auto !important; /* Сбрасываем позиционирование сверху, если оно было */
+        z-index: 10;
+    }
+}
