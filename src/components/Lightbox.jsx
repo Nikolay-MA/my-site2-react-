@@ -271,10 +271,35 @@ export default function Lightbox({ images, initialIndex, onClose }) {
   if (!images || images.length === 0) return null;
   const currentImage = images[currentIndex];
 
-  return ReactDOM.createPortal(
+ return ReactDOM.createPortal(
     <div 
       className="lightbox" 
-      onClick={onClose}
+      onClick={(e) => {
+        const imgElem = document.querySelector(".lightbox-content");
+        
+        // 1. ЕСЛИ КЛИКНУЛИ ПО КАРТИНКЕ: вызываем встроенный зум
+        if (imgElem && imgElem.contains(e.target)) {
+          handleImageClick(e);
+          return;
+        }
+
+        // 2. ЕСЛИ КЛИКНУЛИ МИМО КАРТИНКИ (ПО ФОНУ В ЛЮБОМ МЕСТЕ):
+        if (zoom === 1) {
+          // Игнорируем подпись, чтобы клик по тексту подписи не перелистывал фото
+          if (e.target.id === "lightbox-caption") return;
+
+          // Делим экран ровно пополам (100% ширины) и переключаем слайды
+          const halfWidth = window.innerWidth / 2;
+          if (e.clientX < halfWidth) {
+            handlePrev(e);
+          } else {
+            handleNext(e);
+          }
+        } else {
+          // Если картинка приближена (активный зум) — клик по фону закрывает лайтбокс
+          onClose();
+        }
+      }}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
@@ -286,29 +311,18 @@ export default function Lightbox({ images, initialIndex, onClose }) {
       {/* 1. КРЕСТИК НА САМОМ ВЕРХУ (z-index: 1020) */}
       <span className={`lightbox-close ${zoom > 1 ? "hidden-on-zoom" : ""}`} onClick={onClose}>&times;</span>
       
-      {/* 2. ДЕСКТОПНЫЕ БЛОКИ ДЛЯ КЛИКА ОКОЛО КАРТИНКИ + СТРЕЛКИ ВНУТРИ (z-index: 1012) */}
-      {zoom === 1 && (
-        <div className="lightbox-desktop-curtains-wrapper">
-          <div className="lightbox-curtain curtain-left" onClick={handlePrev}>
-            <button className="lightbox-arrow">&#10094;</button>
-          </div>
-          <div className="lightbox-curtain curtain-right" onClick={handleNext}>
-            <button className="lightbox-arrow">&#10095;</button>
-          </div>
-        </div>
-      )}
-
-      {/* 3. ЦЕНТРАЛЬНЫЙ МЕДИА-БЛОК (z-index: 1005) */}
+      {/* 2. ВСЕ ЛИШНИЕ СЛОИ И ШТОРЫ УДАЛЕНЫ — РАСЧЕТ ИДЕТ ОТ КООРДИНАТ КЛИКА ПО ФОНУ */}
+          
+      {/* 3. ЦЕНТРАЛЬНЫЙ МЕДИА-БЛОК — РАСТЯНУТ НА 100% ЭКРАНА */}
       <div 
         className={`lightbox-media-wrapper ${zoom > 1 ? "zoomed" : ""}`}
-        onClick={(e) => e.stopPropagation()}
         onMouseDown={handleMouseDown}
       >
-        {/* МОБИЛЬНЫЕ КЛИК-ЗОНЫ (z-index: 1010) — Автоматически скроются на ПК через CSS */}
+        {/* МОБИЛЬНЫЕ КЛИК-ЗОНЫ (Скроются на ПК через CSS автоматически) */}
         {zoom === 1 && (
           <>
-            <div className="lightbox-mobile-curtain mobile-curtain-left" onClick={handlePrev}></div>
-            <div className="lightbox-mobile-curtain mobile-curtain-right" onClick={handleNext}></div>
+            <div className="lightbox-mobile-curtain mobile-curtain-left" onClick={(e) => { e.stopPropagation(); handlePrev(e); }}></div>
+            <div className="lightbox-mobile-curtain mobile-curtain-right" onClick={(e) => { e.stopPropagation(); handleNext(e); }}></div>
           </>
         )}
 
@@ -316,12 +330,11 @@ export default function Lightbox({ images, initialIndex, onClose }) {
           className={`lightbox-content ${zoom > 1 ? "lightbox-zoomed" : "lightbox-normal"} ${isDragging.current ? "is-dragging" : ""}`} 
           src={currentImage.src} 
           alt={currentImage.caption} 
-          onClick={handleImageClick}
           style={{ transform: `translate(${position.x}px, ${position.y}px) scale(${zoom})` }}
         />
 
         {zoom === 1 && currentImage.caption && currentImage.caption.trim() !== "" && (
-          <div id="lightbox-caption" onClick={(e) => e.stopPropagation()}>
+          <div id="lightbox-caption">
             {currentImage.caption}
           </div>
         )}

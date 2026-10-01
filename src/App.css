@@ -1255,3 +1255,409 @@ button.btn-social.donghua-tab-btn.tab-active { background: var(--primary-gradien
     }
 }
 
+/* ==========================================================================
+   ФИКС ДЕСКТОПНЫХ БЛОКОВ И СТРЕЛОК ПЕРЕКЛЮЧЕНИЯ
+   ========================================================================== */
+
+/* Контейнер десктопных штор на весь экран */
+.lightbox-desktop-curtains-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none; /* Пропускает клики к центру экрана */
+    z-index: 1012;
+}
+
+/* Боковые кликабельные зоны (расчет ширины: 50% экрана минус половина ширины фото) */
+.lightbox-curtain {
+    position: absolute;
+    top: 0;
+    height: 100vh;
+    width: calc(50vw - (82vh * 0.66) / 2); 
+    min-width: 12vw; /* Гарантированный блок для клика, если картинка слишком широкая */
+    background: transparent;
+    cursor: pointer;
+    pointer-events: auto; /* Включаем кликабельность обратно */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.curtain-left { left: 0; }
+.curtain-right { right: 0; }
+
+/* Стилизация круглых стрелок */
+.lightbox-arrow {
+    width: 56px;
+    height: 56px;
+    background-color: rgba(30, 31, 36, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease;
+    user-select: none;
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border-style: solid;
+    outline: none;
+}
+
+/* Подсвечиваем стрелку при наведении на всю боковую область шторы */
+.lightbox-curtain:hover .lightbox-arrow {
+    background-color: rgba(30, 31, 36, 0.75);
+    color: #ffffff;
+    transform: scale(1.05);
+}
+
+/* Позиционирование стрелок внутри блоков */
+.arrow-left { margin-right: auto; margin-left: 30px; }
+.arrow-right { margin-left: auto; margin-right: 30px; }
+
+/* Отключаем мобильные curtain-зоны на дескрипторах */
+@media (min-width: 681px) {
+    .lightbox-mobile-curtain {
+        display: none !important;
+    }
+}
+
+/* Полная адаптивность: отключаем десктопные шторы на смартфонах */
+@media (max-width: 680px) {
+    .lightbox-desktop-curtains-wrapper {
+        display: none !important;
+    }
+    .lightbox-mobile-curtain {
+        display: block !important;
+    }
+}
+/* ==========================================================================
+   КОРРЕКЦИЯ ДВУХПАНЕЛЬНОГО БЛОКА ВНУТРИ ЛАЙТБОКСА
+   ========================================================================== */
+
+/* Предотвращаем конфликты: центрируем медиа-блок поверх разделенных панелей */
+.lightbox .lightbox-media-wrapper {
+    position: relative;
+    z-index: 1015 !important; /* Картинка должна быть выше панелей */
+    pointer-events: auto;
+}
+
+/* Делаем так, чтобы текстовые блоки реагировали на наведение, но не мешали кликать на фото */
+.md\:flex.absolute.inset-0 {
+    background-color: transparent !important; /* Оставляем подложку лайтбокса главной */
+}
+
+/* Стилизация встроенных стрелок кнопок */
+.lightbox-close, 
+.md\:flex button {
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Плавное затемнение панелей при наведении для индикации кликабельности */
+.md\:flex .w-1\/2 {
+    transition: opacity 0.3s ease, background-color 0.3s ease;
+    opacity: 0.15; /* В обычном состоянии панели полупрозрачные, чтобы видеть фото */
+}
+
+.md\:flex .w-1\/2:hover {
+    opacity: 0.95; /* При наведении на панель текст и градиент становятся четкими */
+}
+
+/* Если картинка развернута на весь экран (зум), полностью изолируем десктопную сетку */
+.lightbox:has(.zoomed) .hidden.md\:flex {
+    display: none !important;
+}
+
+/* Скрытие мобильныхカーテン-зон на десктопе, чтобы не дублировать клики */
+@media (min-width: 681px) {
+    .lightbox-mobile-curtain {
+        display: none !important;
+    }
+}
+/* ==========================================================================
+   ФИКСАТОР СЛОЕВ И БОКОВЫХ ПАНЕЛЕЙ ДЛЯ ЛАЙТБОКСА
+   ========================================================================== */
+
+/* Изолируем центральный медиа-блок, выталкивая его на передний план над панелями текста */
+.lightbox .lightbox-media-wrapper {
+    position: relative;
+    z-index: 1005 !important;
+    pointer-events: auto;
+}
+
+/* Принудительно задаем поведение боковых карточек, чтобы они не растягивались на пол-экрана */
+.lightbox-side-panel {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+/* Легкий интерактивный эффект при наведении на текстовые блоки */
+.lightbox-side-panel:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
+}
+
+/* Прячем всю сетку панелей, если пользователь использует зум/зум-колесико */
+.lightbox:has(.zoomed) .hidden.md\:flex,
+.lightbox:has(.lightbox-zoomed) .hidden.md\:flex {
+    display: none !important;
+}
+
+/* Убираем конфликты с мобильной версткой на ПК */
+@media (min-width: 681px) {
+    .lightbox-mobile-curtain {
+        display: none !important;
+    }
+}
+/* ==========================================================================
+   НЕВИДИМЫЕ КЛИК-ЗОНЫ НА ВЕСЬ ЭКРАН (ПК)
+   ========================================================================== */
+
+/* Изолируем центральный медиа-блок, чтобы клики по самой картинке (для зума) не перехватывались */
+.lightbox .lightbox-media-wrapper {
+    position: relative;
+    z-index: 1015 !important; /* Картинка и подпись встают выше невидимых половин экрана */
+    pointer-events: auto;
+}
+
+/* Полностью отключаем клик-зоны, если картинка приближена (зум) */
+.lightbox:has(.zoomed) .hidden.md\:block,
+.lightbox:has(.lightbox-zoomed) .hidden.md\:block {
+    display: none !important;
+}
+
+/* Убираем мобильные шторки на ПК, чтобы избежать дублирования */
+@media (min-width: 681px) {
+    .lightbox-mobile-curtain {
+        display: none !important;
+    }
+}
+/* ==========================================================================
+   ФИКС НЕВИДИМЫХ КЛИК-ЗОН НА ПОЛ-ЭКРАНА ДЛЯ ПК
+   ========================================================================== */
+
+/* Невидимые зоны на половину экрана */
+.lightbox-desktop-zone {
+    position: fixed;
+    top: 0;
+    height: 100vh;
+    width: 50vw;
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    z-index: 1000; /* Ниже, чем картинка (1005), но покрывает весь задний фон */
+    cursor: pointer;
+}
+
+.zone-left {
+    left: 0;
+}
+
+.zone-right {
+    right: 0;
+}
+
+/* Центральный медиа-блок ставим строго выше невидимых половин, 
+   чтобы клик по самому фото активировал handleImageClick (зум) */
+.lightbox .lightbox-media-wrapper {
+    position: relative;
+    z-index: 1005 !important;
+    pointer-events: auto;
+}
+
+/* Полностью отключаем зоны на ПК при зуме */
+.lightbox:has(.zoomed) .lightbox-desktop-zone,
+.lightbox:has(.lightbox-zoomed) .lightbox-desktop-zone {
+    display: none !important;
+    pointer-events: none !important;
+}
+
+/* Отключаем десктопные зоны на мобильных устройствах */
+@media (max-width: 680px) {
+    .lightbox-desktop-zone {
+        display: none !important;
+    }
+}
+/* ==========================================================================
+   ФИКСАТОР ЧИСТЫХ КЛИК-ЗОН ДЛЯ ПЕРЕКЛЮЧЕНИЯ НА ПК
+   ========================================================================== */
+
+/* Главный контейнер лайтбокса */
+.lightbox {
+    position: fixed;
+    z-index: 999999 !important;
+    top: 0;
+    left: 0;
+    width: 100vw !important;
+    height: 100vh !important;
+    user-select: none;
+}
+
+/* Вспомогательный слой для отлова координат */
+.lightbox-desktop-zone-wrapper {
+    z-index: 1001;
+}
+
+/* Центральный медиа-блок имеет приоритет на клик (для зума) */
+.lightbox .lightbox-media-wrapper {
+    position: relative;
+    z-index: 1005 !important;
+    pointer-events: auto;
+}
+
+/* Сама картинка */
+.lightbox-content {
+    pointer-events: auto !important;
+}
+
+/* Стилизация курсора для фона на ПК: показываем стрелочки влево/вправо в зависимости от половины экрана */
+@media (pointer: fine) {
+    .lightbox:not(:has(.zoomed)):not(:has(.lightbox-zoomed)) {
+        cursor: url("data:image/svg+xml,%3Csvg xmlns='http://w3.org' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M12 5l7 7-7 7'/%3E%3C/svg%3E"), auto !important;
+    }
+}
+/* ==========================================================================
+   ПОЛНОЭКРАННЫЕ НЕВИДИМЫЕ ЗОНЫ ПЕРЕКЛЮЧЕНИЯ ДЛЯ ПК
+   ========================================================================== */
+
+/* Обертка для кнопок на весь экран */
+.lightbox-fullscreen-pc-triggers {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    z-index: 1012; /* Встает поверх оберток, клики больше не блокируются кодом JS */
+    pointer-events: none; /* Пропускает события сквозь основной контейнер */
+}
+
+/* Разделение экрана ровно на две невидимые половины */
+.pc-trigger-half {
+    width: 50vw;
+    height: 100vh;
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    pointer-events: auto; /* Включаем кликабельность обратно только для самих половин */
+}
+
+/* Настройка стандартных указателей мыши влево-вправо */
+.pc-left { cursor: left; }
+.pc-right { cursor: right; }
+
+/* КРИТИЧЕСКИЙ ФИКС ДЛЯ ЗУМА: Если мышка находится НАД картинкой, 
+   невидимые зоны временно отключаются, позволяя кликнуть по фото для зума */
+.lightbox-fullscreen-pc-triggers:has(+ .lightbox-media-wrapper:hover) .pc-trigger-half {
+    pointer-events: none !important;
+}
+
+/* Принудительно выставляем приоритеты для медиа-контента */
+.lightbox .lightbox-media-wrapper {
+    position: relative;
+    z-index: 1005 !important;
+    pointer-events: auto !important;
+}
+
+/* Полностью отключаем невидимые зоны на ПК при активном зуме */
+.lightbox:has(.zoomed) .lightbox-fullscreen-pc-triggers,
+.lightbox:has(.lightbox-zoomed) .lightbox-fullscreen-pc-triggers {
+    display: none !important;
+    pointer-events: none !important;
+}
+
+/* Исключаем десктопную логику на смартфонах */
+@media (max-width: 680px) {
+    .lightbox-fullscreen-pc-triggers {
+        display: none !important;
+    }
+}
+/* ==========================================================================
+   ФИКСАТОР КЛИКА ПО ФОНУ ДЛЯ ПЕРЕКЛЮЧЕНИЯ СЛАЙДОВ (ПК)
+   ========================================================================== */
+
+/* Главный контейнер лайтбокса на весь экран */
+.lightbox {
+    position: fixed;
+    z-index: 999999 !important;
+    top: 0;
+    left: 0;
+    width: 100vw !important;
+    height: 100vh !important;
+    user-select: none;
+    cursor: pointer; /* Делает фон визуально кликабельным */
+}
+
+/* Центральный медиа-блок (обертка картинки) */
+.lightbox .lightbox-media-wrapper {
+    position: relative;
+    z-index: 1005 !important;
+    pointer-events: auto !important;
+    max-width: 95vw;
+    max-height: 82vh;
+}
+
+/* Сама картинка */
+.lightbox-content {
+    pointer-events: auto !important;
+}
+
+/* Отключаем перехват кликов у подписи, чтобы клик по ней не триггерил фон */
+#lightbox-caption {
+    pointer-events: auto;
+}
+/* ==========================================================================
+   ФИНАЛЬНЫЙ ФИКСАТОР КЛИКА ПО 100% ФОНА БЕЗ ИСПОЛЬЗОВАНИЯ ШТОР
+   ========================================================================== */
+
+/* Контейнер лайтбокса на 100% экрана */
+.lightbox {
+    position: fixed;
+    z-index: 999999 !important;
+    top: 0;
+    left: 0;
+    width: 100vw !important;
+    height: 100vh !important;
+    user-select: none;
+    cursor: pointer; /* Делает весь фон интерактивно кликабельным */
+}
+
+/* Медиа-враппер на 100% ширины и высоты */
+.lightbox .lightbox-media-wrapper {
+    position: relative;
+    z-index: 1005 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: 100vw !important;
+    max-height: 100vh !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: auto; /* Позволяет кликам проходить сквозь пустые места враппера к фону */
+}
+
+/* Сама картинка сохраняет индивидуальный клик для зума */
+.lightbox-content {
+    pointer-events: auto !important;
+}
+
+/* Изолируем подпись от ложных кликов */
+#lightbox-caption {
+    pointer-events: auto;
+    cursor: default;
+}
+
+/* Отключаем мобильные curtain-зоны на ПК, чтобы избежать конфликта эвентов */
+@media (min-width: 681px) {
+    .lightbox-mobile-curtain {
+        display: none !important;
+    }
+}
