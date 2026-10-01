@@ -283,20 +283,28 @@ export default function Lightbox({ images, initialIndex, onClose }) {
       onMouseLeave={handleMouseUp}
       style={{ backgroundColor: `rgba(10, 11, 14, ${bgOpacity})` }}
     >
+      {/* 1. КРЕСТИК НА САМОМ ВЕРХУ (z-index: 1020) */}
       <span className={`lightbox-close ${zoom > 1 ? "hidden-on-zoom" : ""}`} onClick={onClose}>&times;</span>
       
+      {/* 2. ДЕСКТОПНЫЕ БЛОКИ ДЛЯ КЛИКА ОКОЛО КАРТИНКИ + СТРЕЛКИ ВНУТРИ (z-index: 1012) */}
       {zoom === 1 && (
         <div className="lightbox-desktop-curtains-wrapper">
-          <div className="lightbox-curtain curtain-left" onClick={handlePrev}></div>
-          <div className="lightbox-curtain curtain-right" onClick={handleNext}></div>
+          <div className="lightbox-curtain curtain-left" onClick={handlePrev}>
+            <button className="lightbox-arrow">&#10094;</button>
+          </div>
+          <div className="lightbox-curtain curtain-right" onClick={handleNext}>
+            <button className="lightbox-arrow">&#10095;</button>
+          </div>
         </div>
       )}
 
+      {/* 3. ЦЕНТРАЛЬНЫЙ МЕДИА-БЛОК (z-index: 1005) */}
       <div 
         className={`lightbox-media-wrapper ${zoom > 1 ? "zoomed" : ""}`}
         onClick={(e) => e.stopPropagation()}
         onMouseDown={handleMouseDown}
       >
+        {/* МОБИЛЬНЫЕ КЛИК-ЗОНЫ (z-index: 1010) — Автоматически скроются на ПК через CSS */}
         {zoom === 1 && (
           <>
             <div className="lightbox-mobile-curtain mobile-curtain-left" onClick={handlePrev}></div>
@@ -321,4 +329,5 @@ export default function Lightbox({ images, initialIndex, onClose }) {
     </div>,
     document.body
   );
+
 }

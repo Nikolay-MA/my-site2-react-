@@ -1107,3 +1107,151 @@ button.btn-social.donghua-tab-btn.tab-active { background: var(--primary-gradien
 .lightbox-content.is-dragging {
     transition: none !important;
 }
+/* --- ДЕСКТОПНЫЕ ШТОРЫ: ОТ КРАЕВ ЭКРАНА ДО ИЗОБРАЖЕНИЯ --- */
+.lightbox-desktop-curtains-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none; /* Пропускает события сквозь обертку */
+    z-index: 1012; /* Выше мобильных клик-зон (1010) и медиа-обертки (1005) */
+}
+
+.lightbox-curtain {
+    position: absolute;
+    top: 0;
+    height: 100vh;
+    width: calc(50vw - (82vh * 0.66) / 2); /* Авто-расчет: половина экрана минус половина примерной ширины фото */
+    min-width: 15vw; /* Гарантированный отступ, если картинка слишком широкая */
+    background: transparent;
+    cursor: pointer;
+    pointer-events: auto; /* Включаем кликабельность обратно для самих штор */
+    -webkit-tap-highlight-color: transparent;
+}
+
+.curtain-left {
+    left: 0;
+}
+
+.curtain-right {
+    right: 0;
+}
+
+/* --- СТИЛЬНЫЕ СТРЕЛОЧКИ НА ПК --- */
+.lightbox-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 56px;
+    height: 56px;
+    background-color: rgba(30, 31, 36, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 1015; /* Выше десктопных штор, но ниже крестика */
+    user-select: none;
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border-style: solid;
+}
+
+.lightbox-arrow:hover {
+    background-color: rgba(30, 31, 36, 0.75);
+    color: #ffffff;
+    transform: translateY(-50%) scale(1.05);
+}
+
+/* Прижимаем стрелки к краям изображения внутри штор */
+.arrow-left { left: 25px; }
+.arrow-right { right: 25px; }
+
+/* --- АДАПТИВНОСТЬ: ПОЛНОЕ ОТКЛЮЧЕНИЕ НА СМАРТФОНАХ --- */
+@media (max-width: 680px) {
+    .lightbox-desktop-curtains-wrapper,
+    .lightbox-arrow {
+        display: none !important;
+    }
+}
+/* --- ДЕСКТОПНЫЕ БЛОКИ ДЛЯ КЛИКА ОКОЛО КАРТИНКИ --- */
+.lightbox-desktop-curtains-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none; /* Пропускаем клики к центру экрана */
+    z-index: 1012;
+}
+
+.lightbox-curtain {
+    position: absolute;
+    top: 0;
+    height: 100vh;
+    /* Расчет ширины: ровно половина экрана минус половина максимальной ширины изображения */
+    width: calc(50vw - (82vh * 0.66) / 2); 
+    min-width: 12vw; /* Гарантированный блок для клика, если картинка слишком широкая */
+    background: transparent;
+    cursor: pointer;
+    pointer-events: auto; /* Включаем кликабельность обратно */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.curtain-left { left: 0; }
+.curtain-right { right: 0; }
+
+/* --- СТРЕЛОЧКИ НА ПК (ВЛОЖЕНЫ ВНУТРЬ БЛОКОВ) --- */
+.lightbox-arrow {
+    width: 56px;
+    height: 56px;
+    background-color: rgba(30, 31, 36, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease;
+    user-select: none;
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border-style: solid;
+}
+
+/* Эффект при наведении на весь боковой блок, чтобы пользователю было легче кликать */
+.lightbox-curtain:hover .lightbox-arrow {
+    background-color: rgba(30, 31, 36, 0.75);
+    color: #ffffff;
+    transform: scale(1.05);
+}
+
+/* --- АДАПТИВНОЕ ИСКЛЮЧЕНИЕ МОБИЛЬНЫХ БЛОКОВ НА ПК --- */
+@media (min-width: 681px) {
+    /* Полностью удаляем мобильные 12% зоны на компьютерах */
+    .lightbox-mobile-curtain {
+        display: none !important;
+    }
+}
+
+/* --- МОБИЛЬНАЯ АДАПТАЦИЯ (СМАРТФОНЫ ДО 680px) --- */
+@media (max-width: 680px) {
+    /* Полностью убираем десктопные шторы и стрелки */
+    .lightbox-desktop-curtains-wrapper {
+        display: none !important;
+    }
+    /* Возвращаем стандартные мобильные зоны тапа поверх картинки */
+    .lightbox-mobile-curtain {
+        display: block;
+    }
+}
+
