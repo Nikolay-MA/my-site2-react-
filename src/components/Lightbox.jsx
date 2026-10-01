@@ -248,13 +248,17 @@ export default function Lightbox({ images, initialIndex, onClose }) {
     if (e.touches.length < 2) isPinching.current = false;
     isDragging.current = false;
 
+    // В приближении (zoom > 1) свайпы переключения полностью заблокированы
+    if (zoom > 1) return;
+
+    // ВСЯ ЛОГИКА НИЖЕ СРАБОТАЕТ СТРОГО ПРИ ZOOM === 1
     if (e.changedTouches.length === 1) {
       touchEndX.current = e.changedTouches[0].clientX;
       touchEndY.current = e.changedTouches[0].clientY;
       const diffX = touchStartX.current - touchEndX.current;
       const diffY = touchStartY.current - touchEndY.current;
 
-      // Проверка на свайп: если сдвиг по горизонтали значительный и больше, чем по вертикали
+      // Горизонтальный свайп для перехода на новую картинку
       if (Math.abs(diffX) > 60 && Math.abs(diffX) > Math.abs(diffY)) {
         if (diffX > 0) {
           handleNext();
@@ -264,13 +268,11 @@ export default function Lightbox({ images, initialIndex, onClose }) {
         return;
       }
 
-      // Если зума нет, проверяем вертикальный свайп для закрытия
-      if (zoom === 1) {
-        if (Math.abs(position.y) > 120) {
-          onClose();
-        } else {
-          resetZoom();
-        }
+      // Вертикальный свайп для закрытия лайтбокса
+      if (Math.abs(position.y) > 120) {
+        onClose();
+      } else {
+        resetZoom();
       }
     }
   };
