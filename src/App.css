@@ -1,5 +1,5 @@
 /* ==========================================================================
-   БЛОК 1: ПЕРЕМЕННЫЕ ТЕМЫ, СБРОС И БАЗОВАЯ ГЕОМЕТРИЯ BODY
+   БЛОК 1: ЦВЕТОВЫЕ ПЕРЕМЕННЫЕ, СБРОС СТИЛЕЙ И ГЕОМЕТРИЯ СТРАНИЦЫ
    ========================================================================== */
 :root {
     --primary-color: #0984e3;
@@ -38,8 +38,12 @@ body {
     padding-right: calc(20px + env(safe-area-inset-right));
     background-color: var(--bg-base);
 }
+
+body:has(.lightbox) { 
+    overflow: hidden; 
+}
 /* ==========================================================================
-   БЛОК 2: ГЕОМЕТРИЧЕСКИЙ ФОН, АНИМАЦИИ И ГЛАВНЫЕ КОНТЕЙНЕРЫ (ОБЕРТКИ)
+   БЛОК 2: АБСТРАКТНЫЙ ВЕКТОРНЫЙ ФОН И СЕТКА ОСНОВНЫХ КОНТЕЙНЕРОВ
    ========================================================================== */
 .vector-bg-emulation {
     position: fixed;
@@ -92,11 +96,8 @@ body {
     flex-direction: column;
     gap: 60px;
 }
-
-.page-fade-animation { animation: fadeInPage 0.4s ease forwards; }
-@keyframes fadeInPage { from { opacity: 0; } to { opacity: 1; } }
 /* ==========================================================================
-   БЛОК 3: ВЕРХНЯЯ НАВИГАЦИЯ, ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ И ЛЕВИЦАЦИЯ АВАТАРА
+   БЛОК 3: ВЕРХНЕЕ НАВИГАЦИОННОЕ МЕНЮ И КАРТОЧКА ПРОФИЛЯ С АНИМАЦИЕЙ
    ========================================================================== */
 .top-navigation {
     background: var(--glass-card);
@@ -145,29 +146,9 @@ body {
     box-shadow: 0 4px 15px rgba(0, 86, 179, 0.2);
 }
 
-.profile-card { 
-    display: flex; 
-    align-items: flex-start; 
-    gap: 50px; 
-    flex-wrap: wrap; 
-}
-
-.avatar-container { 
-    position: relative; 
-    width: 280px; 
-    height: 280px; 
-    flex-shrink: 0;
-}
-
-.avatar {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 6px solid white;
-    box-shadow: 0 15px 35px rgba(0, 86, 179, 0.18);
-    animation: avatarLevitate 6s infinite ease-in-out;
-}
+.profile-card { display: flex; align-items: flex-start; gap: 50px; flex-wrap: wrap; }
+.avatar-container { position: relative; width: 280px; height: 280px; flex-shrink: 0;}
+.avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 6px solid white; box-shadow: 0 15px 35px rgba(0, 86, 179, 0.18); animation: avatarLevitate 6s infinite ease-in-out; }
 
 @keyframes avatarLevitate {
     0% { transform: translateY(0px); }
@@ -175,31 +156,16 @@ body {
     100% { transform: translateY(0px); }
 }
 
-.profile-info { 
-    flex: 1; 
-    min-width: 300px; 
-    display: flex;
-    flex-direction: column;
-    align-items: stretch; 
-}
-
-.profile-info h1 {
-    font-size: 2.6rem;
-    margin-bottom: 8px;
-    letter-spacing: -0.8px;
-    background: var(--primary-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
+.profile-info { flex: 1; min-width: 300px; display: flex; flex-direction: column; align-items: stretch; }
+.profile-info h1 { font-size: 2.6rem; margin-bottom: 8px; letter-spacing: -0.8px; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 .tagline { font-size: 1.15rem; color: var(--text-muted); margin-bottom: 20px; font-weight: 500; }
 .bio { font-size: 1.05rem; line-height: 1.7; color: var(--text-dark); margin-bottom: 25px; }
-
-.action-buttons { display: flex; width: 100%; margin-bottom: 15px; }
-.social-links { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; }
 /* ==========================================================================
-   БЛОК 4: КНОПКИ, ИНТЕРФЕЙСНЫЕ СЕТКИ ГАЛЕРЕИ, ИНФО-КАРТЫ И СВЯЗЬ (ФОРМА, КАРТА)
+   БЛОК 4: ДЕКОРАТИВНЫЕ ЗАГОЛОВКИ, СТИЛИ КНОПОК И КАРТОЧКИ СОЦСЕТЕЙ
    ========================================================================== */
+.gallery-section h2, .contact-section h2, .anime-widget h2, .map-section h2, .info-section-block h2 { font-size: 1.6rem; margin-bottom: 25px; position: relative; }
+.gallery-section h2::after, .contact-section h2::after, .anime-widget h2::after, .map-section h2::after, .info-section-block h2::after { content: ''; position: absolute; width: 35px; height: 4px; background: var(--primary-color); bottom: -8px; left: 0; border-radius: 4px; }
+
 button.btn-primary {
     padding: 14px 28px;
     border: none;
@@ -218,6 +184,8 @@ button.btn-primary {
 }
 
 button.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0, 86, 179, 0.35); }
+.action-buttons { display: flex; width: 100%; margin-bottom: 15px; }
+.social-links { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; }
 
 a.btn-social {
     display: block;
@@ -238,44 +206,16 @@ a.btn-social {
 }
 
 a.btn-social:hover { background: var(--primary-color) !important; color: white !important; }
-
-.gallery-section h2, .contact-section h2, .anime-widget h2, .map-section h2, .info-section-block h2 {
-    font-size: 1.6rem;
-    margin-bottom: 25px;
-    position: relative;
-}
-
-.gallery-section h2::after, .contact-section h2::after, .anime-widget h2::after, .map-section h2::after, .info-section-block h2::after {
-    content: ''; position: absolute; width: 35px; height: 4px; background: var(--primary-color); bottom: -8px; left: 0; border-radius: 4px;
-}
-
-.gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
-.gallery-item { position: relative; border-radius: 20px; overflow: hidden; aspect-ratio: 4/3; background: #e2e7ea; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
-.gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
-.gallery-item:hover img { transform: scale(1.07); }
-.gallery-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, rgba(35, 31, 32, 0.7) 0%, transparent 60%); opacity: 0; transition: opacity 0.3s ease; display: flex; align-items: flex-end; padding: 20px; }
-.gallery-item:hover .gallery-overlay { opacity: 1; }
-.gallery-overlay span { color: white; font-size: 1.05rem; transform: translateY(10px); transition: 0.4s; font-weight: 500; }
-.gallery-item:hover .gallery-overlay span { transform: translateY(0); }
-
-.map-section { display: flex; flex-direction: column; }
-.map-wrapper { width: 100%; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); border: 1px solid rgba(0, 0, 0, 0.05); background: #fff; padding: 5px; }
-.map-wrapper iframe { border-radius: 16px; display: block; width: 100%; }
-
-.contact-form { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; width: 100%; }
-.form-group { display: flex; flex-direction: column; gap: 8px; position: relative; }
-.contact-form .form-group:nth-child(4), .contact-form .btn-submit { grid-column: span 3; }
-.form-group label { font-size: 0.95rem; font-weight: 600; }
-.form-group input, .form-group textarea { width: 100%; padding: 14px 18px; border-radius: 14px; border: 1px solid rgba(0,0,0,0.08); background: rgba(255, 255, 255, 0.7); outline: none; transition: 0.3s; -webkit-appearance: none; }
-.form-group input:focus, .form-group textarea:focus { background: #fff; border-color: var(--primary-color); }
-
-.btn-submit { padding: 14px; background: var(--primary-color); color: #fff; border: none; border-radius: 14px; font-weight: 600; cursor: pointer; transition: 0.3s; text-align: center; -webkit-appearance: none; }
-.btn-submit:hover { background: #0056b3; transform: translateY(-2px); }
-.btn-submit:disabled { background: var(--text-muted); opacity: 0.6; cursor: not-allowed; transform: none; }
-.btn-submit.btn-success { background: var(--success-color) !important; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4); transform: scale(1.02); }
 /* ==========================================================================
-   БЛОК 5: ШКОЛЬНЫЕ СТРАНИЦЫ, РЕЗУЛЬТАТЫ ОГЭ / ЕГЭ И СПИСКИ УСПЕВАЕМОСТИ
+   БЛОК 5: СЕТКА КАРТОЧЕК АНИМЕ, ИНФОРМАЦИЯ О ШКОЛЕ И СТИЛИ ОЦЕНОК/БАЛЛОВ
    ========================================================================== */
+.anime-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 24px; }
+.anime-card { background: white; padding: 25px; border-radius: 20px; border: 1px solid rgba(0,0,0,0.05); position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.01); display: flex; flex-direction: column; justify-content: center; min-height: 140px; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.anime-card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); }
+.anime-badge { position: absolute; top: 15px; right: 15px; background: #ffeaa7; color: #d63031; font-size: 0.8rem; font-weight: 700; padding: 4px 10px; border-radius: 8px; }
+.anime-card h3 { font-size: 1.15rem; margin-bottom: 8px; color: var(--text-dark); padding-right: 45px; }
+.anime-card p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.4; }
+
 .school-grid-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
 .school-info-card, .legal-info-card { background: white; padding: 25px; border-radius: 20px; border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 4px 15px rgba(0,0,0,0.01); line-height: 1.7; font-size: 1.05rem; }
 .school-info-card h3 { font-size: 1.25rem; margin-bottom: 15px; color: var(--text-dark); }
@@ -290,29 +230,35 @@ a.btn-social:hover { background: var(--primary-color) !important; color: white !
 .scores-list .score { padding: 4px 12px; border-radius: 8px; font-size: 0.9rem; font-weight: 700; }
 .badge-high { background-color: rgba(46, 204, 113, 0.15); color: #27ae60; }
 .badge-medium { background-color: rgba(241, 196, 15, 0.15); color: #d35400; }
-
-.anime-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 24px; }
-.anime-card { background: white; padding: 25px; border-radius: 20px; border: 1px solid rgba(0,0,0,0.05); position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.01); display: flex; flex-direction: column; justify-content: center; min-height: 140px; transition: transform 0.3s ease, box-shadow 0.3s ease; }
-.anime-card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); }
-.anime-badge { position: absolute; top: 15px; right: 15px; background: #ffeaa7; color: #d63031; font-size: 0.8rem; font-weight: 700; padding: 4px 10px; border-radius: 8px; }
-.anime-card h3 { font-size: 1.15rem; margin-bottom: 8px; color: var(--text-dark); padding-right: 45px; }
-.anime-card p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.4; }
-
-.page-footer { width: 100%; text-align: center; padding: 15px 0; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
-
-.full-bleed-photo {
-    width: 100vw !important;
-    position: relative;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw !important;
-    margin-right: -50vw !important;
-    max-height: 500px; 
-    object-fit: cover;
-    display: block;
-}
 /* ==========================================================================
-   БЛОК 6: ЛАЙТБОКС С ЛОГИКОЙ СУПЕР-ЗУМА, ТАКТИЛЬНЫМИ КУРСОРAМИ И ПОДПИСЯМИ
+   БЛОК 6: ИНПУТЫ ФОРМЫ СВЯЗИ, ИНТЕРАКТИВНАЯ КАРТА И СЕТКА ГАЛЕРЕИ С ХОВЕРОМ
+   ========================================================================== */
+.contact-form { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; width: 100%; }
+.form-group { display: flex; flex-direction: column; gap: 8px; position: relative; }
+.contact-form .form-group:nth-child(4), .contact-form .btn-submit { grid-column: span 3; }
+.form-group label { font-size: 0.95rem; font-weight: 600; }
+.form-group input, .form-group textarea { width: 100%; padding: 14px 18px; border-radius: 14px; border: 1px solid rgba(0,0,0,0.08); background: rgba(255, 255, 255, 0.7); outline: none; transition: 0.3s; -webkit-appearance: none; }
+.form-group input:focus, .form-group textarea:focus { background: #fff; border-color: var(--primary-color); }
+
+.btn-submit { padding: 14px; background: var(--primary-color); color: #fff; border: none; border-radius: 14px; font-weight: 600; cursor: pointer; transition: 0.3s; text-align: center; -webkit-appearance: none; }
+.btn-submit:hover { background: #0056b3; transform: translateY(-2px); }
+.btn-submit:disabled { background: var(--text-muted); opacity: 0.6; cursor: not-allowed; transform: none; }
+.btn-submit.btn-success { background: var(--success-color) !important; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4); transform: scale(1.02); }
+
+.map-section { display: flex; flex-direction: column; }
+.map-wrapper { width: 100%; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); border: 1px solid rgba(0, 0, 0, 0.05); background: #fff; padding: 5px; }
+.map-wrapper iframe { border-radius: 16px; display: block; width: 100%; }
+
+.gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+.gallery-item { position: relative; border-radius: 20px; overflow: hidden; aspect-ratio: 4/3; background: #e2e7ea; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+.gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+.gallery-item:hover img { transform: scale(1.07); }
+.gallery-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, rgba(35, 31, 32, 0.7) 0%, transparent 60%); opacity: 0; transition: opacity 0.3s ease; display: flex; align-items: flex-end; padding: 20px; }
+.gallery-item:hover .gallery-overlay { opacity: 1; }
+.gallery-overlay span { color: white; font-size: 1.05rem; transform: translateY(10px); transition: 0.4s; font-weight: 500; }
+.gallery-item:hover .gallery-overlay span { transform: translateY(0); }
+/* ==========================================================================
+   БЛОК 7: ГЛОБАЛЬНЫЙ КОНТЕЙНЕР ЛАЙТБОКСА И СВОЙСТВА МАСШТАБИРОВАНИЯ ИЗОБРАЖЕНИЯ
    ========================================================================== */
 .lightbox { 
     position: fixed; 
@@ -331,45 +277,63 @@ a.btn-social:hover { background: var(--primary-color) !important; color: white !
     margin: 0 !important; 
     padding: 0 !important;
     user-select: none;
+    -webkit-user-select: none;
     cursor: pointer;
-    touch-action: none; 
-    transition: background-color 0.2s ease-out;
 }
 
-.lightbox-media-wrapper {
+.lightbox .lightbox-media-wrapper {
     position: relative;
-    overflow: hidden;
-    transition: transform 0.1s ease-out;
+    z-index: 1015 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: 100vw !important;
+    max-height: 100vh !important;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100vw;
-    height: 100vh;
-    max-width: 100vw !important;
-    max-height: 100vh !important;
     pointer-events: auto;
-    z-index: 1005 !important;
+    overflow: hidden;
 }
 
 .lightbox-content { 
-    max-width: 100%; 
-    max-height: 82vh; 
-    border-radius: 0px !important; 
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important; 
-    object-fit: contain;
     transform-origin: center center !important;
     will-change: transform;
     -webkit-user-drag: none;
     user-select: none;
+    -webkit-user-select: none;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
+    border-radius: 0px !important; 
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    object-fit: contain; 
 }
 
-.lightbox-content:not(.is-dragging) { transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1) !important; }
-.lightbox-content.is-dragging { transition: none !important; }
-.lightbox:has(.is-dragging) { transition: none !important; }
+.lightbox-content:not(.is-dragging) {
+    transition: transform 0.22s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+.lightbox-content.is-dragging {
+    transition: none !important;
+}
+/* ==========================================================================
+   БЛОК 8: ЭЛЕМЕНТЫ ИНТЕРФЕЙСА ЛАЙТБОКСА (КНОПКА ЗАКРЫТИЯ, ОВАЛЬНАЯ ПОДПИСЬ, БОКОВЫЕ ПАНЕЛИ)
+   ========================================================================== */
+.lightbox-close { 
+    position: absolute; 
+    top: 25px; 
+    right: 60px; 
+    color: rgba(255, 255, 255, 0.6); 
+    font-size: 38px; 
+    cursor: pointer; 
+    transition: all 0.2s ease; 
+    line-height: 1; 
+    z-index: 1020 !important; 
+    -webkit-tap-highlight-color: transparent;
+}
+.lightbox-close:hover { transform: scale(1.1); color: #fff; }
+.lightbox-close.hidden-on-zoom { opacity: 0; pointer-events: none; }
 
 #lightbox-caption {
     position: absolute;
@@ -393,51 +357,121 @@ a.btn-social:hover { background: var(--primary-color) !important; color: white !
     z-index: 1020;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35); 
     box-sizing: border-box;
-    cursor: default;
     pointer-events: auto;
+    cursor: default;
 }
 
-.lightbox-close { 
-    position: absolute; 
-    top: 25px; 
-    right: 60px; 
-    color: rgba(255, 255, 255, 0.6); 
-    font-size: 38px; 
-    cursor: pointer; 
-    transition: all 0.2s ease; 
-    line-height: 1; 
-    z-index: 1020 !important; 
+.lightbox-side-panel {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+.lightbox-side-panel:hover { transform: translateY(-4px); box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7); }
+
+.lightbox:has(.zoomed) .hidden.md\:flex,
+.lightbox:has(.lightbox-zoomed) .hidden.md\:flex,
+.lightbox:has(.zoomed) .hidden.md\:block,
+.lightbox:has(.lightbox-zoomed) .hidden.md\:block,
+.lightbox:has(.zoomed) .lightbox-desktop-zone,
+.lightbox:has(.lightbox-zoomed) .lightbox-desktop-zone,
+.lightbox:has(.zoomed) .lightbox-fullscreen-pc-triggers,
+.lightbox:has(.lightbox-zoomed) .lightbox-fullscreen-pc-triggers {
+    display: none !important;
+    pointer-events: none !important;
+}
+
+.md\:flex.absolute.inset-0 { background-color: transparent !important; }
+.md\:flex button { user-select: none; -webkit-tap-highlight-color: transparent; }
+.md\:flex .w-1\/2 { transition: opacity 0.3s ease, background-color 0.3s ease; opacity: 0.15; }
+.md\:flex .w-1\/2:hover { opacity: 0.95; }
+/* ==========================================================================
+   БЛОК 9: СИСТЕМА КЛИК-ЗОН И СТРЕЛОК ПЕРЕКЛЮЧЕНИЯ ДЛЯ ДЕСКТОПНЫХ СЛАЙДЕРОВ
+   ========================================================================== */
+.lightbox-desktop-zone-wrapper { z-index: 1001; }
+
+.lightbox-desktop-zone {
+    position: fixed;
+    top: 0;
+    height: 100vh;
+    width: 50vw;
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    z-index: 1000; 
+    cursor: pointer;
+}
+.zone-left { left: 0; }
+.zone-right { right: 0; }
+
+.lightbox-fullscreen-pc-triggers {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    z-index: 1012; 
+    pointer-events: none; 
+}
+.pc-trigger-half {
+    width: 50vw;
+    height: 100vh;
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    pointer-events: auto; 
+}
+.pc-left { cursor: left; }
+.pc-right { cursor: right; }
+.lightbox-fullscreen-pc-triggers:has(+ .lightbox-media-wrapper:hover) .pc-trigger-half { pointer-events: none !important; }
+
+.lightbox-desktop-curtains-wrapper { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 1012; }
+.lightbox-curtain {
+    position: absolute;
+    top: 0;
+    height: 100vh;
+    width: calc(50vw - (82vh * 0.66) / 2); 
+    min-width: 12vw; 
+    background: transparent;
+    cursor: pointer;
+    pointer-events: auto; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
     -webkit-tap-highlight-color: transparent;
 }
-.lightbox-close:hover { transform: scale(1.1); color: #fff; }
-.lightbox-close.hidden-on-zoom { opacity: 0; pointer-events: none; }
+.curtain-left { left: 0; }
+.curtain-right { right: 0; }
 
-body:has(.lightbox) { overflow: hidden; }
-
-@media (pointer: fine) {
-    .lightbox-content.lightbox-normal { cursor: default !important; }
-    .lightbox-content.lightbox-zoomed { cursor: grab !important; }
-    .lightbox-content.lightbox-zoomed.is-dragging { cursor: grabbing !important; }
+.lightbox-arrow {
+    width: 56px;
+    height: 56px;
+    background-color: rgba(30, 31, 36, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease;
+    user-select: none;
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border-style: solid;
+    outline: none;
 }
+.lightbox-curtain:hover .lightbox-arrow { background-color: rgba(30, 31, 36, 0.75); color: #ffffff; transform: scale(1.05); }
+.arrow-left { margin-right: auto; margin-left: 30px; }
+.arrow-right { margin-left: auto; margin-right: 30px; }
 /* ==========================================================================
-   БЛОК 7: ОТОБРАЖЕНИЕ КАРТОЧЕК ДУНХУА, ИНТЕРАКТИВНЫЕ ВКЛАДКИ И ТАЙТЛЫ
+   БЛОК 10: КАРТОЧКИ СТРАНИЦЫ ДУНХУА, ФИКСИРОВАННЫЕ ПЕРЕКЛЮЧАТЕЛИ ЯЗЫКА И ТЕМЫ
    ========================================================================== */
 .donghua-page-container { display: flex; flex-direction: column; gap: 60px; width: 100%; }
 .donghua-card-wrapper { display: flex; gap: 35px; flex-wrap: wrap; align-items: flex-start; padding: 30px; position: relative; }
-.donghua-poster-block {
-    /* Было: flex: 0 0 260px; */
-    flex: 0 0 300px; /* Увеличиваем ширину с 260px до 300px (или 320px) */
-    
-    /* Было: height: 370px; */
-    height: 425px;   /* Пропорционально увеличиваем высоту, чтобы постер не сжимался */
-    
-    border-radius: 16px;
-    overflow: hidden;
-    position: relative;
-    margin: 0 auto;
-    box-shadow: 0 12px 30px rgba(0, 86, 179, 0.15);
-    transition: transform 0.3s ease;
-}.donghua-poster-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.donghua-poster-block { flex: 0 0 260px; height: 370px; border-radius: 16px; overflow: hidden; position: relative; margin: 0 auto; box-shadow: 0 12px 30px rgba(0, 86, 179, 0.15); transition: transform 0.3s ease; }
+.donghua-poster-img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .donghua-card-wrapper:hover .donghua-poster-block { transform: scale(1.02); }
 .donghua-rating-badge { position: absolute; bottom: 12px; right: 12px; background-color: #ffeaa7; color: #d63031; padding: 6px 12px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
 .donghua-text-content { display: flex; flex-direction: column; flex: 1; min-width: 280px; }
@@ -462,30 +496,20 @@ button.btn-social.donghua-tab-btn.tab-active { background: var(--primary-gradien
 .donghua-link-item { padding: 6px 14px; font-size: 0.8rem; width: auto !important; background: rgba(0, 86, 179, 0.05); border-color: rgba(0, 86, 179, 0.1); color: var(--primary-color); font-weight: 600; }
 .donghua-link-item:hover { background: var(--primary-color) !important; color: white !important; }
 
-@media (min-width: 681px) {
-    .legal-info-card .donghua-description-p { max-height: none !important; margin-bottom: 0 !important; }
-    .legal-info-card .donghua-text-fade-overlay { display: none !important; }
-    .legal-info-card .donghua-btn-more { display: none !important; }
-    .lightbox-media-wrapper { max-width: 100vw; max-height: 100vh; width: auto; height: auto; }
-    .lightbox-content { max-width: 100vw !important; max-height: 100vh !important; width: auto; height: auto; object-fit: contain; }
-    #lightbox-caption { font-size: 1.05rem; padding: 14px 28px !important; }
-}
-/* ==========================================================================
-   БЛОК 8: ТЕМНАЯ ТЕМА, ФИКСИРОВАННЫЙ СВИТЧЕР ЯЗЫКОВ И МОБИЛЬНЫЙ АДАПТИВ @MEDIA
-   ========================================================================== */
+.page-footer { width: 100%; text-align: center; padding: 15px 0; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+.page-fade-animation { animation: fadeInPage 0.4s ease forwards; }
+@keyframes fadeInPage { from { opacity: 0; } to { opacity: 1; } }
+
 .lang-switcher-fixed { position: fixed; top: 20px; right: 20px; display: flex; gap: 8px; z-index: 9999; background: rgba(35, 31, 32, 0.6); padding: 6px; border-radius: 12px; backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.1); }
 .lang-fixed-btn { background: transparent; color: #888; border: none; padding: 6px 12px; font-size: 0.85rem; font-weight: 700; cursor: pointer; border-radius: 8px; transition: all 0.2s ease; }
 .lang-fixed-btn:hover { color: #fff; }
 .lang-fixed-btn.active { background: #1565c0; color: #fff; box-shadow: 0 2px 8px rgba(21, 101, 192, 0.4); }
 
-@media (max-width: 768px) {
-  .lang-switcher-fixed { top: 10px; right: 10px; padding: 4px; }
-  .lang-fixed-btn { padding: 4px 8px; font-size: 0.75rem; }
-}
-
 .theme-toggle-btn { background: transparent; border: none; font-size: 1.1rem; cursor: pointer; padding: 6px; display: flex; align-items: center; justify-content: center; border-radius: 8px; transition: all 0.2s ease; user-select: none; }
 .theme-toggle-btn:hover { background: rgba(255, 255, 255, 0.1); transform: scale(1.1); }
-
+/* ==========================================================================
+   БЛОК 11: МОДИФИКАТОРЫ ТЕМНОЙ ТЕМЫ И ПЕРЕОПРЕДЕЛЕНИЕ ПЕРЕМЕННЫХ СРЕДЫ
+   ========================================================================== */
 .dark-theme { --text-dark: #f9f6f7; --text-muted: #a4b0be; --bg-base: #131418; --glass-card: rgba(30, 31, 38, 0.85); --glass-border: rgba(255, 255, 255, 0.08); --shadow-smooth: 0 15px 35px rgba(0, 0, 0, 0.3); }
 .dark-theme .anime-card, .dark-theme .school-info-card, .dark-theme .legal-info-card, .dark-theme .map-wrapper, .dark-theme a.btn-social { background: #1e1f26 !important; border-color: rgba(255, 255, 255, 0.05) !important; color: var(--text-dark) !important; }
 .dark-theme .form-group input, .dark-theme .form-group textarea { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.1); color: var(--text-dark); }
@@ -494,6 +518,25 @@ button.btn-social.donghua-tab-btn.tab-active { background: var(--primary-gradien
 .dark-theme .top-navigation button.nav-btn:hover { background: var(--primary-color); color: white; }
 .dark-theme button.btn-social.donghua-tab-btn:not(.tab-active) { background: rgba(255, 255, 255, 0.05) !important; border-color: rgba(255, 255, 255, 0.1) !important; color: var(--text-dark) !important; }
 .dark-theme button.btn-social.donghua-tab-btn:not(.tab-active):hover { background: var(--primary-color) !important; color: #ffffff !important; border-color: transparent !important; }
+/* ==========================================================================
+   БЛОК 12: МЕДИА-ЗАПРОСЫ, ТАКТИЛЬНЫЕ КУРСОРЫ ПК И МОБИЛЬНАЯ ОПТИМИЗАЦИЯ ЛАЙТБОКСА
+   ========================================================================== */
+.lightbox-mobile-curtain { display: none; }
+
+@media (pointer: fine) {
+    .lightbox-content.lightbox-normal { cursor: default !important; }
+    .lightbox-content.lightbox-zoomed { cursor: grab !important; }
+    .lightbox-content.lightbox-zoomed.is-dragging { cursor: grabbing !important; }
+    .lightbox:not(:has(.zoomed)):not(:has(.lightbox-zoomed)) { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://w3.org' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M12 5l7 7-7 7'/%3E%3C/svg%3E"), auto !important; }
+}
+
+@media (min-width: 681px) {
+    .legal-info-card .donghua-description-p { max-height: none !important; margin-bottom: 0 !important; }
+    .legal-info-card .donghua-text-fade-overlay, .legal-info-card .donghua-btn-more, .lightbox-mobile-curtain { display: none !important; }
+    .lightbox-media-wrapper { max-width: 100vw; max-height: 100vh; width: auto; height: auto; }
+    .lightbox-content { max-width: 100vw !important; max-height: 100vh !important; width: auto; height: auto; object-fit: contain; }
+    #lightbox-caption { font-size: 1.05rem; padding: 14px 28px !important; }
+}
 
 @media (max-width: 1024px) {
     .container { padding: 40px 30px; gap: 40px; }
@@ -508,6 +551,11 @@ button.btn-social.donghua-tab-btn.tab-active { background: var(--primary-gradien
     .donghua-text-content { align-items: center; width: 100%; }
     .donghua-title { padding-right: 0; }
     .donghua-tags-container, .donghua-tabs-container, .donghua-links-inline { justify-content: center; }
+}
+
+@media (max-width: 768px) {
+    .lang-switcher-fixed { top: 10px; right: 10px; padding: 4px; }
+    .lang-fixed-btn { padding: 4px 8px; font-size: 0.75rem; }
 }
 
 @media (max-width: 680px) {
@@ -528,58 +576,83 @@ button.btn-social.donghua-tab-btn.tab-active { background: var(--primary-gradien
     .school-grid-layout { grid-template-columns: 1fr !important; }
     .gallery-section h2::after, .contact-section h2::after, .anime-widget h2::after, .map-section h2::after, .info-section-block h2::after { left: 50%; transform: translateX(-50%); }
     .gallery-section h2, .contact-section h2, .anime-widget h2, .map-section h2, .info-section-block h2 { text-align: center; }
+    .full-bleed-photo { max-height: 300px; }
+    .gallery-fullbleed-item { height: 45vh; min-height: 280px; }
+    .gallery-fullbleed-overlay { padding: 20px 20px; }
+    .gallery-fullbleed-caption { font-size: 1.1rem; }
+    
+    /* Стили карточек Дунхуа для мобильных */
+    .donghua-card-wrapper {
+        padding: 0 0 20px 0 !important;
+        overflow: hidden;
+    }
+    .donghua-poster-block {
+        flex: none !important;
+        width: 100% !important;
+        height: auto !important;
+        aspect-ratio: 2 / 3;
+        border-radius: 0px !important;
+    }
+    .donghua-text-content {
+        padding: 0 20px !important;
+    }
+    
+    /* Стили Лайтбокса для мобильных */
+    .lightbox-desktop-curtains-wrapper, .lightbox-desktop-zone { display: none !important; }
     .lightbox-media-wrapper { max-width: 100vw !important; width: 100vw !important; max-height: 82vh; }
     .lightbox-content { width: 100% !important; max-width: 100% !important; max-height: 82vh; object-fit: contain; }
     .lightbox-close { top: 15px; right: 20px; font-size: 32px; }
-    .full-bleed-photo { max-height: 300px; }
-    .donghua-poster-block { flex: 0 0 240px; height: 340px; }
+    .lightbox-mobile-curtain { display: block; position: absolute; top: 0; height: 100%; width: 20%; z-index: 1010; background: transparent; -webkit-tap-highlight-color: transparent; cursor: pointer; }
+    .mobile-curtain-left { left: 0; }
+    .mobile-curtain-right { right: 0; }
+    
     .dark-theme .container { background: #1e1f26 !important; }
     .dark-theme .vector-bg-emulation { background: #131418 !important; }
     .lang-switcher-fixed { position: absolute !important; top: 15px !important; right: 15px !important; left: auto !important; }
-    #lightbox-caption { background-color: rgba(35, 35, 35, 0.75) !important; -webkit-backdrop-filter: blur(5px) !important; backdrop-filter: blur(5px) !important; width: max-content !important; max-width: 88% !important; white-space: normal !important; word-break: break-word !important; border-radius: 20px !important; border: 1px solid rgba(255, 255, 255, 0.18) !important; padding: 8px 18px !important; font-size: 0.9rem !important; line-height: 1.35; position: absolute !important; bottom: 15px !important; left: 50% !important; transform: translateX(-50%) !important; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important; }
+    
+    #lightbox-caption {
+        background-color: rgba(35, 35, 35, 0.75) !important; 
+        -webkit-backdrop-filter: blur(5px) !important;
+        backdrop-filter: blur(5px) !important;
+        width: max-content !important;
+        max-width: 88% !important;
+        white-space: normal !important; 
+        word-break: break-word !important;
+        border-radius: 20px !important; 
+        border: 1px solid rgba(255, 255, 255, 0.18) !important;
+        padding: 8px 18px !important;
+        font-size: 0.9rem !important;
+        line-height: 1.35;
+        position: absolute !important;
+        bottom: 15px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+    }
     
     @media (max-height: 480px) {
         .lightbox-media-wrapper { flex-direction: row !important; justify-content: center !important; }
         .lightbox-content { max-height: 82vh !important; }
-        #lightbox-caption { position: absolute !important; bottom: 12px !important; left: 50% !important; transform: translateX(-50%) !important; width: max-content !important; max-width: 85% !important; display: inline-block !important; white-space: normal !important; word-break: break-word !important; background-color: rgba(45, 45, 45, 0.7) !important; -webkit-backdrop-filter: blur(6px) !important; backdrop-filter: blur(6px) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; border-radius: 20px !important; padding: 6px 16px !important; font-size: 0.85rem !important; line-height: 1.3; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important; }
+        #lightbox-caption {
+            position: absolute !important; bottom: 12px !important; left: 50% !important; transform: translateX(-50%) !important;
+            width: max-content !important; max-width: 85% !important; display: inline-block !important; white-space: normal !important; word-break: break-word !important;
+            background-color: rgba(50, 50, 50, 0.65) !important; -webkit-backdrop-filter: blur(6px) !important; backdrop-filter: blur(6px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.18) !important; border-radius: 20px !important; padding: 6px 16px !important; font-size: 0.85rem !important; line-height: 1.3; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+        }
     }
     
     @media (min-height: 481px) {
         .lightbox-media-wrapper { flex-direction: column !important; justify-content: center !important; height: auto !important; }
         .lightbox-content { max-height: 74vh !important; }
-        #lightbox-caption { position: relative !important; bottom: auto !important; left: auto !important; transform: none !important; border-radius: 0px !important; border: none !important; box-shadow: none !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; background-color: transparent !important; background: transparent !important; margin-top: 14px !important; width: 100% !important; max-width: 90% !important; padding: 6px 0px !important; font-size: 0.95rem !important; line-height: 1.4; }
+        #lightbox-caption {
+            position: relative !important; bottom: auto !important; left: auto !important; transform: none !important;
+            border-radius: 0px !important; border: none !important; box-shadow: none !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
+            background-color: transparent !important; background: transparent !important;
+            margin-top: 14px !important; width: 100% !important; max-width: 90% !important; padding: 6px 0px !important; font-size: 0.95rem !important; line-height: 1.4;
+        }
     }
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     .top-navigation, .container, .anime-card, .school-info-card, .legal-info-card { border-width: 0.5px; }
-}
-/* Изменения только для мобильных телефонов */
-@media (max-width: 680px) {
-    /* 1. Постер аниме встает по всей ширине экрана */
-    .donghua-poster-block {
-        width: 100% !important;
-        flex: 0 0 100% !important;
-        height: auto !important;
-        aspect-ratio: 2/3; /* Сохраняет правильные пропорции постера */
-    }
-
-    /* Дополнительно убираем боковые внутренние отступы у самой карточки, 
-       чтобы постер прижимался к краям на телефоне */
-    .donghua-card-wrapper {
-        padding: 15px 0px !important;
-    }
-    
-    .donghua-text-content {
-        padding: 0 15px !important; /* Возвращаем отступы для текста под фото */
-    }
-
-    /* 2. Количество звезд (рейтинг) внутри картинки справа снизу */
-    .donghua-rating-badge {
-        position: absolute !important;
-        bottom: 15px !important;
-        right: 15px !important;
-        top: auto !important; /* Сбрасываем позиционирование сверху, если оно было */
-        z-index: 10;
-    }
 }
