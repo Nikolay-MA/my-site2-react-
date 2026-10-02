@@ -91,7 +91,6 @@ export default function Lightbox({ images, initialIndex, onClose }) {
 
     return clampPosition(rawX, rawY, targetZoom);
   };
-
   const handleImageClick = (e) => {
     e.stopPropagation();
     if (!isDesktop()) return; 
@@ -106,6 +105,7 @@ export default function Lightbox({ images, initialIndex, onClose }) {
       setPosition(newPos);
     }
   };
+
   useEffect(() => {
     const handleWheel = (e) => {
       e.preventDefault();
@@ -214,10 +214,14 @@ export default function Lightbox({ images, initialIndex, onClose }) {
       if (currentDistance === 0) return;
       
       const isMobilePhone = window.innerWidth <= 680;
-      const speedFactor = isMobilePhone ? 4.5 : 2.2;
-      const factor = 1 + (currentDistance / startTouchDistance.current - 1) * speedFactor;
       
       setZoom(() => {
+        // На телефонах скорость строго равна движению пальцев (factor = пропорция расстояния)
+        // На планшетах сохраняется старый расчет с коэффициентом 2.2
+        const factor = isMobilePhone 
+          ? (currentDistance / startTouchDistance.current)
+          : 1 + (currentDistance / startTouchDistance.current - 1) * 2.2;
+          
         const newZoom = startZoom.current * factor;
         const maxZoomLimit = isMobilePhone ? 16 : 12;
         const clampedZoom = Math.min(Math.max(newZoom, 1), maxZoomLimit);
@@ -248,17 +252,14 @@ export default function Lightbox({ images, initialIndex, onClose }) {
     if (e.touches.length < 2) isPinching.current = false;
     isDragging.current = false;
 
-    // В приближении (zoom > 1) свайпы переключения полностью заблокированы
     if (zoom > 1) return;
 
-    // ВСЯ ЛОГИКА НИЖЕ СРАБОТАЕТ СТРОГО ПРИ ZOOM === 1
     if (e.changedTouches.length === 1) {
       touchEndX.current = e.changedTouches[0].clientX;
       touchEndY.current = e.changedTouches[0].clientY;
       const diffX = touchStartX.current - touchEndX.current;
       const diffY = touchStartY.current - touchEndY.current;
 
-      // Горизонтальный свайп для перехода на новую картинку
       if (Math.abs(diffX) > 60 && Math.abs(diffX) > Math.abs(diffY)) {
         if (diffX > 0) {
           handleNext();
@@ -268,7 +269,6 @@ export default function Lightbox({ images, initialIndex, onClose }) {
         return;
       }
 
-      // Вертикальный свайп для закрытия лайтбокса
       if (Math.abs(position.y) > 120) {
         onClose();
       } else {
@@ -276,7 +276,6 @@ export default function Lightbox({ images, initialIndex, onClose }) {
       }
     }
   };
-
   if (!images || images.length === 0) return null;
   const currentImage = images[currentIndex];
 
