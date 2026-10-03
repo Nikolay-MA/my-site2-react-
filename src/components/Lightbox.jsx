@@ -1,108 +1,248 @@
 import React, { useState, useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
+import { useGesture } from "@use-gesture/react";
+import { animated, useSpring } from "@react-spring/web";
 
 export default function Lightbox({ images, initialIndex, onClose }) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
-  const [zoom, setZoom] = useState(1);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
   const [bgOpacity, setBgOpacity] = useState(0.97);
-  
+
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
-  const touchEndX = useRef(0);
-  const touchEndY = useRef(0);
-  
-  const isDragging = useRef(false);
-  const dragStart = useRef({ x: 0, y: 0 });
-  const hasMoved = useRef(false);
-
-  const startTouchDistance = useRef(0);
-  const startZoom = useRef(1);
-  const isPinching = useRef(false);
   const lastTap = useRef(0);
 
-  const isDesktop = () => {
-    return window.matchMedia("(pointer: fine)").matches;
-  };
+  const isDesktop = () => window.matchMedia("(pointer: fine)").matches;
+  const isMobilePhone = () => window.innerWidth <= 680;
 
-  const getTouchDistance = (touches) => {
-    if (touches.length < 2) return 0;
-    return Math.hypot(
-      touches[0].clientX - touches[1].clientX,
-      touches[0].clientY - touches[1].clientY
-    );
-  };
+  // Настройка пружины с максимальным приоритетом производительности
+  const [{ x, y, scale }, api] = useSpring(() => ({
+    x: 0,
+    y: 0,
+    scale: 1,
+    config: { precision: 0.001, mass: 1, tension: 300, friction: 32 },
+  }));
 
-  const resetZoom = () => {
-    setZoom(1);
-    setPosition({ x: 0, y: 0 });
+  // Физический стейт без реактивности (защита от лагов)
+  const state = useRef({ x: 0, y: 0, scale: 1 });
+
+  const resetZoom = (immediate = false) => {
+    state.current = { x: 0, y: 0, scale: 1 };
     setBgOpacity(0.97);
+    api.start({ x: 0, y: 0, scale: 1, immediate });
   };
 
   const handlePrev = (e) => {
     if (e) e.stopPropagation();
-    resetZoom();
+    resetZoom(true);
     setCurrentIndex((prevIdx) => (prevIdx === 0 ? images.length - 1 : prevIdx - 1));
   };
 
   const handleNext = (e) => {
     if (e) e.stopPropagation();
-    resetZoom();
+    resetZoom(true);
     setCurrentIndex((prevIdx) => (prevIdx === images.length - 1 ? 0 : prevIdx + 1));
   };
+  // Нативный расчет физического расстояния между тачами
+  const getTouchDist = (touches) => {
+    if (touches.length < 2) return 0;
+    const dx = touches[0].clientX - touches[1].clientX;
+    const dy = touches[0].clientY - touches[1].clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+  };
 
-  // ЖЕСТКИЕ ГРАНИЦЫ: Картинка никогда не выйдет за пределы своих краев
-  const clampPosition = (newX, newY, currentZoom) => {
+  const clampPosition = (targetX, targetY, targetScale) => {
     const imgElem = document.querySelector(".lightbox-content");
-    if (!imgElem || currentZoom <= 1) return { x: 0, y: 0 };
+    if (!imgElem || targetScale <= 1) return { x: 0, y: 0 };
 
     const wRatio = imgElem.naturalWidth / imgElem.clientWidth;
     const hRatio = imgElem.naturalHeight / imgElem.clientHeight;
-    const maxRatio = Math.max(wRatio, hRatio);
-    
+    const maxRatio = wRatio > hRatio ? wRatio : hRatio;
+
     const visibleWidth = imgElem.naturalWidth / maxRatio;
     const visibleHeight = imgElem.naturalHeight / maxRatio;
 
-    const overflowX = visibleWidth * currentZoom - window.innerWidth;
-    const overflowY = visibleHeight * currentZoom - window.innerHeight;
+    const overflowX = visibleWidth * targetScale - window.innerWidth;
+    const overflowY = visibleHeight * targetScale - window.innerHeight;
 
     const limitX = overflowX > 0 ? overflowX / 2 : 0;
     const limitY = overflowY > 0 ? overflowY / 2 : 0;
 
     return {
-      x: overflowX > 0 ? Math.min(Math.max(newX, -limitX), limitX) : 0,
-      y: overflowY > 0 ? Math.min(Math.max(newY, -limitY), limitY) : 0
+      x: overflowX > 0 ? Math.min(Math.max(targetX, -limitX), limitX) : 0,
+      y: overflowY > 0 ? Math.min(Math.max(targetY, -limitY), limitY) : 0,
     };
   };
 
-  const calculateZoomToPoint = (clientX, clientY, targetZoom) => {
+  const calculateZoomToPoint = (clientX, clientY, targetScale) => {
     const imgElem = document.querySelector(".lightbox-content");
     if (!imgElem) return { x: 0, y: 0 };
 
     const rect = imgElem.getBoundingClientRect();
-    const imgCenterX = rect.left + rect.width / 2;
-    const imgCenterY = rect.top + rect.height / 2;
+    const imgCenterX = rect.left + rect.width / 2 - state.current.x;
+    const imgCenterY = rect.top + rect.height / 2 - state.current.y;
 
     const offsetX = clientX - imgCenterX;
     const offsetY = clientY - imgCenterY;
 
-    const rawX = position.x - offsetX * (targetZoom / zoom - 1);
-    const rawY = position.y - offsetY * (targetZoom / zoom - 1);
+    const rawX = state.current.x - offsetX * (targetScale / state.current.scale - 1);
+    const rawY = state.current.y - offsetY * (targetScale / state.current.scale - 1);
 
-    return clampPosition(rawX, rawY, targetZoom);
+    return clampPosition(rawX, rawY, targetScale);
+  };
+  const bindGestures = useGesture(
+    {
+      onDrag: ({ pinching, cancel, delta: [dx, dy], movement: [mx, my], active }) => {
+        if (pinching) return cancel(); // Блокируем драг, если активен пинч
+
+        if (state.current.scale > 1) {
+          const targetX = state.current.x + dx;
+          const targetY = state.current.y + dy;
+          const clamped = clampPosition(targetX, targetY, state.current.scale);
+
+          state.current.x = clamped.x;
+          state.current.y = clamped.y;
+
+          api.start({ x: clamped.x, y: clamped.y, immediate: active });
+        } else {
+          // Свайп вниз на масштабе 1 для закрытия
+          if (!isDesktop()) {
+            api.start({ y: my, immediate: active });
+            const newOpacity = Math.max(0.2, 0.97 - Math.abs(my) / 600);
+            setBgOpacity(newOpacity);
+          }
+        }
+      },
+      onDragEnd: () => {
+        if (state.current.scale > 1) return;
+        if (Math.abs(y.get()) > 120) {
+          onClose();
+        } else {
+          resetZoom();
+        }
+      },
+    },
+    {
+      drag: { filterTaps: true }
+    }
+  );
+  // Рефы для точечного замера без участия стейта React
+  const pinchMemo = useRef({ startScale: 1, startDist: 1, startX: 0, startY: 0, ox: 0, oy: 0 });
+
+  const handleTouchStart = (e) => {
+    if (isDesktop()) return;
+
+    if (e.touches.length === 2) {
+      // Инициализация нативного пинча 1:1
+      const dist = getTouchDist(e.touches);
+      if (dist === 0) return;
+
+      const ox = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+      const oy = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+
+      const imgElem = document.querySelector(".lightbox-content");
+      let imgCenterX = window.innerWidth / 2;
+      let imgCenterY = window.innerHeight / 2;
+
+      if (imgElem) {
+        const rect = imgElem.getBoundingClientRect();
+        imgCenterX = rect.left + rect.width / 2 - state.current.x;
+        imgCenterY = rect.top + rect.height / 2 - state.current.y;
+      }
+
+      pinchMemo.current = {
+        startScale: state.current.scale,
+        startDist: dist,
+        startX: state.current.x,
+        startY: state.current.y,
+        offsetX: ox - imgCenterX,
+        offsetY: oy - imgCenterY,
+      };
+      return;
+    }
+
+    if (e.touches.length === 1) {
+      const t0 = e.touches[0];
+      touchStartX.current = t0.clientX;
+      touchStartY.current = t0.clientY;
+
+      const now = Date.now();
+      if (now - lastTap.current < 300) {
+        e.preventDefault();
+        if (state.current.scale > 1) {
+          resetZoom();
+        } else {
+          const targetScale = 2.5;
+          const newPos = calculateZoomToPoint(t0.clientX, t0.clientY, targetScale);
+          state.current.scale = targetScale;
+          state.current.x = newPos.x;
+          state.current.y = newPos.y;
+          api.start({ scale: targetScale, x: newPos.x, y: newPos.y, immediate: false });
+        }
+        return;
+      }
+      lastTap.current = now;
+    }
+  };
+
+  const handleTouchMove = (e) => {
+    if (isDesktop() || e.touches.length !== 2) return;
+    
+    // Блокируем нативный зум страницы браузером во время пинча
+    if (e.cancelable) e.preventDefault();
+
+    const dist = getTouchDist(e.touches);
+    if (dist === 0) return;
+
+    const memo = pinchMemo.current;
+    
+    // Смартфоны: скорость зума строго равна скорости движения пальцев (1:1)
+    // Планшеты: добавляем небольшой мультипликатор для больших экранов
+    const speedMultiplier = isMobilePhone() ? 1.0 : 1.6;
+    const rawFactor = dist / memo.startDist;
+    const factor = 1 + (rawFactor - 1) * speedMultiplier;
+
+    const targetScale = Math.min(Math.max(memo.startScale * factor, 1), 8);
+
+    const rawX = memo.startX - memo.offsetX * (targetScale / memo.startScale - 1);
+    const rawY = memo.startY - memo.offsetY * (targetScale / memo.startScale - 1);
+    const clampedPos = clampPosition(rawX, rawY, targetScale);
+
+    state.current.scale = targetScale;
+    state.current.x = clampedPos.x;
+    state.current.y = clampedPos.y;
+
+    api.start({
+      scale: targetScale,
+      x: clampedPos.x,
+      y: clampedPos.y,
+      immediate: true, // Мгновенная отрисовка на уровне GPU без лагов
+    });
+  };
+
+  const handleTouchEnd = (e) => {
+    if (isDesktop() || state.current.scale > 1 || e.changedTouches.length !== 1) return;
+    const ct0 = e.changedTouches[0];
+    const diffX = touchStartX.current - ct0.clientX;
+    const diffY = touchStartY.current - ct0.clientY;
+
+    if (Math.abs(diffX) > 60 && Math.abs(diffX) > Math.abs(diffY)) {
+      if (diffX > 0) handleNext();
+      else handlePrev();
+    }
   };
   const handleImageClick = (e) => {
     e.stopPropagation();
-    if (!isDesktop()) return; 
-    if (hasMoved.current) return; 
+    if (!isDesktop()) return;
 
-    if (zoom > 1) {
+    if (state.current.scale > 1) {
       resetZoom();
     } else {
-      const targetZoom = 2.5;
-      const newPos = calculateZoomToPoint(e.clientX, e.clientY, targetZoom);
-      setZoom(targetZoom); 
-      setPosition(newPos);
+      const targetScale = 2.5;
+      const newPos = calculateZoomToPoint(e.clientX, e.clientY, targetScale);
+      state.current.scale = targetScale;
+      state.current.x = newPos.x;
+      state.current.y = newPos.y;
+      api.start({ scale: targetScale, x: newPos.x, y: newPos.y, immediate: false });
     }
   };
 
@@ -112,56 +252,29 @@ export default function Lightbox({ images, initialIndex, onClose }) {
       const imgElem = document.querySelector(".lightbox-content");
       if (!imgElem) return;
 
-      const isMouseOverImage = e.target === imgElem || imgElem.contains(e.target);
+      if (e.target === imgElem || imgElem.contains(e.target)) {
+        const newZoom = state.current.scale - e.deltaY * 0.005;
+        const clampedZoom = Math.min(Math.max(newZoom, 1), 5);
 
-      if (isMouseOverImage) {
-        setZoom((prevZoom) => {
-          const newZoom = prevZoom - e.deltaY * 0.005;
-          const clampedZoom = Math.min(Math.max(newZoom, 1), 5);
-          
-          if (clampedZoom === 1) {
-            setPosition({ x: 0, y: 0 });
-          } else {
-            const newPos = calculateZoomToPoint(e.clientX, e.clientY, clampedZoom);
-            setPosition(newPos);
-          }
-          return clampedZoom;
-        });
-      } else {
-        if (e.deltaY > 0 || e.deltaX > 0) {
-          handleNext();
+        if (clampedZoom === 1) {
+          resetZoom();
         } else {
-          handlePrev();
+          const newPos = calculateZoomToPoint(e.clientX, e.clientY, clampedZoom);
+          state.current.scale = clampedZoom;
+          state.current.x = newPos.x;
+          state.current.y = newPos.y;
+          api.start({ scale: clampedZoom, x: newPos.x, y: newPos.y, immediate: true });
         }
+      } else {
+        if (e.deltaY > 0 || e.deltaX > 0) handleNext();
+        else handlePrev();
       }
     };
 
     const lightboxElem = document.querySelector(".lightbox");
-    if (lightboxElem) {
-      lightboxElem.addEventListener("wheel", handleWheel, { passive: false });
-    }
-    return () => {
-      if (lightboxElem) lightboxElem.removeEventListener("wheel", handleWheel);
-    };
-  }, [currentIndex, zoom, position]);
-
-  const handleMouseDown = (e) => {
-    if (zoom <= 1 || !isDesktop()) return;
-    e.preventDefault(); 
-    isDragging.current = true;
-    hasMoved.current = false;
-    dragStart.current = { x: e.clientX - position.x, y: e.clientY - position.y };
-  };
-
-  const handleMouseMove = (e) => {
-    if (!isDragging.current || zoom <= 1 || !isDesktop()) return;
-    const currentX = e.clientX - dragStart.current.x;
-    const currentY = e.clientY - dragStart.current.y;
-    hasMoved.current = true;
-    setPosition(clampPosition(currentX, currentY, zoom));
-  };
-
-  const handleMouseUp = () => { isDragging.current = false; };
+    if (lightboxElem) lightboxElem.addEventListener("wheel", handleWheel, { passive: false });
+    return () => lightboxElem?.removeEventListener("wheel", handleWheel);
+  }, [currentIndex, api]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -173,132 +286,22 @@ export default function Lightbox({ images, initialIndex, onClose }) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [images, currentIndex]);
 
-  const handleTouchStart = (e) => {
-    if (isDesktop()) return;
-
-    if (e.touches.length === 2) {
-      isPinching.current = true;
-      startTouchDistance.current = getTouchDistance(e.touches);
-      startZoom.current = zoom;
-    } else if (e.touches.length === 1) {
-      isPinching.current = false;
-      touchStartX.current = e.touches[0].clientX;
-      touchStartY.current = e.touches[0].clientY;
-      
-      const now = Date.now();
-      if (now - lastTap.current < 300) {
-        e.preventDefault();
-        if (zoom > 1) {
-          resetZoom();
-        } else {
-          const targetZoom = 2.5;
-          const newPos = calculateZoomToPoint(e.touches[0].clientX, e.touches[0].clientY, targetZoom);
-          setZoom(targetZoom);
-          setPosition(newPos);
-        }
-        return;
-      }
-      lastTap.current = now;
-
-      isDragging.current = true;
-      dragStart.current = { x: e.touches[0].clientX - position.x, y: e.touches[0].clientY - position.y };
-    }
-  };
-
-  const handleTouchMove = (e) => {
-    if (isDesktop()) return;
-
-    if (e.touches.length === 2 && isPinching.current) {
-      e.preventDefault();
-      const currentDistance = getTouchDistance(e.touches);
-      if (currentDistance === 0) return;
-      
-      const isMobilePhone = window.innerWidth <= 680;
-      
-      setZoom(() => {
-        // На телефонах скорость строго равна движению пальцев (factor = пропорция расстояния)
-        // На планшетах сохраняется старый расчет с коэффициентом 2.2
-        const factor = isMobilePhone 
-          ? (currentDistance / startTouchDistance.current)
-          : 1 + (currentDistance / startTouchDistance.current - 1) * 2.2;
-          
-        const newZoom = startZoom.current * factor;
-        const maxZoomLimit = isMobilePhone ? 16 : 12;
-        const clampedZoom = Math.min(Math.max(newZoom, 1), maxZoomLimit);
-        
-        if (clampedZoom === 1) {
-          setPosition({ x: 0, y: 0 });
-        } else {
-          setPosition((prevPos) => clampPosition(prevPos.x, prevPos.y, clampedZoom));
-        }
-        return clampedZoom;
-      });
-    } else if (e.touches.length === 1 && isDragging.current) {
-      const deltaX = e.touches[0].clientX - dragStart.current.x;
-      const deltaY = e.touches[0].clientY - dragStart.current.y;
-
-      if (zoom > 1) {
-        setPosition(clampPosition(deltaX, deltaY, zoom));
-      } else {
-        setPosition({ x: 0, y: deltaY });
-        const newOpacity = Math.max(0.2, 0.97 - Math.abs(deltaY) / 600);
-        setBgOpacity(newOpacity);
-      }
-    }
-  };
-
-  const handleTouchEnd = (e) => {
-    if (isDesktop()) return;
-    if (e.touches.length < 2) isPinching.current = false;
-    isDragging.current = false;
-
-    if (zoom > 1) return;
-
-    if (e.changedTouches.length === 1) {
-      touchEndX.current = e.changedTouches[0].clientX;
-      touchEndY.current = e.changedTouches[0].clientY;
-      const diffX = touchStartX.current - touchEndX.current;
-      const diffY = touchStartY.current - touchEndY.current;
-
-      if (Math.abs(diffX) > 60 && Math.abs(diffX) > Math.abs(diffY)) {
-        if (diffX > 0) {
-          handleNext();
-        } else {
-          handlePrev();
-        }
-        return;
-      }
-
-      if (Math.abs(position.y) > 120) {
-        onClose();
-      } else {
-        resetZoom();
-      }
-    }
-  };
   if (!images || images.length === 0) return null;
   const currentImage = images[currentIndex];
-
   return ReactDOM.createPortal(
-    <div 
-      className="lightbox" 
+    <div
+      className="lightbox"
+      {...bindGestures()}
       onClick={(e) => {
         const imgElem = document.querySelector(".lightbox-content");
-        
         if (imgElem && imgElem.contains(e.target)) {
           handleImageClick(e);
           return;
         }
-
-        if (zoom === 1) {
+        if (state.current.scale === 1) {
           if (e.target.id === "lightbox-caption") return;
-
-          const halfWidth = window.innerWidth / 2;
-          if (e.clientX < halfWidth) {
-            handlePrev(e);
-          } else {
-            handleNext(e);
-          }
+          if (e.clientX < window.innerWidth / 2) handlePrev(e);
+          else handleNext(e);
         } else {
           onClose();
         }
@@ -306,35 +309,47 @@ export default function Lightbox({ images, initialIndex, onClose }) {
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp}
-      style={{ backgroundColor: `rgba(10, 11, 14, ${bgOpacity})` }}
+      style={{
+        backgroundColor: `rgba(10, 11, 14, ${bgOpacity})`,
+        touchAction: "none",
+        willChange: "background-color"
+      }}
     >
-      <span className={`lightbox-close ${zoom > 1 ? "hidden-on-zoom" : ""}`} onClick={onClose}>&times;</span>
-      
-      <div 
-        className={`lightbox-media-wrapper ${zoom > 1 ? "zoomed" : ""}`}
-        onMouseDown={handleMouseDown}
+      <span
+        className={`lightbox-close ${state.current.scale > 1 ? "hidden-on-zoom" : ""}`}
+        onClick={onClose}
       >
-        {zoom === 1 && (
+        &times;
+      </span>
+
+      <div className={`lightbox-media-wrapper ${state.current.scale > 1 ? "zoomed" : ""}`}>
+        {state.current.scale === 1 && (
           <>
-            <div className="lightbox-mobile-curtain mobile-curtain-left" onClick={(e) => { e.stopPropagation(); handlePrev(e); }}></div>
-            <div className="lightbox-mobile-curtain mobile-curtain-right" onClick={(e) => { e.stopPropagation(); handleNext(e); }}></div>
+            <div
+              className="lightbox-mobile-curtain mobile-curtain-left"
+              onClick={(e) => { e.stopPropagation(); handlePrev(e); }}
+            ></div>
+            <div
+              className="lightbox-mobile-curtain mobile-curtain-right"
+              onClick={(e) => { e.stopPropagation(); handleNext(e); }}
+            ></div>
           </>
         )}
 
-        <img 
-          className={`lightbox-content ${zoom > 1 ? "lightbox-zoomed" : "lightbox-normal"} ${isDragging.current ? "is-dragging" : ""}`} 
-          src={currentImage.src} 
-          alt={currentImage.caption} 
-          style={{ transform: `translate(${position.x}px, ${position.y}px) scale(${zoom})` }}
+        <animated.img
+          className={`lightbox-content ${state.current.scale > 1 ? "lightbox-zoomed" : "lightbox-normal"}`}
+          src={currentImage.src}
+          alt={currentImage.caption}
+          style={{
+            x,
+            y,
+            scale,
+            willChange: "transform",
+          }}
         />
 
-        {zoom === 1 && currentImage.caption && currentImage.caption.trim() !== "" && (
-          <div id="lightbox-caption">
-            {currentImage.caption}
-          </div>
+        {state.current.scale === 1 && currentImage.caption && currentImage.caption.trim() !== "" && (
+          <div id="lightbox-caption">{currentImage.caption}</div>
         )}
       </div>
     </div>,
