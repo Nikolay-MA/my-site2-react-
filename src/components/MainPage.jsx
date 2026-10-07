@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useTranslation } from "react-i18next"; 
 import GalleryItem from "./GalleryItem";
 import Lightbox from "./Lightbox";
+import BreadcrumbsJsonLd from "./BreadcrumbsJsonLd";
 
 // Возвращаем оригинальные форматы файлов, которые физически присутствуют в проекте
 import avatarImg from "./Фото/image_EMD_AL.webp";

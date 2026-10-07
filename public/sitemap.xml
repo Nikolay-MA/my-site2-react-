@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://sitemaps.org">
+  <!-- Главная страница (RU) -->
+  <url>
+    <loc>https://nikolay.hostingvibe.ru/</loc>
+    <lastmod>2026-10-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <!-- Главная страница (EN) -->
+  <url>
+    <loc>https://nikolay.hostingvibe.ru/en</loc>
+    <lastmod>2026-10-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Страница школы -->
+  <url>
+    <loc>https://nikolay.hostingvibe.ru/school-study</loc>
+    <lastmod>2026-10-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <!-- Страница Смена фамилии -->
+  <url>
+    <loc>https://nikolay.hostingvibe.ru/name-change</loc>
+    <lastmod>2026-10-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <!-- Страница учебы в МИРЭА -->
+  <url>
+    <loc>https://nikolay.hostingvibe.ru/mirea-study</loc>
+    <lastmod>2026-10-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Страница проектов -->
+  <url>
+    <loc>https://nikolay.hostingvibe.ru/projects</loc>
+    <lastmod>2026-10-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Страница Событий -->
+  <url>
+    <loc>https://nikolay.hostingvibe.ru/events</loc>
+    <lastmod>2026-10-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <!-- Страница Дунхуа -->
+  <url>
+    <loc>https://nikolay.hostingvibe.ru/donghua</loc>
+    <lastmod>2026-10-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+</urlset>
